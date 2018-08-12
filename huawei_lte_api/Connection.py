@@ -4,7 +4,7 @@ import requests
 import urllib.parse
 import re
 from huawei_lte_api.enums.client import ResponseCodeEnum
-from huawei_lte_api.exceptions import ResponseErrorException
+from huawei_lte_api.exceptions import ResponseErrorException, ResponseErrorLoginRequiredException, ResponseErrorNotSupportedException, ResponseErrorSystemBusyException
 
 
 class Connection(object):
@@ -34,12 +34,20 @@ class Connection(object):
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: 'No support',
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN: 'Unknown',
         }
+
+        error_code_to_exception = {
+            ResponseCodeEnum.ERROR_SYSTEM_BUSY: ResponseErrorSystemBusyException,
+            ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: ResponseErrorLoginRequiredException,
+            ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: ResponseErrorNotSupportedException,
+            ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN:  ResponseErrorException,
+        }
         if 'error' in data:
+            error_code = int(data['error']['code'])
             if not data['error']['message']:
-                message = error_code_to_message.get(int(data['error']['code']))
+                message = error_code_to_message.get(error_code, 'Unknown')
             else:
                 message = data['error']['message']
-            raise ResponseErrorException('{}: {}'.format(data['error']['code'], message))
+            raise error_code_to_exception.get(error_code, ResponseErrorException)('{}: {}'.format(data['error']['code'], message))
 
         return data['response'] if 'response' in data else data
 
@@ -59,7 +67,7 @@ class Connection(object):
     def _build_final_url(self, endpoint: str, prefix: str='api') -> str:
         return urllib.parse.urljoin(self.url + '{}/'.format(prefix), endpoint)
 
-    def post(self, endpoint: str, data: dict, refresh_csfr: bool=False, prefix: str='api') -> dict:
+    def post(self, endpoint: str, data: dict=None, refresh_csfr: bool=False, prefix: str='api') -> dict:
         headers = {
             'Content-Type': 'application/xml'
         }
@@ -70,7 +78,7 @@ class Connection(object):
 
         response = requests.post(
             self._build_final_url(endpoint, prefix),
-            self._create_request_xml(data),
+            self._create_request_xml(data) if data else '',
             headers=headers,
             cookies=self.cookie_jar
         )

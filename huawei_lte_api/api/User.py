@@ -6,8 +6,8 @@ from huawei_lte_api.ApiGroup import ApiGroup
 
 
 class User(ApiGroup):
-    username = 'admin'
-    password = None
+    _username = 'admin'
+    _password = None
 
     def _state_login(self) -> dict:
         return self._connection.get('user/state-login')
@@ -15,16 +15,16 @@ class User(ApiGroup):
     def _login(self, password_type: PasswordTypeEnum=PasswordTypeEnum.BASE_64) -> bool:
         if password_type == PasswordTypeEnum.SHA256:
             concentrated = b''.join([
-                self.username.encode('UTF-8'),
-                base64.b64encode(hashlib.sha256(self.password.encode('UTF-8')).hexdigest().encode('ascii')),
+                self._username.encode('UTF-8'),
+                base64.b64encode(hashlib.sha256(self._password.encode('UTF-8')).hexdigest().encode('ascii')),
                 self._connection.request_verification_tokens[0].encode('UTF-8')
             ])
             password = base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
         else:
-            password = base64.b64encode(self.password.encode('UTF-8'))
+            password = base64.b64encode(self._password.encode('UTF-8'))
 
         result = self._connection.post('user/login', {
-            'Username': self.username,
+            'Username': self._username,
             'Password': password.decode('UTF-8'),
             'password_type': password_type.value
         }, refresh_csfr=False)
@@ -39,8 +39,8 @@ class User(ApiGroup):
         return self._login(PasswordTypeEnum(int(state_login['password_type'])))
 
     def login(self, username: str=None, password: str=None) -> bool:
-        self.username = username
-        self.password = password
+        self._username = username
+        self._password = password
         return self._enforce_logged(True)
 
     def logout(self):
@@ -50,6 +50,9 @@ class User(ApiGroup):
 
     def remind(self):
         return self._connection.get('user/remind')
+
+    def password(self):
+        return self._connection.get('user/password')
 
     def set_remind(self, remind_state):
         return self._connection.post('user/remind', {

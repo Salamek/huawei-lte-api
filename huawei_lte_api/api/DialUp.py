@@ -10,6 +10,16 @@ class DialUp(ApiGroup):
     def connection(self):
         return self._connection.get('dialup/connection')
 
+    def dialup_feature_switch(self):
+        return self._connection.get('dialup/dialup-feature-switch')
+
+    @authorized_call
+    def profiles(self):
+        return self._connection.get('dialup/profiles')
+
+    def auto_apn(self):
+        return self._connection.get('dialup/auto-apn')
+
     def dial(self):
         return self._connection.post('dialup/dial', {
             'Action': 1
