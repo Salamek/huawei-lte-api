@@ -5,10 +5,10 @@ from huawei_lte_api.AuthorizedConnection import authorized_call
 
 class Global(ApiGroup):
     def languagelist(self):
-        return self.connection.get('global/languagelist.xml', prefix='config')
+        return self._connection.get('global/languagelist.xml', prefix='config')
 
     def config(self):
-        return self.connection.get('global/config.xml', prefix='config')
+        return self._connection.get('global/config.xml', prefix='config')
 
     def net_type(self):
-        return self.connection.get('global/net-type.xml', prefix='config')
+        return self._connection.get('global/net-type.xml', prefix='config')

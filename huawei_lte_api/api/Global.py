@@ -5,4 +5,4 @@ from huawei_lte_api.AuthorizedConnection import authorized_call
 
 class Global(ApiGroup):
     def module_switch(self):
-        return self.connection.get('global/module-switch')
+        return self._connection.get('global/module-switch')

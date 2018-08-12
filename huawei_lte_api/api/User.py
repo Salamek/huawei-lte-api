@@ -10,20 +10,20 @@ class User(ApiGroup):
     password = None
 
     def _state_login(self) -> dict:
-        return self.connection.get('user/state-login')
+        return self._connection.get('user/state-login')
 
     def _login(self, password_type: PasswordTypeEnum=PasswordTypeEnum.BASE_64) -> bool:
         if password_type == PasswordTypeEnum.SHA256:
             concentrated = b''.join([
                 self.username.encode('UTF-8'),
                 base64.b64encode(hashlib.sha256(self.password.encode('UTF-8')).hexdigest().encode('ascii')),
-                self.connection.request_verification_tokens[0].encode('UTF-8')
+                self._connection.request_verification_tokens[0].encode('UTF-8')
             ])
             password = base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
         else:
             password = base64.b64encode(self.password.encode('UTF-8'))
 
-        result = self.connection.post('user/login', {
+        result = self._connection.post('user/login', {
             'Username': self.username,
             'Password': password.decode('UTF-8'),
             'password_type': password_type.value
@@ -44,14 +44,14 @@ class User(ApiGroup):
         return self._enforce_logged(True)
 
     def logout(self):
-        return self.connection.post('user/logout', {
+        return self._connection.post('user/logout', {
             'Logout': 1
         })
 
     def remind(self):
-        return self.connection.get('user/remind')
+        return self._connection.get('user/remind')
 
     def set_remind(self, remind_state):
-        return self.connection.post('user/remind', {
+        return self._connection.post('user/remind', {
             'remindstate': remind_state
         })

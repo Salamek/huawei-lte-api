@@ -10,11 +10,11 @@ def authorized_call(fn):
         if not isinstance(args[0], ApiGroup):
             raise Exception('{} is not instance of ApiGroup'.format(args[0]))
 
-        if not isinstance(args[0].connection, AuthorizedConnection):
-            raise Exception('{} is not instance of AuthorizedConnection needed by {}'.format(args[0].connection, fn))
+        if not isinstance(args[0]._connection, AuthorizedConnection):
+            raise Exception('{} is not instance of AuthorizedConnection needed by {}'.format(args[0]._connection, fn))
 
-        if not args[0].connection.enforce_authorized_connection():
-            raise Exception('{}: Failed to enforce login for  {}'.format(args[0].connection, fn))
+        if not args[0]._connection.enforce_authorized_connection():
+            raise Exception('{}: Failed to enforce login for  {}'.format(args[0]._connection, fn))
 
         return fn(*args, **kw)
     return wrapped
