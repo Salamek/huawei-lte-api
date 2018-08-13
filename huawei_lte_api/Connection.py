@@ -1,6 +1,7 @@
 import dicttoxml
 import xmltodict
 import requests
+import typing
 import urllib.parse
 import re
 from huawei_lte_api.enums.client import ResponseCodeEnum
@@ -24,8 +25,10 @@ class Connection(object):
         self._initialize_csfr_tokens_and_session()
 
     @staticmethod
-    def _create_request_xml(data: dict) -> str:
-        return dicttoxml.dicttoxml(data, custom_root='request')
+    def _create_request_xml(data: dict, dicttoxml_xargs: dict=None) -> str:
+        if not dicttoxml_xargs:
+            dicttoxml_xargs = {}
+        return dicttoxml.dicttoxml(data, custom_root='request', **dicttoxml_xargs)
 
     @staticmethod
     def _process_response_xml(xml: str) -> dict:
@@ -74,7 +77,14 @@ class Connection(object):
     def _build_final_url(self, endpoint: str, prefix: str='api') -> str:
         return urllib.parse.urljoin(self.url + '{}/'.format(prefix), endpoint)
 
-    def post(self, endpoint: str, data: dict=None, refresh_csfr: bool=False, prefix: str='api') -> dict:
+    def post(self,
+             endpoint: str,
+             data: dict=None,
+             refresh_csfr: bool=False,
+             prefix: str='api',
+             dicttoxml_xargs: dict=None
+             ) -> dict:
+
         headers = {
             'Content-Type': 'application/xml'
         }
@@ -85,7 +95,7 @@ class Connection(object):
 
         response = requests.post(
             self._build_final_url(endpoint, prefix),
-            self._create_request_xml(data) if data else '',
+            self._create_request_xml(data, dicttoxml_xargs) if data else '',
             headers=headers,
             cookies=self.cookie_jar
         )

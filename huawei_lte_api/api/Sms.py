@@ -64,17 +64,20 @@ class Sms(ApiGroup):
                  text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
                  from_date: datetime.datetime=datetime.datetime.utcnow()
                  ):
+
+        dicttoxml_xargs = {
+            'item_func': lambda x: x[:-1]
+        }
+
         return self._connection.post('sms/save-sms', {
             'Index': sms_index,
-            'Phones': {
-                'Phone': phone_numbers
-            },
+            'Phones':  phone_numbers,
             'Sca': sca,
             'Content': message,
             'Length': len(message),
             'Reserved': text_mode.value,
             'Date': from_date.strftime("%Y-%m-%d %H:%M:%S")
-        })
+        }, dicttoxml_xargs=dicttoxml_xargs)
 
     @authorized_call
     def send_sms(self,
@@ -85,17 +88,20 @@ class Sms(ApiGroup):
                  text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
                  from_date: datetime.datetime=datetime.datetime.utcnow()
                  ):
+
+        dicttoxml_xargs = {
+            'item_func': lambda x: x[:-1]
+        }
+
         return self._connection.post('sms/send-sms', {
             'Index': sms_index,
-            'Phones': {
-                'Phone': phone_numbers
-            },
+            'Phones': phone_numbers,
             'Sca': sca,
             'Content': message,
             'Length': len(message),
             'Reserved': text_mode.value,
             'Date': from_date.strftime("%Y-%m-%d %H:%M:%S")
-        })
+        }, dicttoxml_xargs=dicttoxml_xargs)
 
     def cancel_send(self):
         return self._connection.post('sms/cancel-send', 1)
