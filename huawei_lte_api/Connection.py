@@ -4,7 +4,12 @@ import requests
 import urllib.parse
 import re
 from huawei_lte_api.enums.client import ResponseCodeEnum
-from huawei_lte_api.exceptions import ResponseErrorException, ResponseErrorLoginRequiredException, ResponseErrorNotSupportedException, ResponseErrorSystemBusyException
+from huawei_lte_api.exceptions import \
+    ResponseErrorException, \
+    ResponseErrorLoginRequiredException, \
+    ResponseErrorNotSupportedException, \
+    ResponseErrorSystemBusyException, \
+    ResponseErrorLoginCsfrException
 
 
 class Connection(object):
@@ -33,6 +38,7 @@ class Connection(object):
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: 'No rights (needs login)',
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: 'No support',
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN: 'Unknown',
+            ResponseCodeEnum.ERROR_SYSTEM_CSFR: 'Session error'
         }
 
         error_code_to_exception = {
@@ -40,6 +46,7 @@ class Connection(object):
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: ResponseErrorLoginRequiredException,
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: ResponseErrorNotSupportedException,
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN:  ResponseErrorException,
+            ResponseCodeEnum.ERROR_SYSTEM_CSFR: ResponseErrorLoginCsfrException
         }
         if 'error' in data:
             error_code = int(data['error']['code'])
@@ -84,7 +91,10 @@ class Connection(object):
         )
         response.raise_for_status()
 
-        self.cookie_jar = response.cookies
+        if response.cookies:
+            self.cookie_jar = response.cookies
+
+        data = self._check_response_status(self._process_response_xml(response.content))
 
         if refresh_csfr:
             self.request_verification_tokens = []
@@ -98,11 +108,11 @@ class Connection(object):
         else:
             raise ResponseErrorException('Failed to get CSFR from POST response headers')
 
-        return self._check_response_status(self._process_response_xml(response.content))
+        return data
 
     def get(self, endpoint: str, params: dict=None, prefix: str='api') -> dict:
         headers = {}
-        if len(self.request_verification_tokens) > 0:
+        if len(self.request_verification_tokens) == 1:
             headers['__RequestVerificationToken'] = self.request_verification_tokens[0]
 
         response = requests.get(
@@ -111,6 +121,7 @@ class Connection(object):
             headers=headers,
             cookies=self.cookie_jar
         )
+
         return self._check_response_status(self._process_response_xml(response.content))
 
     def _get_token(self):
