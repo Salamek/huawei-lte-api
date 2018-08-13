@@ -12,3 +12,7 @@ class ResponseErrorLoginRequiredException(ResponseErrorException):
 
 class ResponseErrorSystemBusyException(ResponseErrorException):
     pass
+
+
+class ResponseErrorLoginCsfrException(ResponseErrorException):
+    pass

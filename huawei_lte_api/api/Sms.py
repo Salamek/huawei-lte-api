@@ -55,6 +55,7 @@ class Sms(ApiGroup):
             'Index': sms_id
         })
 
+    @authorized_call
     def save_sms(self,
                  phone_numbers: list,
                  message: str,
@@ -75,6 +76,7 @@ class Sms(ApiGroup):
             'Date': from_date.strftime("%Y-%m-%d %H:%M:%S")
         })
 
+    @authorized_call
     def send_sms(self,
                  phone_numbers: list,
                  message: str,
