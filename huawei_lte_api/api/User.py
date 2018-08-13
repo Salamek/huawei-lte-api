@@ -27,7 +27,7 @@ class User(ApiGroup):
             'Username': self._username,
             'Password': password.decode('UTF-8'),
             'password_type': password_type.value
-        }, refresh_csfr=False)
+        }, refresh_csfr=True)
 
         return result == ResponseEnum.OK.value
 
