@@ -5,20 +5,20 @@ from huawei_lte_api.enums.sms import BoxTypeEnum, TextModeEnum, SaveModeEnum, Se
 
 
 class Sms(ApiGroup):
-    def get_cbsnewslist(self):
+    def get_cbsnewslist(self) -> dict:
         return self._connection.get('sms/get-cbsnewslist')
 
-    def sms_count(self):
+    def sms_count(self) -> dict:
         return self._connection.get('sms/sms-count')
 
-    def splitinfo_sms(self):
+    def splitinfo_sms(self) -> dict:
         return self._connection.get('sms/splitinfo-sms')
 
     @authorized_call
-    def sms_feature_switch(self):
+    def sms_feature_switch(self) -> dict:
         return self._connection.get('sms/sms-feature-switch')
 
-    def send_status(self):
+    def send_status(self) -> dict:
         return self._connection.get('sms/send-status')
 
     def get_sms_list(self,
@@ -28,7 +28,7 @@ class Sms(ApiGroup):
                      sort_type: int=0,
                      ascending: int=0,
                      unread_preferred: int=0
-                     ):
+                     ) -> dict:
         return self._connection.post('sms/sms-list', {
             'PageIndex': page,
             'BoxType': box_type.value,
@@ -107,7 +107,7 @@ class Sms(ApiGroup):
         return self._connection.post('sms/cancel-send', 1)
 
     @authorized_call
-    def config(self):
+    def config(self) -> dict:
         return self._connection.get('sms/config')
 
     @authorized_call

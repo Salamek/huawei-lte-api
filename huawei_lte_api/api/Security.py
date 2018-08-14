@@ -5,11 +5,11 @@ from huawei_lte_api.AuthorizedConnection import authorized_call
 
 class Security(ApiGroup):
 
-    def bridgemode(self):
+    def bridgemode(self) -> dict:
         return self._connection.get('security/bridgemode')
 
     @authorized_call
-    def get_firewall_switch(self):
+    def get_firewall_switch(self) -> dict:
         return self._connection.get('security/firewall-switch')
 
     @authorized_call
@@ -29,17 +29,17 @@ class Security(ApiGroup):
         })
 
     @authorized_call
-    def mac_filter(self):
+    def mac_filter(self) -> dict:
         return self._connection.get('security/mac-filter')
 
     @authorized_call
-    def lan_ip_filter(self):
+    def lan_ip_filter(self) -> dict:
         return self._connection.get('security/lan-ip-filter')
 
     @authorized_call
-    def virtual_servers(self):
+    def virtual_servers(self) -> dict:
         return self._connection.get('security/virtual-servers')
 
     @authorized_call
-    def url_filter(self):
+    def url_filter(self) -> dict:
         return self._connection.get('security/url-filter')

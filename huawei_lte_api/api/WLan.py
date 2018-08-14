@@ -5,13 +5,13 @@ from huawei_lte_api.enums.wlan import AuthModeEnum, WepEncryptModeEnum, WpaEncry
 
 
 class WLan(ApiGroup):
-    def wifi_feature_switch(self):
+    def wifi_feature_switch(self) -> dict:
         return self._connection.get('wlan/wifi-feature-switch')
 
-    def station_information(self):
+    def station_information(self) -> dict:
         return self._connection.get('wlan/station-information')
 
-    def basic_settings(self):
+    def basic_settings(self) -> dict:
         return self._connection.get('wlan/basic-settings')
 
     @authorized_call
@@ -23,7 +23,7 @@ class WLan(ApiGroup):
         })
 
     @authorized_call
-    def security_settings(self):
+    def security_settings(self) -> dict:
         return self._connection.get('wlan/security-settings')
 
     @authorized_call
@@ -45,15 +45,15 @@ class WLan(ApiGroup):
         })
 
     @authorized_call
-    def multi_security_settings(self):
+    def multi_security_settings(self) -> dict:
         return self._connection.get('wlan/multi-security-settings')
 
     @authorized_call
-    def multi_security_settings_ex(self):
+    def multi_security_settings_ex(self) -> dict:
         return self._connection.get('wlan/multi-security-settings-ex')
 
     @authorized_call
-    def multi_basic_settings(self):
+    def multi_basic_settings(self) -> dict:
         return self._connection.get('wlan/multi-basic-settings')
 
     @authorized_call
@@ -71,10 +71,10 @@ class WLan(ApiGroup):
         })
 
     @authorized_call
-    def host_list(self):
+    def host_list(self) -> dict:
         return self._connection.get('wlan/host-list')
 
-    def handover_setting(self):
+    def handover_setting(self) -> dict:
         return self._connection.get('wlan/handover-setting')
 
     def set_handover_setting(self, handover: int):
@@ -88,11 +88,11 @@ class WLan(ApiGroup):
             'Handover': handover
         })
 
-    def multi_switch_settings(self):
+    def multi_switch_settings(self) -> dict:
         return self._connection.get('wlan/multi-switch-settings')
 
     @authorized_call
-    def multi_macfilter_settings(self):
+    def multi_macfilter_settings(self) -> dict:
         return self._connection.get('wlan/multi-macfilter-settings')
 
     @authorized_call
@@ -109,7 +109,7 @@ class WLan(ApiGroup):
         })
 
     @authorized_call
-    def mac_filter(self):
+    def mac_filter(self) -> dict:
         return self._connection.get('wlan/mac-filter')
 
     @authorized_call
@@ -120,17 +120,17 @@ class WLan(ApiGroup):
         })
 
     @authorized_call
-    def oled_showpassword(self):
+    def oled_showpassword(self) -> dict:
         return self._connection.get('wlan/oled-showpassword')
 
     @authorized_call
-    def wps(self):
+    def wps(self) -> dict:
         return self._connection.get('wlan/wps')
 
     @authorized_call
-    def wps_appin(self):
+    def wps_appin(self) -> dict:
         return self._connection.get('wlan/wps-appin')
 
     @authorized_call
-    def wps_pbc(self):
+    def wps_pbc(self) -> dict:
         return self._connection.get('wlan/wps-pbc')

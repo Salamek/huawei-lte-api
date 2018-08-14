@@ -19,7 +19,7 @@ class Pb(ApiGroup):
                     key_word: str='',
                     group_id: int=0,
                     read_count: int=50
-                    ):
+                    ) -> dict:
         return self._connection.post('pb/pb-list', {
             'GroupID': group_id,
             'PageIndex': page,

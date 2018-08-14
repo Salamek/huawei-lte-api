@@ -4,20 +4,20 @@ from huawei_lte_api.AuthorizedConnection import authorized_call
 
 
 class DialUp(ApiGroup):
-    def mobile_dataswitch(self):
+    def mobile_dataswitch(self) ->dict:
         return self._connection.get('dialup/mobile-dataswitch')
 
-    def connection(self):
+    def connection(self) ->dict:
         return self._connection.get('dialup/connection')
 
-    def dialup_feature_switch(self):
+    def dialup_feature_switch(self) ->dict:
         return self._connection.get('dialup/dialup-feature-switch')
 
     @authorized_call
-    def profiles(self):
+    def profiles(self) ->dict:
         return self._connection.get('dialup/profiles')
 
-    def auto_apn(self):
+    def auto_apn(self) ->dict:
         return self._connection.get('dialup/auto-apn')
 
     def dial(self):

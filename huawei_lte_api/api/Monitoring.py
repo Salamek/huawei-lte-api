@@ -4,19 +4,19 @@ from huawei_lte_api.AuthorizedConnection import authorized_call
 
 
 class Monitoring(ApiGroup):
-    def converged_status(self):
+    def converged_status(self) -> dict:
         return self._connection.get('monitoring/converged-status')
 
-    def status(self):
+    def status(self) -> dict:
         return self._connection.get('monitoring/status')
 
-    def check_notifications(self):
+    def check_notifications(self) -> dict:
         return self._connection.get('monitoring/check-notifications')
 
-    def traffic_statistics(self):
+    def traffic_statistics(self) -> dict:
         return self._connection.get('monitoring/traffic-statistics')
 
-    def start_date(self):
+    def start_date(self) -> dict:
         return self._connection.get('monitoring/start_date')
 
     def set_start_date(self, start_day: int, data_limit: str, month_threshold: int):
@@ -34,7 +34,7 @@ class Monitoring(ApiGroup):
             'SetMonthData': 1
         })
 
-    def start_date_wlan(self):
+    def start_date_wlan(self) -> dict:
         return self._connection.get('monitoring/start_date_wlan')
 
     def set_start_date_wlan(self, start_day: int, data_limit: str, month_threshold: int):
@@ -52,13 +52,13 @@ class Monitoring(ApiGroup):
             'SettingEnable': 1  #!FIXME
         })
 
-    def month_statistics(self):
+    def month_statistics(self) -> dict:
         return self._connection.get('monitoring/month_statistics')
 
-    def month_statistics_wlan(self):
+    def month_statistics_wlan(self) -> dict:
         return self._connection.get('monitoring/month_statistics_wlan')
 
-    def set_clear_traffic(self):
+    def set_clear_traffic(self) -> dict:
         return self._connection.post('monitoring/clear-traffic', {
             'ClearTraffic': 1
         })

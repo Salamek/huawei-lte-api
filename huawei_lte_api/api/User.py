@@ -48,10 +48,10 @@ class User(ApiGroup):
             'Logout': 1
         })
 
-    def remind(self):
+    def remind(self) -> dict:
         return self._connection.get('user/remind')
 
-    def password(self):
+    def password(self) -> dict:
         return self._connection.get('user/password')
 
     def set_remind(self, remind_state):
