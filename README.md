@@ -30,6 +30,9 @@ connection = AuthorizedConnection('http://192.168.8.1/', 'admin', 'MY_SUPER_TRUP
 client = Client(connection) # This just siplifies acces to separated API groups, you can use device = Device(connection) if you want
 
 print(client.device.information())
+
+# For more API calls just look on code in the huawei_lte_api/api folder, there is no separate DOC yet
+
 ```
 Result dict
 ```python
