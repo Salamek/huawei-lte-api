@@ -32,8 +32,9 @@ class Device(ApiGroup):
     def signal(self):
         return self._connection.get('device/signal')
 
+    @authorized_call
     def control(self, control: int):
-        return self._connection.get('device/control', {
+        return self._connection.post('device/control', {
             'Control': control
         })
 
