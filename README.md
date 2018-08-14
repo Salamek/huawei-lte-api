@@ -1,6 +1,7 @@
 # huawei-lte-api
 API For huawei LAN/WAN LTE Modems,
 you can use this to simply send SMS, get information about your internet usage, signal, and tones of other stuff
+
 PS: it is funny how many stuff you can request from modem/router without any authentication
 
 ## Installation
