@@ -1,0 +1,15 @@
+GIT:
+    AUTO_COMMIT: true
+    AUTO_TAG: true
+    AUTO_PUSH: true # false=disabled, true=enabled, 'remote_name'=enabled and push to remote_name
+    COMMIT_MESSAGE: 'New version {version}'
+
+REGEXPS:
+    'python': __version__\s*=\s*\'(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\'
+    'setup.py': version\s*=\s*\'(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)\'
+    'PKGBUILD': pkgver\s*=\s*(?P<version>.*)
+
+VERSION_FILES:
+    'huawei_lte_api/__init__.py': 'python'
+    'setup.py': 'setup.py'
+    'archlinux/PKGBUILD': 'PKGBUILD'

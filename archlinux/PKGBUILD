@@ -1,0 +1,24 @@
+pkgname=python-huawei-lte-api
+pkgver=1.0
+pkgdesc="API For huawei LAN/WAN LTE Modems"
+pkgrel=1
+arch=('any')
+license=('LGPL-3.0')
+url='https://github.com/Salamek/huawei-lte-api'
+makedepends=('python-setuptools')
+depends=(
+    'python'
+)
+
+prepare() {
+  mkdir -p "${srcdir}/${pkgname}"
+  cp -R "${srcdir}/../../huawei_lte_api" "${srcdir}/${pkgname}"
+  cp -R "${srcdir}/../../tests" "${srcdir}/${pkgname}"
+  cp -R "${srcdir}/../../setup.py" "${srcdir}/${pkgname}"
+  cp -R "${srcdir}/../../README.md" "${srcdir}/${pkgname}"
+}
+
+package() {
+  cd "${srcdir}/${pkgname}"
+  python setup.py install --root="$pkgdir/" --optimize=1
+}

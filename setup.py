@@ -18,5 +18,15 @@ setup(
     license='LGPL-3.0 ',
     author='Adam Schubert',
     author_email='adam.schubert@sg1-game.net',
-    description='API For huawei LAN/WAN LTE Modems'
+    description='API For huawei LAN/WAN LTE Modems',
+    test_suite="tests",
+    setup_requires=[
+        'pytest-runner'
+    ],
+    tests_require=[
+        'pytest',
+        'pylint',
+        'pytest-cov'
+    ]
+
 )

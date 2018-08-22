@@ -1,7 +1,6 @@
 import dicttoxml
 import xmltodict
 import requests
-import typing
 import urllib.parse
 import re
 from huawei_lte_api.enums.client import ResponseCodeEnum
