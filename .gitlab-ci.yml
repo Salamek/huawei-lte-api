@@ -85,17 +85,16 @@ packagetest:archlinux:
 
 repoupdate:
   stage: deploy
+  variables:
+    TWINE_USERNAME: Salamek
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - apt-get update -y
-    - apt-get install python-setuptools -y
+    - apt-get install twine -y
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-
-    # PyPy
-    - 'echo -e "[distutils]\nindex-servers =\n   pypi\n\n[pypi]\nusername=Salamek\npassword=$PYPI_PASSWORD" > ~/.pypirc'
   script:
     - ssh www-data@salamek.cz 'rm -rf /var/www/arch-private.salamek.cz/www/any/python-huawei-lte-api*.pkg.tar.xz'
     - ssh www-data@salamek.cz 'rm -rf /var/www/apt-private.salamek.cz/cache/python3-huawei-lte-api*.deb'
@@ -103,7 +102,8 @@ repoupdate:
     - scp deb_dist/*.deb www-data@salamek.cz:/var/www/apt-private.salamek.cz/cache
     - ssh www-data@salamek.cz '/var/www/arch-private.salamek.cz/update_repo.sh'
     - ssh www-data@salamek.cz '/var/www/apt-private.salamek.cz/update_repo.sh'
-    - python setup.py sdist upload -r pypi
+    - python setup.py sdist bdist_wheel
+    - twine upload dist/*
   dependencies:
     - package:archlinux
     - package:debian
