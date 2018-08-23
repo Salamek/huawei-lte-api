@@ -97,8 +97,7 @@ repoupdate:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
     # PyPy
-    - 'echo -e "[distutils]\nindex-servers =\n   pypi\n\n[pypi]\nrepository=https://pypi.python.org/pypi\nusername=Salamek\npassword=" > ~/.pypirc'
-    - echo $PYPI_PASSWORD >> ~/.pypirc
+    - 'echo -e "[distutils]\nindex-servers =\n   pypi\n\n[pypi]\nrepository=https://pypi.python.org/pypi\nusername=Salamek\npassword=$PYPI_PASSWORD" > ~/.pypirc'
   script:
     - ssh www-data@salamek.cz 'rm -rf /var/www/arch-private.salamek.cz/www/any/python-huawei-lte-api*.pkg.tar.xz'
     - ssh www-data@salamek.cz 'rm -rf /var/www/apt-private.salamek.cz/cache/python3-huawei-lte-api*.deb'
