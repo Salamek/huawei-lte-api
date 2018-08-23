@@ -102,12 +102,12 @@ repoupdate:
     - scp deb_dist/*.deb www-data@salamek.cz:/var/www/apt-private.salamek.cz/cache
     - ssh www-data@salamek.cz '/var/www/arch-private.salamek.cz/update_repo.sh'
     - ssh www-data@salamek.cz '/var/www/apt-private.salamek.cz/update_repo.sh'
-    - python setup.py sdist bdist_wheel
+    - python3 setup.py sdist bdist_wheel
     - twine upload dist/*
   dependencies:
     - package:archlinux
     - package:debian
   tags:
-    - docker
+    - debian
   only:
     - tags
