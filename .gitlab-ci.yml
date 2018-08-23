@@ -16,6 +16,9 @@ test:debian:
 test:archlinux:
   stage: test
   script:
+    - echo "[salamek]" >> /etc/pacman.conf
+    - echo "Server = https://arch.salamek.cz/any" >> /etc/pacman.conf
+    - echo "SigLevel = Optional" >> /etc/pacman.conf
     - pacman -Sy python-pytest-runner python-pytest python-pylint python-pytest-cov python-xmltodict python-dicttoxml python-requests --noconfirm
     - python setup.py test
   tags:
@@ -39,6 +42,9 @@ package:debian:
 package:archlinux:
   stage: package
   script:
+    - echo "[salamek]" >> /etc/pacman.conf
+    - echo "Server = https://arch.salamek.cz/any" >> /etc/pacman.conf
+    - echo "SigLevel = Optional" >> /etc/pacman.conf
     - pacman -Sy python-pip sudo openssh binutils fakeroot python-xmltodict python-dicttoxml python-requests --noconfirm
     - useradd -m -G users -s /bin/bash package
     - chown -R package:users archlinux
