@@ -56,7 +56,7 @@ class Connection(object):
                 message = error_code_to_message.get(error_code, 'Unknown')
             else:
                 message = data['error']['message']
-            raise error_code_to_exception.get(error_code, ResponseErrorException)('{}: {}'.format(data['error']['code'], message))
+            raise error_code_to_exception.get(error_code, ResponseErrorException)('{}: {}'.format(error_code, message), error_code)
 
         return data['response'] if 'response' in data else data
 

@@ -1,5 +1,7 @@
 class ResponseErrorException(Exception):
-    pass
+    def __init__(self, message, code):
+        super(ResponseErrorException, self).__init__(message)
+        self.code = code
 
 
 class ResponseErrorNotSupportedException(ResponseErrorException):
@@ -15,4 +17,28 @@ class ResponseErrorSystemBusyException(ResponseErrorException):
 
 
 class ResponseErrorLoginCsfrException(ResponseErrorException):
+    pass
+
+
+class LoginErrorUsernameWrongException(ResponseErrorException):
+    pass
+
+
+class LoginErrorPasswordWrongException(ResponseErrorException):
+    pass
+
+
+class LoginErrorAlreadyLoginException(ResponseErrorException):
+    pass
+
+
+class LoginErrorUsernamePasswordWrongException(ResponseErrorException):
+    pass
+
+
+class LoginErrorUsernamePasswordOverrunException(ResponseErrorException):
+    pass
+
+
+class LoginErrorUsernamePasswordModifyException(ResponseErrorException):
     pass

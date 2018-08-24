@@ -1,4 +1,5 @@
 import datetime
+from urllib.parse import urlparse
 from huawei_lte_api.Connection import Connection
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.api.User import User
@@ -25,12 +26,19 @@ class AuthorizedConnection(Connection):
     login_time = None
     logged_in = False
 
-    def __init__(self, url: str, username: str, password: str):
+    def __init__(self, url: str, username: str=None, password: str=None, login_on_demand: bool=False):
         super(AuthorizedConnection, self).__init__(url)
-        self.user = User(self)
-        if self.user.login(username, password):
-            self.login_time = datetime.datetime.utcnow()
-            self.logged_in = True
+        parsed_url = urlparse(url)
+
+        username = username if username else parsed_url.username
+        password = password if password else parsed_url.password
+
+        self.user = User(self, username, password)
+
+        if not login_on_demand:
+            if self.user.login(True):
+                self.login_time = datetime.datetime.utcnow()
+                self.logged_in = True
 
     def _is_login_timeout(self) -> bool:
         if self.login_time is None:
@@ -42,7 +50,7 @@ class AuthorizedConnection(Connection):
         # Check if connection timeouted or not
         if not self.logged_in or self._is_login_timeout():
             # Connection timeouted, relogin
-            if self.user._enforce_logged():
+            if self.user.login():
                 self.login_time = datetime.datetime.utcnow()
                 self.logged_in = True
             else:

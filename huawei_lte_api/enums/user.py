@@ -23,6 +23,7 @@ class LoginStateEnum(enum.IntEnum):
     LOGGED_OUT = -1
     REPEAT = -2
 
+
 @enum.unique
 class SessionErrorEnum(enum.IntEnum):
     VOICE_BUSY = 120001
