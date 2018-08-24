@@ -23,6 +23,9 @@ class Connection(object):
         self.url = url
         self._initialize_csfr_tokens_and_session()
 
+    def reload(self):
+        self._initialize_csfr_tokens_and_session()
+
     @staticmethod
     def _create_request_xml(data: dict, dicttoxml_xargs: dict=None) -> str:
         if not dicttoxml_xargs:
