@@ -1,6 +1,6 @@
 # huawei-lte-api
 API For huawei LAN/WAN LTE Modems,
-you can use this to simply send SMS, get information about your internet usage, signal, and tones of other stuff
+you can use this to simply send SMS, get information about your internet usage, signal, and tons of other stuff
 
 Tested on:
 * Huawei B310s-22
@@ -24,7 +24,7 @@ from huawei_lte_api.Connection import Connection
 # connection = AuthorizedConnection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/', login_on_demand=True) # If you wish to login on demand (when call requires authorization), pass login_on_demand=True
 connection = AuthorizedConnection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/')
 
-client = Client(connection) # This just siplifies acces to separated API groups, you can use device = Device(connection) if you want
+client = Client(connection) # This just simplifies access to separate API groups, you can use device = Device(connection) if you want
 
 print(client.device.signal())  # Can be accessed without authorization
 print(client.device.information())  # Needs valid authorization, will throw exception if invalid credentials are passed in URL
