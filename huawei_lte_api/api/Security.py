@@ -43,3 +43,7 @@ class Security(ApiGroup):
     @authorized_call
     def url_filter(self) -> dict:
         return self._connection.get('security/url-filter')
+
+    @authorized_call
+    def upnp(self) -> dict:
+        return self._connection.get('security/upnp')

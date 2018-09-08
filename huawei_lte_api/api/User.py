@@ -87,6 +87,9 @@ class User(ApiGroup):
     def password(self) -> dict:
         return self._connection.get('user/password')
 
+    def pwd(self) -> dict:
+        return self._connection.get('user/pwd')
+
     def set_remind(self, remind_state):
         return self._connection.post('user/remind', {
             'remindstate': remind_state
