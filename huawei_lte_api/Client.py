@@ -22,6 +22,13 @@ from huawei_lte_api.api.DDns import DDns
 from huawei_lte_api.api.Diagnosis import Diagnosis
 from huawei_lte_api.api.SNtp import SNtp
 from huawei_lte_api.api.OnlineUpdate import OnlineUpdate
+from huawei_lte_api.api.Log import Log
+from huawei_lte_api.api.Time import Time
+from huawei_lte_api.api.SdCard import SdCard
+from huawei_lte_api.api.UsbStorage import UsbStorage
+from huawei_lte_api.api.UsbPrinter import UsbPrinter
+from huawei_lte_api.api.Vpn import Vpn
+from huawei_lte_api.api.Ntwk import Ntwk
 
 
 class Client(object):
@@ -50,3 +57,10 @@ class Client(object):
         self.user = User(connection)
         self.device = Device(connection)
         self.online_update = OnlineUpdate(connection)
+        self.log = Log(connection)
+        self.time = Time(connection)
+        self.sd_card = SdCard(connection)
+        self.usb_storage = UsbStorage(connection)
+        self.usb_printer = UsbPrinter(connection)
+        self.vpn = Vpn(connection)
+        self.ntwk = Ntwk(connection)

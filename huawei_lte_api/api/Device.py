@@ -51,3 +51,6 @@ class Device(ApiGroup):
         return self._connection.post('device/antenna_settings', {
             'antenna_type': antenna_type.value
         })
+
+    def antenna_type(self) -> dict:
+        return self._connection.get('device/antenna_type')

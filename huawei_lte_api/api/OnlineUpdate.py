@@ -38,3 +38,8 @@ class OnlineUpdate(ApiGroup):
             'messagebox': messagebox
         })
 
+    def configuration(self) -> dict:
+        return self._connection.get('online-update/configuration')
+
+    def autoupdate_config(self) -> dict:
+        return self._connection.get('online-update/autoupdate-config')
