@@ -74,6 +74,10 @@ packagetest:debian:
 packagetest:archlinux:
   stage: packagetest
   script:
+    - echo "[salamek]" >> /etc/pacman.conf
+    - echo "Server = https://arch.salamek.cz/any" >> /etc/pacman.conf
+    - echo "SigLevel = Optional" >> /etc/pacman.conf
+    - pacman -Sy --noconfirm
     - cd archlinux
     - pacman -U python-huawei-lte-api*.pkg.tar.xz --noconfirm
   tags:
