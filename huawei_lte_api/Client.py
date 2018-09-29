@@ -29,6 +29,7 @@ from huawei_lte_api.api.UsbStorage import UsbStorage
 from huawei_lte_api.api.UsbPrinter import UsbPrinter
 from huawei_lte_api.api.Vpn import Vpn
 from huawei_lte_api.api.Ntwk import Ntwk
+from huawei_lte_api.api.Global import Global as Global_
 
 
 class Client(object):
@@ -36,7 +37,7 @@ class Client(object):
         self.monitoring = Monitoring(connection)
         self.security = Security(connection)
         self.webserver = WebServer(connection)
-        self.global_ = Global(connection)
+        self.global_ = Global_(connection)
         self.wlan = WLan(connection)
         self.cradle = Cradle(connection)
         self.pin = Pin(connection)
