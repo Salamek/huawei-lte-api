@@ -10,6 +10,8 @@ from huawei_lte_api.api.Pin import Pin
 from huawei_lte_api.config.Global import Global
 from huawei_lte_api.config.Voice import Voice
 from huawei_lte_api.config.PcAssistant import PcAssistant
+from huawei_lte_api.config.DeviceInformation import DeviceInformation
+from huawei_lte_api.config.WebUICfg import WebUICfg
 from huawei_lte_api.api.Ota import Ota
 from huawei_lte_api.api.Net import Net
 from huawei_lte_api.api.DialUp import DialUp
@@ -43,6 +45,8 @@ class Client(object):
         self.config_global = Global(connection)
         self.config_voice = Voice(connection)
         self.config_pc_assistant = PcAssistant(connection)
+        self.config_device_information = DeviceInformation(connection)
+        self.config_web_ui_cfg = WebUICfg(connection)
         self.ota = Ota(connection)
         self.net = Net(connection)
         self.dial_up = DialUp(connection)
