@@ -5,6 +5,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 Tested on:
 * Huawei B310s-22
 * Huawei B525s-23a
+* Huawei E5186s-22a
 
 PS: it is funny how many stuff you can request from modem/router without any authentication
 
