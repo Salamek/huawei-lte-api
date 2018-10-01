@@ -8,7 +8,7 @@ else:
 
 setup(
     name='huawei-lte-api',
-    version='1.0.15',
+    version='1.0.16',
     packages=[
         'huawei_lte_api',
         'huawei_lte_api.api',
