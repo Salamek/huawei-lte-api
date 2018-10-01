@@ -33,7 +33,7 @@ from huawei_lte_api.api.Vpn import Vpn
 from huawei_lte_api.api.Ntwk import Ntwk
 
 
-class Client(object):
+class Client:
     def __init__(self, connection: Connection):
         self.monitoring = Monitoring(connection)
         self.security = Security(connection)

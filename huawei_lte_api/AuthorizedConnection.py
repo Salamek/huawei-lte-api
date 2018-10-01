@@ -58,4 +58,3 @@ class AuthorizedConnection(Connection):
                 self.logged_in = False
 
         return self.logged_in
-

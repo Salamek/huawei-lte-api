@@ -1,8 +1,8 @@
+import re
+import urllib.parse
 import dicttoxml
 import xmltodict
 import requests
-import urllib.parse
-import re
 from huawei_lte_api.enums.client import ResponseCodeEnum
 from huawei_lte_api.exceptions import \
     ResponseErrorException, \
@@ -12,8 +12,8 @@ from huawei_lte_api.exceptions import \
     ResponseErrorLoginCsfrException
 
 
-class Connection(object):
-    csfr_re = re.compile('name="csrf_token"\s+content="(\S+)"')
+class Connection:
+    csfr_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
     cookie_jar = None
     request_verification_tokens = []
 
@@ -59,7 +59,10 @@ class Connection(object):
                 message = error_code_to_message.get(error_code, 'Unknown')
             else:
                 message = data['error']['message']
-            raise error_code_to_exception.get(error_code, ResponseErrorException)('{}: {}'.format(error_code, message), error_code)
+            raise error_code_to_exception.get(error_code, ResponseErrorException)(
+                '{}: {}'.format(error_code, message),
+                error_code
+            )
 
         return data['response'] if 'response' in data else data
 
@@ -71,7 +74,7 @@ class Connection(object):
         self.cookie_jar = response.cookies
 
         csfr_tokens = self.csfr_re.findall(response.content.decode('UTF-8'))
-        if len(csfr_tokens):
+        if csfr_tokens:
             self.request_verification_tokens = csfr_tokens
         else:
             self.request_verification_tokens.append(self._get_token())
@@ -118,7 +121,7 @@ class Connection(object):
         elif '__RequestVerificationToken' in response.headers:
             self.request_verification_tokens.append(response.headers['__RequestVerificationToken'])
         else:
-            raise ResponseErrorException('Failed to get CSFR from POST response headers')
+            raise ResponseErrorException('Failed to get CSFR from POST response headers', response.status_code)
 
         return data
 
