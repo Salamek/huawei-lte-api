@@ -3,6 +3,7 @@ import hashlib
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
 from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.AuthorizedConnection import authorized_call
 from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorAlreadyLoginException, \
     LoginErrorUsernamePasswordModifyException, \
@@ -76,6 +77,7 @@ class User(ApiGroup):
 
         return self._login(PasswordTypeEnum(int(state_login['password_type'])))
 
+    @authorized_call
     def logout(self):
         return self._connection.post('user/logout', {
             'Logout': 1
