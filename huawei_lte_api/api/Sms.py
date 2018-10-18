@@ -104,7 +104,11 @@ class Sms(ApiGroup):
         }, dicttoxml_xargs=dicttoxml_xargs)
 
     def cancel_send(self):
-        return self._connection.post('sms/cancel-send', 1)
+        return self._connection.post('sms/cancel-send', {
+            'request': 1,
+        }, dicttoxml_xargs={
+            'root': False,
+        })
 
     @authorized_call
     def config(self) -> dict:
