@@ -2,7 +2,6 @@ import datetime
 from urllib.parse import urlparse
 from huawei_lte_api.Connection import Connection
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.api.User import User
 
 
 def authorized_call(fn):
@@ -33,6 +32,7 @@ class AuthorizedConnection(Connection):
         username = username if username else parsed_url.username
         password = password if password else parsed_url.password
 
+        from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import
         self.user = User(self, username, password)
 
         if not login_on_demand:

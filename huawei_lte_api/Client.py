@@ -32,6 +32,7 @@ from huawei_lte_api.api.UsbPrinter import UsbPrinter
 from huawei_lte_api.api.Vpn import Vpn
 from huawei_lte_api.api.Ntwk import Ntwk
 from huawei_lte_api.api.Global import Global as Global_
+from huawei_lte_api.api.Pb import Pb
 
 
 class Client:
@@ -69,3 +70,4 @@ class Client:
         self.usb_printer = UsbPrinter(connection)
         self.vpn = Vpn(connection)
         self.ntwk = Ntwk(connection)
+        self.pb = Pb(connection)

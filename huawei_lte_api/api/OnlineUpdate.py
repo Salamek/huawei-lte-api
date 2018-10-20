@@ -38,6 +38,7 @@ class OnlineUpdate(ApiGroup):
             'messagebox': messagebox
         })
 
+    @authorized_call
     def configuration(self) -> dict:
         return self._connection.get('online-update/configuration')
 

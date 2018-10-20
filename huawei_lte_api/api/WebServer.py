@@ -8,3 +8,6 @@ class WebServer(ApiGroup):
 
     def token(self) -> dict:
         return self._connection.get('webserver/token')
+
+    def white_list_switch(self) -> dict:
+        return self._connection.get('webserver/white_list_switch')

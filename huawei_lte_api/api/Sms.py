@@ -21,6 +21,7 @@ class Sms(ApiGroup):
     def send_status(self) -> dict:
         return self._connection.get('sms/send-status')
 
+    @authorized_call
     def get_sms_list(self,
                      page: int=1,
                      box_type: BoxTypeEnum=BoxTypeEnum.LOCAL_INBOX,
@@ -38,18 +39,21 @@ class Sms(ApiGroup):
             'UnreadPreferred': unread_preferred
         })
 
+    @authorized_call
     def delete_sms(self, sms_ids: list):
         data = []
         for sms_id in sms_ids:
             data.append({'Index': sms_id})
         return self._connection.post('sms/delete-sms', data)
 
+    @authorized_call
     def backup_sim(self, from_date: datetime.datetime, is_move: bool=False):
         return self._connection.post('sms/backup-sim', {
             'IsMove': int(is_move),
             'Date': from_date.strftime("%Y-%m-%d %H:%M:%S")
         })
 
+    @authorized_call
     def set_read(self, sms_id: int):
         return self._connection.post('sms/set-read', {
             'Index': sms_id
@@ -104,7 +108,11 @@ class Sms(ApiGroup):
         }, dicttoxml_xargs=dicttoxml_xargs)
 
     def cancel_send(self):
-        return self._connection.post('sms/cancel-send', 1)
+        return self._connection.post('sms/cancel-send', {
+            'request': 1,
+        }, dicttoxml_xargs={
+            'root': False,
+        })
 
     @authorized_call
     def config(self) -> dict:
