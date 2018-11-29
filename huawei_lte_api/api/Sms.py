@@ -32,8 +32,8 @@ class Sms(ApiGroup):
                      ) -> dict:
         return self._connection.post('sms/sms-list', {
             'PageIndex': page,
-            'BoxType': box_type.value,
             'ReadCount': read_count,
+            'BoxType': box_type.value,            
             'SortType': sort_type,
             'Ascending': ascending,
             'UnreadPreferred': unread_preferred
