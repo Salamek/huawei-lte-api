@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import datetime
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.AuthorizedConnection import authorized_call
@@ -30,14 +31,15 @@ class Sms(ApiGroup):
                      ascending: int=0,
                      unread_preferred: int=0
                      ) -> dict:
-        return self._connection.post('sms/sms-list', {
-            'PageIndex': page,
-            'ReadCount': read_count,
-            'BoxType': box_type.value,            
-            'SortType': sort_type,
-            'Ascending': ascending,
-            'UnreadPreferred': unread_preferred
-        })
+        # Note: at least the B525s-23a is order sensitive
+        return self._connection.post('sms/sms-list', OrderedDict((
+            ('PageIndex', page),
+            ('ReadCount', read_count),
+            ('BoxType', box_type.value),
+            ('SortType', sort_type),
+            ('Ascending', ascending),
+            ('UnreadPreferred', unread_preferred),
+        )))
 
     @authorized_call
     def delete_sms(self, sms_ids: list):
@@ -66,9 +68,11 @@ class Sms(ApiGroup):
                  sms_index: int=-1,
                  sca: str='',
                  text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
-                 from_date: datetime.datetime=datetime.datetime.utcnow()
+                 from_date: datetime.datetime=None,
                  ):
 
+        if from_date is None:
+            from_date = datetime.datetime.utcnow()
         dicttoxml_xargs = {
             'item_func': lambda x: x[:-1]
         }
@@ -90,9 +94,11 @@ class Sms(ApiGroup):
                  sms_index: int=-1,
                  sca: str='',
                  text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
-                 from_date: datetime.datetime=datetime.datetime.utcnow()
+                 from_date: datetime.datetime=None,
                  ):
 
+        if from_date is None:
+            from_date = datetime.datetime.utcnow()
         dicttoxml_xargs = {
             'item_func': lambda x: x[:-1]
         }
