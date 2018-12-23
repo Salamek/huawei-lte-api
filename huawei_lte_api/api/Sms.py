@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import datetime
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.AuthorizedConnection import authorized_call
@@ -30,14 +31,15 @@ class Sms(ApiGroup):
                      ascending: int=0,
                      unread_preferred: int=0
                      ) -> dict:
-        return self._connection.post('sms/sms-list', {
-            'PageIndex': page,
-            'ReadCount': read_count,
-            'BoxType': box_type.value,            
-            'SortType': sort_type,
-            'Ascending': ascending,
-            'UnreadPreferred': unread_preferred
-        })
+        # Note: at least the B525s-23a is order sensitive
+        return self._connection.post('sms/sms-list', OrderedDict((
+            ('PageIndex', page),
+            ('ReadCount', read_count),
+            ('BoxType', box_type.value),
+            ('SortType', sort_type),
+            ('Ascending', ascending),
+            ('UnreadPreferred', unread_preferred),
+        )))
 
     @authorized_call
     def delete_sms(self, sms_ids: list):
