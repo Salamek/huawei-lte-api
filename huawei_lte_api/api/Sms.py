@@ -66,9 +66,11 @@ class Sms(ApiGroup):
                  sms_index: int=-1,
                  sca: str='',
                  text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
-                 from_date: datetime.datetime=datetime.datetime.utcnow()
+                 from_date: datetime.datetime=None,
                  ):
 
+        if from_date is None:
+            from_date = datetime.datetime.utcnow()
         dicttoxml_xargs = {
             'item_func': lambda x: x[:-1]
         }
@@ -90,9 +92,11 @@ class Sms(ApiGroup):
                  sms_index: int=-1,
                  sca: str='',
                  text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
-                 from_date: datetime.datetime=datetime.datetime.utcnow()
+                 from_date: datetime.datetime=None,
                  ):
 
+        if from_date is None:
+            from_date = datetime.datetime.utcnow()
         dicttoxml_xargs = {
             'item_func': lambda x: x[:-1]
         }
