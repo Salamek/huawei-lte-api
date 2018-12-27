@@ -26,7 +26,7 @@ class Sms(ApiGroup):
     def get_sms_list(self,
                      page: int=1,
                      box_type: BoxTypeEnum=BoxTypeEnum.LOCAL_INBOX,
-                     read_count: int=None,
+                     read_count: int=20,
                      sort_type: int=0,
                      ascending: int=0,
                      unread_preferred: int=0
