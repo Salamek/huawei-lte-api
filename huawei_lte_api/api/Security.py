@@ -47,3 +47,31 @@ class Security(ApiGroup):
     @authorized_call
     def upnp(self) -> dict:
         return self._connection.get('security/upnp')
+
+    @authorized_call
+    def set_upnp(self, enabled: bool):
+        return self._connection.post('security/upnp', {
+            'UpnpStatus': int(enabled),
+        })
+
+    @authorized_call
+    def dmz(self) -> dict:
+        return self._connection.get('security/dmz')
+
+    @authorized_call
+    def set_dmz(self, enabled: bool, ip_address: str):
+        return self._connection.post('security/dmz', {
+            'DmzStatus': int(enabled),
+            'DmzIPAddress': ip_address,
+        })
+
+    @authorized_call
+    def sip(self) -> dict:
+        return self._connection.get('security/sip')
+
+    @authorized_call
+    def set_sip(self, enabled: bool, port: int):
+        return self._connection.post('security/sip', {
+            'SipStatus': int(enabled),
+            'SipPort': port,
+        })
