@@ -10,6 +10,13 @@ class Net(ApiGroup):
     def net_mode(self) -> dict:
         return self._connection.get('net/net-mode')
 
+    def set_net_mode(self, lteband: str, networkband: str, networkmode: str):
+        return self._connection.post('net/net-mode', {
+            'NetworkMode': networkmode,
+            'NetworkBand': networkband,
+            'LTEBand': lteband
+        })
+
     @authorized_call
     def network(self) -> dict:
         return self._connection.get('net/network')
