@@ -1,4 +1,4 @@
-
+from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.AuthorizedConnection import authorized_call
 from huawei_lte_api.enums.wlan import AuthModeEnum, WepEncryptModeEnum, WpaEncryptModeEnum
@@ -16,11 +16,11 @@ class WLan(ApiGroup):
 
     @authorized_call
     def set_basic_settings(self, ssid: str, hide: bool=False, wifi_restart: bool=False):
-        return self._connection.post('wlan/basic-settings', {
-            'WifiSsid': ssid,
-            'WifiHide': hide,
-            'WifiRestart': int(wifi_restart)
-        })
+        return self._connection.post('wlan/basic-settings', OrderedDict((
+            ('WifiSsid', ssid),
+            ('WifiHide', hide),
+            ('WifiRestart', int(wifi_restart))
+        )))
 
     @authorized_call
     def security_settings(self) -> dict:
@@ -35,14 +35,14 @@ class WLan(ApiGroup):
                               auth_mode: AuthModeEnum=AuthModeEnum.AUTO,
                               wifi_restart: bool=True
                               ):
-        return self._connection.post('wlan/security-settings', {
-            'WifiAuthmode': auth_mode.value,
-            'WifiWepKey1': wep_key,
-            'WifiWpaencryptionmodes': wpa_encryption_mode.value,
-            'WifiBasicencryptionmodes': wep_encryption_mode.value,
-            'WifiWpapsk': wpa_psk,
-            'WifiRestart': int(wifi_restart)
-        })
+        return self._connection.post('wlan/security-settings', OrderedDict((
+            ('WifiAuthmode', auth_mode.value),
+            ('WifiWepKey1', wep_key),
+            ('WifiWpaencryptionmodes', wpa_encryption_mode.value),
+            ('WifiBasicencryptionmodes', wep_encryption_mode.value),
+            ('WifiWpapsk', wpa_psk),
+            ('WifiRestart', int(wifi_restart))
+        )))
 
     @authorized_call
     def multi_security_settings(self) -> dict:
@@ -114,10 +114,10 @@ class WLan(ApiGroup):
 
     @authorized_call
     def set_mac_filter(self, hostname: str, mac: str):
-        return self._connection.post('wlan/mac-filter', {
-            'wifihostname': hostname,
-            'WifiMacFilterMac': mac
-        })
+        return self._connection.post('wlan/mac-filter', OrderedDict((
+            ('wifihostname', hostname),
+            ('WifiMacFilterMac', mac)
+        )))
 
     @authorized_call
     def oled_showpassword(self) -> dict:

@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.AuthorizedConnection import authorized_call
 
@@ -21,9 +22,9 @@ class Pb(ApiGroup):
                     group_id: int=0,
                     read_count: int=50
                     ) -> dict:
-        return self._connection.post('pb/pb-list', {
-            'GroupID': group_id,
-            'PageIndex': page,
-            'ReadCount': read_count,
-            'KeyWord': key_word
-        })
+        return self._connection.post('pb/pb-list', OrderedDict((
+            ('GroupID', group_id),
+            ('PageIndex', page),
+            ('ReadCount', read_count),
+            ('KeyWord', key_word)
+        )))
