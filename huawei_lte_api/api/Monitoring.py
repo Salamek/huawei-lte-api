@@ -1,4 +1,4 @@
-
+from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
 
 
@@ -26,12 +26,12 @@ class Monitoring(ApiGroup):
         :param month_threshold: Alarm threshold in % as int number eg.: 90
         :return: dict
         """
-        return self._connection.post('monitoring/start_date', {
-            'StartDay': start_day,
-            'DataLimit': data_limit,
-            'MonthThreshold': month_threshold,
-            'SetMonthData': 1
-        })
+        return self._connection.post('monitoring/start_date', OrderedDict((
+            ('StartDay', start_day),
+            ('DataLimit', data_limit),
+            ('MonthThreshold', month_threshold),
+            ('SetMonthData', 1)
+        )))
 
     def start_date_wlan(self) -> dict:
         return self._connection.get('monitoring/start_date_wlan')
@@ -44,12 +44,12 @@ class Monitoring(ApiGroup):
         :param month_threshold: Alarm threshold in % as int number eg.: 90
         :return: dict
         """
-        return self._connection.post('monitoring/start_date_wlan', {
-            'StartDay': start_day,
-            'DataLimit': data_limit,
-            'MonthThreshold': month_threshold,
-            'SettingEnable': 1  #!FIXME
-        })
+        return self._connection.post('monitoring/start_date_wlan', OrderedDict((
+            ('StartDay', start_day),
+            ('DataLimit', data_limit),
+            ('MonthThreshold', month_threshold),
+            ('SettingEnable', 1)  #!FIXME
+        )))
 
     def month_statistics(self) -> dict:
         return self._connection.get('monitoring/month_statistics')

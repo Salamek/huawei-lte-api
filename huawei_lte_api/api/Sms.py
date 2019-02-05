@@ -1,5 +1,5 @@
-from collections import OrderedDict
 import datetime
+from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.AuthorizedConnection import authorized_call
 from huawei_lte_api.enums.sms import BoxTypeEnum, TextModeEnum, SaveModeEnum, SendTypeEnum, PriorityEnum
@@ -50,10 +50,10 @@ class Sms(ApiGroup):
 
     @authorized_call
     def backup_sim(self, from_date: datetime.datetime, is_move: bool=False):
-        return self._connection.post('sms/backup-sim', {
-            'IsMove': int(is_move),
-            'Date': from_date.strftime("%Y-%m-%d %H:%M:%S")
-        })
+        return self._connection.post('sms/backup-sim', OrderedDict((
+            ('IsMove', int(is_move)),
+            ('Date', from_date.strftime("%Y-%m-%d %H:%M:%S"))
+        )))
 
     @authorized_call
     def set_read(self, sms_id: int):
@@ -77,15 +77,15 @@ class Sms(ApiGroup):
             'item_func': lambda x: x[:-1]
         }
 
-        return self._connection.post('sms/save-sms', {
-            'Index': sms_index,
-            'Phones':  phone_numbers,
-            'Sca': sca,
-            'Content': message,
-            'Length': len(message),
-            'Reserved': text_mode.value,
-            'Date': from_date.strftime("%Y-%m-%d %H:%M:%S")
-        }, dicttoxml_xargs=dicttoxml_xargs)
+        return self._connection.post('sms/save-sms', OrderedDict((
+            ('Index', sms_index),
+            ('Phones',  phone_numbers),
+            ('Sca', sca),
+            ('Content', message),
+            ('Length', len(message)),
+            ('Reserved', text_mode.value),
+            ('Date', from_date.strftime("%Y-%m-%d %H:%M:%S"))
+        )), dicttoxml_xargs=dicttoxml_xargs)
 
     @authorized_call
     def send_sms(self,
@@ -103,15 +103,15 @@ class Sms(ApiGroup):
             'item_func': lambda x: x[:-1]
         }
 
-        return self._connection.post('sms/send-sms', {
-            'Index': sms_index,
-            'Phones': phone_numbers,
-            'Sca': sca,
-            'Content': message,
-            'Length': len(message),
-            'Reserved': text_mode.value,
-            'Date': from_date.strftime("%Y-%m-%d %H:%M:%S")
-        }, dicttoxml_xargs=dicttoxml_xargs)
+        return self._connection.post('sms/send-sms', OrderedDict((
+            ('Index', sms_index),
+            ('Phones', phone_numbers),
+            ('Sca', sca),
+            ('Content', message),
+            ('Length', len(message)),
+            ('Reserved', text_mode.value),
+            ('Date', from_date.strftime("%Y-%m-%d %H:%M:%S"))
+        )), dicttoxml_xargs=dicttoxml_xargs)
 
     def cancel_send(self):
         return self._connection.post('sms/cancel-send', {
@@ -133,11 +133,11 @@ class Sms(ApiGroup):
                    send_type: SendTypeEnum=SendTypeEnum.SEND,
                    priority: PriorityEnum=PriorityEnum.NORMAL
                    ):
-        return self._connection.post('sms/config', {
-            'SaveMode': save_mode.value,
-            'Validity': validity,
-            'Sca': sca,
-            'UseSReport': use_s_report,
-            'SendType': send_type.value,
-            'Priority': priority.value
-        })
+        return self._connection.post('sms/config', OrderedDict((
+            ('SaveMode', save_mode.value),
+            ('Validity', validity),
+            ('Sca', sca),
+            ('UseSReport', use_s_report),
+            ('SendType', send_type.value),
+            ('Priority', priority.value)
+        )))

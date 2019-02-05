@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.AuthorizedConnection import authorized_call
 
@@ -29,14 +30,14 @@ class SdCard(ApiGroup):
                         workgroup_name: str = 'WORKGROUP',
                         anonymous_access: bool = False,
                         printer_enabled: bool = True):
-        return self._connection.post('sdcard/sdcardsamba', {
-            'enabled': int(enabled),
-            'servername': server_name,
-            'serverdescription': server_description,
-            'workgroupname': workgroup_name,
-            'anonymousaccess': int(anonymous_access),
-            'printerenable': int(printer_enabled),
-        })
+        return self._connection.post('sdcard/sdcardsamba', OrderedDict((
+            ('enabled', int(enabled)),
+            ('servername', server_name),
+            ('serverdescription', server_description),
+            ('workgroupname', workgroup_name),
+            ('anonymousaccess', int(anonymous_access)),
+            ('printerenable', int(printer_enabled)),
+        )))
 
     def printerlist(self) -> dict:
         return self._connection.get('sdcard/printerlist')

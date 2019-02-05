@@ -1,4 +1,4 @@
-
+from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.AuthorizedConnection import authorized_call
 
@@ -11,11 +11,11 @@ class Net(ApiGroup):
         return self._connection.get('net/net-mode')
 
     def set_net_mode(self, lteband: str, networkband: str, networkmode: str):
-        return self._connection.post('net/net-mode', {
-            'NetworkMode': networkmode,
-            'NetworkBand': networkband,
-            'LTEBand': lteband
-        })
+        return self._connection.post('net/net-mode', OrderedDict((
+            ('NetworkMode', networkmode),
+            ('NetworkBand', networkband),
+            ('LTEBand', lteband)
+        )))
 
     @authorized_call
     def network(self) -> dict:
