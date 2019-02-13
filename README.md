@@ -48,4 +48,4 @@ Result dict
 
 ### SMS
 
-* Relay received SMS into to your email https://github.com/chenwei791129/Huawei-LTE-Router-SMS-to-E-mail-Sender
+* Relay received SMS into your email https://github.com/chenwei791129/Huawei-LTE-Router-SMS-to-E-mail-Sender
