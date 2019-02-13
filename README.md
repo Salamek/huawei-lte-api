@@ -5,6 +5,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 Tested on:
 * Huawei B310s-22
 * Huawei B525s-23a
+* Huawei B525s-65a
 * Huawei E5186s-22a
 
 PS: it is funny how many stuff you can request from modem/router without any authentication
@@ -43,4 +44,8 @@ Result dict
 ## Code examples
 ### Monitoring
 
-Monitoring traffic and signal https://github.com/littlejo/huawei-lte-examples
+* Monitoring traffic and signal https://github.com/littlejo/huawei-lte-examples
+
+### SMS
+
+* Relay received SMS into to your email https://github.com/chenwei791129/Huawei-LTE-Router-SMS-to-E-mail-Sender
