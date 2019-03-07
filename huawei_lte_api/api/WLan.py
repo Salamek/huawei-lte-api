@@ -72,7 +72,13 @@ class WLan(ApiGroup):
 
     @authorized_call
     def host_list(self) -> dict:
-        return self._connection.get('wlan/host-list')
+        # Make sure Hosts->Host is a list
+        # (It may be returned as a single dict if only one is associated)
+        hosts = self._connection.get('wlan/host-list')
+        host = hosts.get('Hosts', {}).get('Host')
+        if isinstance(host, dict):
+            hosts['Hosts']['Host'] = [host]
+        return hosts
 
     def handover_setting(self) -> dict:
         return self._connection.get('wlan/handover-setting')
