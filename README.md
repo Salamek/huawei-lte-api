@@ -6,6 +6,7 @@ Tested on:
 * Huawei B310s-22
 * Huawei B525s-23a
 * Huawei B525s-65a
+* Huawei B715s-23c
 * Huawei E5186s-22a
 
 PS: it is funny how many stuff you can request from modem/router without any authentication
