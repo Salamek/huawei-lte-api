@@ -10,7 +10,8 @@ from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorUsernamePasswordOverrunException, \
     LoginErrorUsernamePasswordWrongException, \
     LoginErrorUsernameWrongException, \
-    LoginErrorPasswordWrongException
+    LoginErrorPasswordWrongException, \
+    ResponseErrorNotSupportedException
 
 
 class User(ApiGroup):
@@ -71,7 +72,11 @@ class User(ApiGroup):
         return result == ResponseEnum.OK.value
 
     def login(self, force_new_login: bool=False) -> bool:
-        state_login = self.state_login()
+        try:
+            state_login = self.state_login()
+        except ResponseErrorNotSupportedException:
+            return True
+
         if LoginStateEnum(int(state_login['State'])) == LoginStateEnum.LOGGED_IN and not force_new_login:
             return True
 
