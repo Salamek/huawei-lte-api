@@ -12,6 +12,17 @@ from huawei_lte_api.exceptions import \
     ResponseErrorLoginCsfrException
 
 
+def _try_or_reload_and_retry(fn):
+    def wrapped(*args, **kw):
+        try:
+            return fn(*args, **kw)
+        except ResponseErrorLoginCsfrException:
+            args[0].reload()
+            return fn(*args, **kw)
+
+    return wrapped
+
+
 class Connection:
     csfr_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
     cookie_jar = None
@@ -82,6 +93,7 @@ class Connection:
     def _build_final_url(self, endpoint: str, prefix: str='api') -> str:
         return urllib.parse.urljoin(self.url + '{}/'.format(prefix), endpoint)
 
+    @_try_or_reload_and_retry
     def post(self,
              endpoint: str,
              data: dict=None,
@@ -125,6 +137,7 @@ class Connection:
 
         return data
 
+    @_try_or_reload_and_retry
     def get(self, endpoint: str, params: dict=None, prefix: str='api') -> dict:
         headers = {}
         if len(self.request_verification_tokens) == 1:
