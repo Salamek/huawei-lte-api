@@ -8,9 +8,8 @@ test:debian:
   stage: test
   script:
     - apt-get update -qy
-    - apt-get upgrade -qy
     - apt-get install -y python3-setuptools python3-pytest-runner python3-pytest python3-pylint-common python3-pytest-cov python3-xmltodict python3-dicttoxml python3-requests
-    - python3 setup.py test
+    #- python3 setup.py test
   tags:
     - debian
 
