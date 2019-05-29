@@ -9,6 +9,9 @@ Tested on:
 * Huawei B715s-23c
 * Huawei E5186s-22a
 
+Will NOT work on:
+* Huawei B2368-22 (Incompatible firmware, testing device needed!)
+
 PS: it is funny how many stuff you can request from modem/router without any authentication
 
 ## Installation
