@@ -7,3 +7,6 @@ class DialUp(ApiGroup):
 
     def connectmode(self):
         return self._connection.get('dialup/connectmode.xml', prefix='config')
+
+    def profileswitch(self):
+        return self._connection.get('dialup/profileswitch.xml', prefix='config')

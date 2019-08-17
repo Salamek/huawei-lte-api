@@ -115,6 +115,7 @@ dump("client.config_device_information.config")
 
 dump("client.config_dialup.config")
 dump("client.config_dialup.connectmode")
+dump("client.config_dialup.profileswitch")
 
 dump("client.config_global.languagelist")
 dump("client.config_global.config")
