@@ -48,7 +48,7 @@ class Connection:
 
     @staticmethod
     def _process_response_xml(xml: str) -> dict:
-        return xmltodict.parse(xml, dict_constructor=dict)
+        return xmltodict.parse(xml, dict_constructor=dict) if xml else {}
 
     @staticmethod
     def _check_response_status(data: dict):
