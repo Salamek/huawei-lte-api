@@ -1,4 +1,5 @@
 import datetime
+from typing import Optional
 from urllib.parse import urlparse
 from huawei_lte_api.Connection import Connection
 from huawei_lte_api.ApiGroup import ApiGroup
@@ -25,7 +26,8 @@ class AuthorizedConnection(Connection):
     login_time = None
     logged_in = False
 
-    def __init__(self, url: str, username: str=None, password: str=None, login_on_demand: bool=False):
+    def __init__(self, url: str, username: Optional[str]=None, password: Optional[str]=None,
+                 login_on_demand: bool=False):
         super(AuthorizedConnection, self).__init__(url)
         parsed_url = urlparse(url)
 

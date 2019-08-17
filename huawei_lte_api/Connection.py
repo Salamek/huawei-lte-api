@@ -1,5 +1,6 @@
 import logging
 import re
+from typing import Dict, List, Optional, Type
 import urllib.parse
 import dicttoxml
 import xmltodict
@@ -29,7 +30,7 @@ def _try_or_reload_and_retry(fn):
 class Connection:
     csrf_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
     cookie_jar = None
-    request_verification_tokens = []
+    request_verification_tokens = []  # type: List[str]
 
     def __init__(self, url: str):
         if not url.endswith('/'):
@@ -41,24 +42,24 @@ class Connection:
         self._initialize_csrf_tokens_and_session()
 
     @staticmethod
-    def _create_request_xml(data: dict, dicttoxml_xargs: dict=None) -> str:
+    def _create_request_xml(data: dict, dicttoxml_xargs: Optional[dict]=None) -> str:
         if not dicttoxml_xargs:
             dicttoxml_xargs = {}
         return dicttoxml.dicttoxml(data, custom_root='request', **dicttoxml_xargs)
 
     @staticmethod
-    def _process_response_xml(xml: str) -> dict:
+    def _process_response_xml(xml: bytes) -> dict:
         return xmltodict.parse(xml, dict_constructor=dict) if xml else {}
 
     @staticmethod
-    def _check_response_status(data: dict):
+    def _check_response_status(data: dict) -> dict:
         error_code_to_message = {
             ResponseCodeEnum.ERROR_SYSTEM_BUSY: 'System busy',
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: 'No rights (needs login)',
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: 'No support',
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN: 'Unknown',
             ResponseCodeEnum.ERROR_SYSTEM_CSRF: 'Session error'
-        }
+        }  # type: Dict[int, str]
 
         error_code_to_exception = {
             ResponseCodeEnum.ERROR_SYSTEM_BUSY: ResponseErrorSystemBusyException,
@@ -66,7 +67,7 @@ class Connection:
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: ResponseErrorNotSupportedException,
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN:  ResponseErrorException,
             ResponseCodeEnum.ERROR_SYSTEM_CSRF: ResponseErrorLoginCsrfException
-        }
+        }  # type: Dict[int, Type[ResponseErrorException]]
         if 'error' in data:
             error_code = int(data['error']['code'])
             if not data['error']['message']:
@@ -101,10 +102,10 @@ class Connection:
     @_try_or_reload_and_retry
     def post(self,
              endpoint: str,
-             data: dict=None,
+             data: Optional[dict]=None,
              refresh_csrf: bool=False,
              prefix: str='api',
-             dicttoxml_xargs: dict=None
+             dicttoxml_xargs: Optional[dict]=None
              ) -> dict:
 
         headers = {
@@ -144,7 +145,7 @@ class Connection:
         return data
 
     @_try_or_reload_and_retry
-    def get(self, endpoint: str, params: dict=None, prefix: str='api') -> dict:
+    def get(self, endpoint: str, params: Optional[dict]=None, prefix: str='api') -> dict:
         headers = {}
         if len(self.request_verification_tokens) == 1:
             headers['__RequestVerificationToken'] = self.request_verification_tokens[0]

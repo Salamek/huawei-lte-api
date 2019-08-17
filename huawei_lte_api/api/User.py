@@ -1,5 +1,6 @@
 import base64
 import hashlib
+from typing import Optional
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
 from huawei_lte_api.ApiGroup import ApiGroup
@@ -18,7 +19,7 @@ class User(ApiGroup):
     _username = 'admin'
     _password = None
 
-    def __init__(self, connection, username: str=None, password: str=None):
+    def __init__(self, connection, username: Optional[str]=None, password: Optional[str]=None):
         super(User, self).__init__(connection)
         self._username = username if username else 'admin'
         self._password = password
