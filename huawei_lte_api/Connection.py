@@ -10,7 +10,7 @@ from huawei_lte_api.exceptions import \
     ResponseErrorLoginRequiredException, \
     ResponseErrorNotSupportedException, \
     ResponseErrorSystemBusyException, \
-    ResponseErrorLoginCsfrException
+    ResponseErrorLoginCsrfException
 
 
 _LOGGER = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def _try_or_reload_and_retry(fn):
     def wrapped(*args, **kw):
         try:
             return fn(*args, **kw)
-        except ResponseErrorLoginCsfrException:
+        except ResponseErrorLoginCsrfException:
             args[0].reload()
             return fn(*args, **kw)
 
@@ -27,7 +27,7 @@ def _try_or_reload_and_retry(fn):
 
 
 class Connection:
-    csfr_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
+    csrf_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
     cookie_jar = None
     request_verification_tokens = []
 
@@ -35,10 +35,10 @@ class Connection:
         if not url.endswith('/'):
             raise Exception('URL must end with /')
         self.url = url
-        self._initialize_csfr_tokens_and_session()
+        self._initialize_csrf_tokens_and_session()
 
     def reload(self):
-        self._initialize_csfr_tokens_and_session()
+        self._initialize_csrf_tokens_and_session()
 
     @staticmethod
     def _create_request_xml(data: dict, dicttoxml_xargs: dict=None) -> str:
@@ -57,7 +57,7 @@ class Connection:
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: 'No rights (needs login)',
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: 'No support',
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN: 'Unknown',
-            ResponseCodeEnum.ERROR_SYSTEM_CSFR: 'Session error'
+            ResponseCodeEnum.ERROR_SYSTEM_CSRF: 'Session error'
         }
 
         error_code_to_exception = {
@@ -65,7 +65,7 @@ class Connection:
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: ResponseErrorLoginRequiredException,
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: ResponseErrorNotSupportedException,
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN:  ResponseErrorException,
-            ResponseCodeEnum.ERROR_SYSTEM_CSFR: ResponseErrorLoginCsfrException
+            ResponseCodeEnum.ERROR_SYSTEM_CSRF: ResponseErrorLoginCsrfException
         }
         if 'error' in data:
             error_code = int(data['error']['code'])
@@ -80,16 +80,16 @@ class Connection:
 
         return data['response'] if 'response' in data else data
 
-    def _initialize_csfr_tokens_and_session(self):
+    def _initialize_csrf_tokens_and_session(self):
         # Reset
         self.request_verification_tokens = []
 
         response = requests.get(self.url)
         self.cookie_jar = response.cookies
 
-        csfr_tokens = self.csfr_re.findall(response.content.decode('UTF-8'))
-        if csfr_tokens:
-            self.request_verification_tokens = csfr_tokens
+        csrf_tokens = self.csrf_re.findall(response.content.decode('UTF-8'))
+        if csrf_tokens:
+            self.request_verification_tokens = csrf_tokens
         else:
             token = self._get_token()
             if token is not None:
@@ -102,7 +102,7 @@ class Connection:
     def post(self,
              endpoint: str,
              data: dict=None,
-             refresh_csfr: bool=False,
+             refresh_csrf: bool=False,
              prefix: str='api',
              dicttoxml_xargs: dict=None
              ) -> dict:
@@ -129,7 +129,7 @@ class Connection:
 
         data = self._check_response_status(self._process_response_xml(response.content))
 
-        if refresh_csfr:
+        if refresh_csrf:
             self.request_verification_tokens = []
 
         if '__RequestVerificationTokenone' in response.headers:
@@ -139,7 +139,7 @@ class Connection:
         elif '__RequestVerificationToken' in response.headers:
             self.request_verification_tokens.append(response.headers['__RequestVerificationToken'])
         else:
-            _LOGGER.debug('Failed to get CSFR from POST response headers')
+            _LOGGER.debug('Failed to get CSRF from POST response headers')
 
         return data
 

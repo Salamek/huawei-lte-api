@@ -45,7 +45,7 @@ class User(ApiGroup):
                 'Username': self._username,
                 'Password': password.decode('UTF-8'),
                 'password_type': password_type.value
-            }, refresh_csfr=True)
+            }, refresh_csrf=True)
         except ResponseErrorException as e:
             error_code_to_message = {
                 LoginErrorEnum.USERNAME_WRONG: 'Username wrong',
