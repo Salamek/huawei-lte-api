@@ -7,6 +7,7 @@ Tested on:
 * Huawei B525s-23a
 * Huawei B525s-65a
 * Huawei B715s-23c
+* Huawei E3131
 * Huawei E5186s-22a
 
 Will NOT work on:
