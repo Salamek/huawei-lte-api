@@ -33,6 +33,8 @@ from huawei_lte_api.api.Vpn import Vpn
 from huawei_lte_api.api.Ntwk import Ntwk
 from huawei_lte_api.api.Global import Global as Global_
 from huawei_lte_api.api.Pb import Pb
+from huawei_lte_api.api.Host import Host
+from huawei_lte_api.api.Language import Language
 
 
 class Client:
@@ -71,3 +73,5 @@ class Client:
         self.vpn = Vpn(connection)
         self.ntwk = Ntwk(connection)
         self.pb = Pb(connection)
+        self.host = Host(connection)
+        self.language = Language(connection)
