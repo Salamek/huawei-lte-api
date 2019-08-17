@@ -144,3 +144,7 @@ class WLan(ApiGroup):
     @authorized_call
     def wps_switch(self) -> dict:
         return self._connection.get('wlan/wps-switch')
+
+    @authorized_call
+    def status_switch_settings(self) -> dict:
+        return self._connection.get('wlan/status-switch-settings')

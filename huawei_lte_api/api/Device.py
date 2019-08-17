@@ -54,3 +54,7 @@ class Device(ApiGroup):
 
     def antenna_type(self) -> dict:
         return self._connection.get('device/antenna_type')
+
+    @authorized_call
+    def antenna_set_type(self) -> dict:
+        return self._connection.get('device/antenna_set_type')

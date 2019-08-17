@@ -101,3 +101,18 @@ class User(ApiGroup):
         return self._connection.post('user/remind', {
             'remindstate': remind_state
         })
+
+    @authorized_call
+    def authentication_login(self) -> dict:
+        return self._connection.get('user/authentication_login')
+
+    @authorized_call
+    def challenge_login(self) -> dict:
+        return self._connection.get('user/challenge_login')
+
+    def hilink_login(self) -> dict:
+        return self._connection.get('user/hilink_login')
+
+    @authorized_call
+    def history_login(self) -> dict:
+        return self._connection.get('user/history-login')

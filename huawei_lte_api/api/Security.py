@@ -75,3 +75,22 @@ class Security(ApiGroup):
             ('SipStatus', int(enabled)),
             ('SipPort', port)
         )))
+
+    def feature_switch(self) -> dict:
+        return self._connection.get('security/feature-switch')
+
+    @authorized_call
+    def nat(self) -> dict:
+        return self._connection.get('security/nat')
+
+    @authorized_call
+    def special_applications(self) -> dict:
+        return self._connection.get('security/special-applications')
+
+    @authorized_call
+    def white_lan_ip_filter(self) -> dict:
+        return self._connection.get('security/white-lan-ip-filter')
+
+    @authorized_call
+    def white_url_filter(self) -> dict:
+        return self._connection.get('security/white-url-filter')

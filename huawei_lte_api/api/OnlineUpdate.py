@@ -44,3 +44,6 @@ class OnlineUpdate(ApiGroup):
 
     def autoupdate_config(self) -> dict:
         return self._connection.get('online-update/autoupdate-config')
+
+    def redirect_cancel(self) -> dict:
+        return self._connection.get('online-update/redirect_cancel')
