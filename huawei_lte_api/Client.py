@@ -7,8 +7,14 @@ from huawei_lte_api.api.WebServer import WebServer
 from huawei_lte_api.api.WLan import WLan
 from huawei_lte_api.api.Cradle import Cradle
 from huawei_lte_api.api.Pin import Pin
+from huawei_lte_api.config.DialUp import DialUp as DialUpConfig
 from huawei_lte_api.config.Global import Global
+from huawei_lte_api.config.Lan import Lan as LanConfig
+from huawei_lte_api.config.Network import Network as NetworkConfig
+from huawei_lte_api.config.Pincode import Pincode as PincodeConfig
+from huawei_lte_api.config.Sms import Sms as SmsConfig
 from huawei_lte_api.config.Voice import Voice
+from huawei_lte_api.config.Wifi import Wifi as WifiConfig
 from huawei_lte_api.config.PcAssistant import PcAssistant
 from huawei_lte_api.config.DeviceInformation import DeviceInformation
 from huawei_lte_api.config.WebUICfg import WebUICfg
@@ -46,8 +52,14 @@ class Client:
         self.wlan = WLan(connection)
         self.cradle = Cradle(connection)
         self.pin = Pin(connection)
+        self.config_dialup = DialUpConfig(connection)
         self.config_global = Global(connection)
+        self.config_lan = LanConfig(connection)
+        self.config_network = NetworkConfig(connection)
+        self.config_pincode = PincodeConfig(connection)
+        self.config_sms = SmsConfig(connection)
         self.config_voice = Voice(connection)
+        self.config_wifi = WifiConfig(connection)
         self.config_pc_assistant = PcAssistant(connection)
         self.config_device_information = DeviceInformation(connection)
         self.config_web_ui_cfg = WebUICfg(connection)
