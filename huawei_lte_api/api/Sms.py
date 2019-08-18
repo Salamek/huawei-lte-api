@@ -1,5 +1,6 @@
 import datetime
 from collections import OrderedDict
+from typing import Optional
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.AuthorizedConnection import authorized_call
 from huawei_lte_api.enums.sms import BoxTypeEnum, TextModeEnum, SaveModeEnum, SendTypeEnum, PriorityEnum
@@ -68,7 +69,7 @@ class Sms(ApiGroup):
                  sms_index: int=-1,
                  sca: str='',
                  text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
-                 from_date: datetime.datetime=None,
+                 from_date: Optional[datetime.datetime]=None,
                  ):
 
         if from_date is None:
@@ -94,7 +95,7 @@ class Sms(ApiGroup):
                  sms_index: int=-1,
                  sca: str='',
                  text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
-                 from_date: datetime.datetime=None,
+                 from_date: Optional[datetime.datetime]=None,
                  ):
 
         if from_date is None:

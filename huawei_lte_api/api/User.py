@@ -1,5 +1,6 @@
 import base64
 import hashlib
+from typing import Optional
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
 from huawei_lte_api.ApiGroup import ApiGroup
@@ -18,7 +19,7 @@ class User(ApiGroup):
     _username = 'admin'
     _password = None
 
-    def __init__(self, connection, username: str=None, password: str=None):
+    def __init__(self, connection, username: Optional[str]=None, password: Optional[str]=None):
         super(User, self).__init__(connection)
         self._username = username if username else 'admin'
         self._password = password
@@ -45,7 +46,7 @@ class User(ApiGroup):
                 'Username': self._username,
                 'Password': password.decode('UTF-8'),
                 'password_type': password_type.value
-            }, refresh_csfr=True)
+            }, refresh_csrf=True)
         except ResponseErrorException as e:
             error_code_to_message = {
                 LoginErrorEnum.USERNAME_WRONG: 'Username wrong',
@@ -101,3 +102,18 @@ class User(ApiGroup):
         return self._connection.post('user/remind', {
             'remindstate': remind_state
         })
+
+    @authorized_call
+    def authentication_login(self) -> dict:
+        return self._connection.get('user/authentication_login')
+
+    @authorized_call
+    def challenge_login(self) -> dict:
+        return self._connection.get('user/challenge_login')
+
+    def hilink_login(self) -> dict:
+        return self._connection.get('user/hilink_login')
+
+    @authorized_call
+    def history_login(self) -> dict:
+        return self._connection.get('user/history-login')
