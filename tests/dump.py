@@ -123,6 +123,7 @@ dump("client.config_global.net_type")
 
 dump("client.config_lan.config")
 
+dump("client.config_network.config")
 dump("client.config_network.net_mode")
 dump("client.config_network.networkmode")
 
@@ -215,6 +216,14 @@ dump("client.vpn.pptp_settings")
 dump("client.ntwk.lan_upnp_portmapping")
 
 dump("client.pb.get_pb_list")
+
+dump("client.syslog.querylog")
+
+dump("client.voice.featureswitch")
+dump("client.voice.sipaccount")
+dump("client.voice.sipadvance")
+dump("client.voice.sipserver")
+dump("client.voice.speeddial")
 
 if isinstance(connection, AuthorizedConnection):
     client.user.logout()

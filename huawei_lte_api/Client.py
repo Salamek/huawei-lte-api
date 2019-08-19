@@ -41,6 +41,8 @@ from huawei_lte_api.api.Global import Global as Global_
 from huawei_lte_api.api.Pb import Pb
 from huawei_lte_api.api.Host import Host
 from huawei_lte_api.api.Language import Language
+from huawei_lte_api.api.Syslog import Syslog
+from huawei_lte_api.api.Voice import Voice as Voice_
 
 
 class Client:
@@ -87,3 +89,5 @@ class Client:
         self.pb = Pb(connection)
         self.host = Host(connection)
         self.language = Language(connection)
+        self.syslog = Syslog(connection)
+        self.voice = Voice_(connection)
