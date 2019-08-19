@@ -7,3 +7,6 @@ class Network(ApiGroup):
 
     def networkmode(self):
         return self._connection.get('network/networkmode.xml', prefix='config')
+
+    def config(self):
+        return self._connection.get('network/config.xml', prefix='config')
