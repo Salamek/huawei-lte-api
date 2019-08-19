@@ -79,7 +79,8 @@ class Connection:
                 error_code
             )
 
-        return data['response'] if 'response' in data else data
+        response = data['response'] if 'response' in data else data
+        return response if response is not None else {}
 
     def _initialize_csrf_tokens_and_session(self):
         # Reset
