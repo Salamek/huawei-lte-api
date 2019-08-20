@@ -8,3 +8,6 @@ class Pin(ApiGroup):
 
     def simlock(self) -> dict:
         return self._connection.get('pin/simlock')
+
+    def save_pin(self) -> dict:
+        return self._connection.get('pin/save-pin')

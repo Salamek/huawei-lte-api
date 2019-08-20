@@ -10,3 +10,6 @@ class DialUp(ApiGroup):
 
     def profileswitch(self):
         return self._connection.get('dialup/profileswitch.xml', prefix='config')
+
+    def lmt_auto_mode_disconnect(self):
+        return self._connection.get('dialup/lmt_auto_mode_disconnect.xml', prefix='config')

@@ -132,3 +132,6 @@ class Sms(ApiGroup):
             ('SendType', send_type.value),
             ('Priority', priority.value)
         )))
+
+    def sms_count_contact(self) -> dict:
+        return self._connection.get('sms/sms-count-contact')

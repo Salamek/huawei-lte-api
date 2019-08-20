@@ -7,3 +7,6 @@ class Wifi(ApiGroup):
 
     def country_channel(self):
         return self._connection.get('wifi/countryChannel.xml', prefix='config')
+
+    def channel_auto_match_hardware(self):
+        return self._connection.get('wifi/channelAutoMatchHardware.xml', prefix='config')

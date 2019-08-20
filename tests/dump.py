@@ -37,6 +37,7 @@ dump(client.device.information)
 dump(client.device.autorun_version)
 dump(client.device.device_feature_switch)
 dump(client.device.basic_information)
+dump(client.device.basicinformation)
 dump(client.device.usb_tethering_switch)
 dump(client.device.boot_time)
 dump(client.device.signal)
@@ -51,6 +52,8 @@ dump(client.user.authentication_login)
 dump(client.user.challenge_login)
 dump(client.user.hilink_login)
 dump(client.user.history_login)
+dump(client.user.heartbeat)
+dump(client.user.web_feature_switch)
 
 dump(client.monitoring.converged_status)
 dump(client.monitoring.status)
@@ -91,6 +94,7 @@ dump(client.wlan.host_list)
 dump(client.wlan.handover_setting)
 dump(client.wlan.multi_switch_settings)
 dump(client.wlan.multi_macfilter_settings)
+dump(client.wlan.multi_macfilter_settings_ex)
 dump(client.wlan.mac_filter)
 dump(client.wlan.oled_showpassword)
 dump(client.wlan.wps)
@@ -107,6 +111,7 @@ dump(client.cradle.mac_info)
 
 dump(client.pin.status)
 dump(client.pin.simlock)
+dump(client.pin.save_pin)
 
 dump(client.language.current_language)
 
@@ -115,6 +120,7 @@ dump(client.config_device_information.config)
 dump(client.config_dialup.config)
 dump(client.config_dialup.connectmode)
 dump(client.config_dialup.profileswitch)
+dump(client.config_dialup.lmt_auto_mode_disconnect)
 
 dump(client.config_global.languagelist)
 dump(client.config_global.config)
@@ -125,6 +131,7 @@ dump(client.config_lan.config)
 dump(client.config_network.config)
 dump(client.config_network.net_mode)
 dump(client.config_network.networkmode)
+dump(client.config_network.networkband_null)
 
 dump(client.config_pc_assistant.config)
 
@@ -138,6 +145,7 @@ dump(client.config_web_ui_cfg.config)
 
 dump(client.config_wifi.configure)
 dump(client.config_wifi.country_channel)
+dump(client.config_wifi.channel_auto_match_hardware)
 
 dump(client.ota.status)
 
@@ -148,6 +156,8 @@ dump(client.net.register)
 dump(client.net.net_mode_list)
 # DoS? dump(client.net.plmn_list)
 dump(client.net.net_feature_switch)
+dump(client.net.cell_info)
+dump(client.net.csps_state)
 
 dump(client.dial_up.mobile_dataswitch)
 dump(client.dial_up.connection)
@@ -160,6 +170,7 @@ dump(client.sms.sms_count)
 dump(client.sms.send_status)
 dump(client.sms.get_sms_list)
 dump(client.sms.config)
+dump(client.sms.sms_count_contact)
 
 dump(client.redirection.homepage)
 
@@ -213,6 +224,7 @@ dump(client.vpn.l2tp_settings)
 dump(client.vpn.pptp_settings)
 
 dump(client.ntwk.lan_upnp_portmapping)
+dump(client.ntwk.celllock)
 
 dump(client.pb.get_pb_list)
 
@@ -223,6 +235,18 @@ dump(client.voice.sipaccount)
 dump(client.voice.sipadvance)
 dump(client.voice.sipserver)
 dump(client.voice.speeddial)
+dump(client.voice.functioncode)
+dump(client.voice.voiceadvance)
+
+dump(client.cwmp.basic_info)
+
+dump(client.lan.host_info)
+
+dump(client.led.nightmode)
+
+dump(client.statistic.feature_roam_statistic)
+
+dump(client.timerule.timerule)
 
 if isinstance(connection, AuthorizedConnection):
     client.user.logout()

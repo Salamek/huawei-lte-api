@@ -10,3 +10,6 @@ class Network(ApiGroup):
 
     def config(self):
         return self._connection.get('network/config.xml', prefix='config')
+
+    def networkband_null(self):
+        return self._connection.get('network/networkband_null.xml', prefix='config')
