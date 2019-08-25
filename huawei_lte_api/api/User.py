@@ -4,7 +4,6 @@ from typing import Optional
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.AuthorizedConnection import authorized_call
 from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorAlreadyLoginException, \
     LoginErrorUsernamePasswordModifyException, \
@@ -83,7 +82,6 @@ class User(ApiGroup):
 
         return self._login(PasswordTypeEnum(int(state_login['password_type'])))
 
-    @authorized_call
     def logout(self):
         return self._connection.post('user/logout', {
             'Logout': 1
@@ -103,17 +101,14 @@ class User(ApiGroup):
             'remindstate': remind_state
         })
 
-    @authorized_call
     def authentication_login(self) -> dict:
         return self._connection.get('user/authentication_login')
 
-    @authorized_call
     def challenge_login(self) -> dict:
         return self._connection.get('user/challenge_login')
 
     def hilink_login(self) -> dict:
         return self._connection.get('user/hilink_login')
 
-    @authorized_call
     def history_login(self) -> dict:
         return self._connection.get('user/history-login')

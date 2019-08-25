@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.AuthorizedConnection import authorized_call
 
 
 class Net(ApiGroup):
@@ -17,7 +16,6 @@ class Net(ApiGroup):
             ('LTEBand', lteband)
         )))
 
-    @authorized_call
     def network(self) -> dict:
         return self._connection.get('net/network')
 
