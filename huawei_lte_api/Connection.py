@@ -33,9 +33,9 @@ class Connection:
     request_verification_tokens = []  # type: List[str]
 
     def __init__(self, url: str):
-        if not url.endswith('/'):
-            raise Exception('URL must end with /')
         self.url = url
+        if not self.url.endswith('/'):
+            self.url += '/'
         self._initialize_csrf_tokens_and_session()
 
     def reload(self):
