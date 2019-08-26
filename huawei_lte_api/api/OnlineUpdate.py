@@ -1,12 +1,10 @@
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.AuthorizedConnection import authorized_call
 
 
 class OnlineUpdate(ApiGroup):
     def check_new_version(self) -> dict:
         return self._connection.get('online-update/check-new-version')
 
-    @authorized_call
     def set_check_new_version(self) -> dict:
         return self._connection.post('online-update/check-new-version')
 
@@ -38,7 +36,6 @@ class OnlineUpdate(ApiGroup):
             'messagebox': messagebox
         })
 
-    @authorized_call
     def configuration(self) -> dict:
         return self._connection.get('online-update/configuration')
 

@@ -1,10 +1,8 @@
 from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.AuthorizedConnection import authorized_call
 
 
 class Pb(ApiGroup):
-    @authorized_call
     def get_pb_match(self, phone_number: str) -> dict:
         """
     Find number in PhoneBook
@@ -15,7 +13,6 @@ class Pb(ApiGroup):
             'Phone': phone_number
         })
 
-    @authorized_call
     def get_pb_list(self,
                     page: int = 1,
                     key_word: str='',

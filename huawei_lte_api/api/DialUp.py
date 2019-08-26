@@ -1,6 +1,4 @@
-
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.AuthorizedConnection import authorized_call
 
 
 class DialUp(ApiGroup):
@@ -17,7 +15,6 @@ class DialUp(ApiGroup):
     def dialup_feature_switch(self) -> dict:
         return self._connection.get('dialup/dialup-feature-switch')
 
-    @authorized_call
     def profiles(self) -> dict:
         return self._connection.get('dialup/profiles')
 

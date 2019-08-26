@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.AuthorizedConnection import authorized_call
 
 
 class SdCard(ApiGroup):
@@ -8,7 +7,6 @@ class SdCard(ApiGroup):
     def dlna_setting(self) -> dict:
         return self._connection.get('sdcard/dlna-setting')
 
-    @authorized_call
     def set_dlna_setting(self, enabled: bool, share_all: bool,
                          share_path: str = '/'):
         return self._connection.post('sdcard/dlna-setting', {
@@ -23,7 +21,6 @@ class SdCard(ApiGroup):
     def sdcardsamba(self) -> dict:
         return self._connection.get('sdcard/sdcardsamba')
 
-    @authorized_call
     def set_sdcardsamba(self, enabled: bool,
                         server_name: str = 'homerouter.cpe',
                         server_description: str = 'samba server',
@@ -42,6 +39,5 @@ class SdCard(ApiGroup):
     def printerlist(self) -> dict:
         return self._connection.get('sdcard/printerlist')
 
-    @authorized_call
     def share_account(self) -> dict:
         return self._connection.get('sdcard/share-account')
