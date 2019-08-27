@@ -32,6 +32,7 @@ def dump(method: Callable[[], Any]) -> None:
         pprint.pprint(method())
     except Exception as e:
         print(str(e))
+    print("")
 
 dump(client.device.information)
 dump(client.device.autorun_version)
