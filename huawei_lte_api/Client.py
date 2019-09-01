@@ -43,6 +43,11 @@ from huawei_lte_api.api.Host import Host
 from huawei_lte_api.api.Language import Language
 from huawei_lte_api.api.Syslog import Syslog
 from huawei_lte_api.api.Voice import Voice as Voice_
+from huawei_lte_api.api.Cwmp import Cwmp
+from huawei_lte_api.api.Lan import Lan
+from huawei_lte_api.api.Led import Led
+from huawei_lte_api.api.Statistic import Statistic
+from huawei_lte_api.api.TimeRule import TimeRule
 
 
 class Client:
@@ -91,3 +96,8 @@ class Client:
         self.language = Language(connection)
         self.syslog = Syslog(connection)
         self.voice = Voice_(connection)
+        self.cwmp = Cwmp(connection)
+        self.lan = Lan(connection)
+        self.led = Led(connection)
+        self.statistic = Statistic(connection)
+        self.timerule = TimeRule(connection)

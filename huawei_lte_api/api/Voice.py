@@ -16,3 +16,9 @@ class Voice(ApiGroup):
 
     def speeddial(self) -> dict:
         return self._connection.get('voice/speeddial')
+
+    def functioncode(self) -> dict:
+        return self._connection.get('voice/functioncode')
+
+    def voiceadvance(self) -> dict:
+        return self._connection.get('voice/voiceadvance')

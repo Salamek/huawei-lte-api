@@ -103,6 +103,9 @@ class WLan(ApiGroup):
             }
         })
 
+    def multi_macfilter_settings_ex(self) -> dict:
+        return self._connection.get('wlan/multi-macfilter-settings-ex')
+
     def mac_filter(self) -> dict:
         return self._connection.get('wlan/mac-filter')
 

@@ -15,6 +15,9 @@ class Device(ApiGroup):
     def basic_information(self) ->dict:
         return self._connection.get('device/basic_information')
 
+    def basicinformation(self) ->dict:
+        return self._connection.get('device/basicinformation')
+
     def usb_tethering_switch(self) ->dict:
         return self._connection.get('device/usb-tethering-switch')
 

@@ -23,6 +23,9 @@ class OnlineUpdate(ApiGroup):
         })
 
     def cancel_downloading(self) -> dict:
+        """
+        Invoking this method is known to cause some devices to reboot.
+        """
         return self._connection.get('online-update/cancel-downloading')
 
     def set_cancel_downloading(self):

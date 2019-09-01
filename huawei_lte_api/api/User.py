@@ -112,3 +112,9 @@ class User(ApiGroup):
 
     def history_login(self) -> dict:
         return self._connection.get('user/history-login')
+
+    def heartbeat(self) -> dict:
+        return self._connection.get('user/heartbeat')
+
+    def web_feature_switch(self) -> dict:
+        return self._connection.get('user/web-feature-switch')

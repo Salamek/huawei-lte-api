@@ -48,8 +48,19 @@ class Connection:
         return dicttoxml.dicttoxml(data, custom_root='request', **dicttoxml_xargs)
 
     @staticmethod
-    def _process_response_xml(xml: bytes) -> dict:
-        return xmltodict.parse(xml, dict_constructor=dict) if xml else {}
+    def _process_response_xml(response: requests.Response) -> dict:
+        # In some cases unsupported methods, e.g. in config namespace,
+        # respond with a redirect to the home page, which may not
+        # parse as XML (even though it's labeled XHTML). Try to detect
+        # such cases, and return a generated "not supported" error
+        # instead of letting the XML parse error pass through.
+        xml = response.content
+        try:
+            return xmltodict.parse(xml, dict_constructor=dict) if xml else {}
+        except:
+            if response.history:
+                return dict(error=dict(code=ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT, message=''))
+            raise
 
     @staticmethod
     def _check_response_status(data: dict) -> dict:
@@ -129,7 +140,7 @@ class Connection:
         if response.cookies:
             self.cookie_jar = response.cookies
 
-        data = self._check_response_status(self._process_response_xml(response.content))
+        data = self._check_response_status(self._process_response_xml(response))
 
         if refresh_csrf:
             self.request_verification_tokens = []
@@ -158,7 +169,7 @@ class Connection:
             cookies=self.cookie_jar
         )
 
-        return self._check_response_status(self._process_response_xml(response.content))
+        return self._check_response_status(self._process_response_xml(response))
 
     def _get_token(self):
         try:
