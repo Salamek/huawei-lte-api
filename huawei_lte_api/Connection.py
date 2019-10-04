@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Dict, List, Optional, Type
+from typing import Dict, List, Optional, Tuple, Type, Union
 import urllib.parse
 import dicttoxml
 import xmltodict
@@ -32,8 +32,9 @@ class Connection:
     cookie_jar = None
     request_verification_tokens = []  # type: List[str]
 
-    def __init__(self, url: str):
+    def __init__(self, url: str, timeout: Union[float, Tuple[float, float], None] = None):
         self.url = url
+        self.timeout = timeout
         if not self.url.endswith('/'):
             self.url += '/'
         self._initialize_csrf_tokens_and_session()
@@ -97,7 +98,7 @@ class Connection:
         # Reset
         self.request_verification_tokens = []
 
-        response = requests.get(self.url)
+        response = requests.get(self.url, timeout=self.timeout)
         self.cookie_jar = response.cookies
 
         csrf_tokens = self.csrf_re.findall(response.content.decode('UTF-8'))
@@ -133,7 +134,8 @@ class Connection:
             self._build_final_url(endpoint, prefix),
             self._create_request_xml(data, dicttoxml_xargs) if data else '',
             headers=headers,
-            cookies=self.cookie_jar
+            cookies=self.cookie_jar,
+            timeout=self.timeout,
         )
         response.raise_for_status()
 
@@ -166,7 +168,8 @@ class Connection:
             self._build_final_url(endpoint, prefix),
             params,
             headers=headers,
-            cookies=self.cookie_jar
+            cookies=self.cookie_jar,
+            timeout=self.timeout,
         )
 
         return self._check_response_status(self._process_response_xml(response))
