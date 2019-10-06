@@ -29,10 +29,10 @@ def _try_or_reload_and_retry(fn):
 
 class Connection:
     csrf_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
-    cookie_jar = None
     request_verification_tokens = []  # type: List[str]
 
     def __init__(self, url: str, timeout: Union[float, Tuple[float, float], None] = None):
+        self.session = requests.Session()
         self.url = url
         self.timeout = timeout
         if not self.url.endswith('/'):
@@ -98,8 +98,7 @@ class Connection:
         # Reset
         self.request_verification_tokens = []
 
-        response = requests.get(self.url, timeout=self.timeout)
-        self.cookie_jar = response.cookies
+        response = self.session.get(self.url, timeout=self.timeout)
 
         csrf_tokens = self.csrf_re.findall(response.content.decode('UTF-8'))
         if csrf_tokens:
@@ -130,17 +129,13 @@ class Connection:
             else:
                 headers['__RequestVerificationToken'] = self.request_verification_tokens[0]
 
-        response = requests.post(
+        response = self.session.post(
             self._build_final_url(endpoint, prefix),
-            self._create_request_xml(data, dicttoxml_xargs) if data else '',
+            data=self._create_request_xml(data, dicttoxml_xargs) if data else '',
             headers=headers,
-            cookies=self.cookie_jar,
             timeout=self.timeout,
         )
         response.raise_for_status()
-
-        if response.cookies:
-            self.cookie_jar = response.cookies
 
         data = self._check_response_status(self._process_response_xml(response))
 
@@ -164,11 +159,10 @@ class Connection:
         if len(self.request_verification_tokens) == 1:
             headers['__RequestVerificationToken'] = self.request_verification_tokens[0]
 
-        response = requests.get(
+        response = self.session.get(
             self._build_final_url(endpoint, prefix),
-            params,
+            params=params,
             headers=headers,
-            cookies=self.cookie_jar,
             timeout=self.timeout,
         )
 
