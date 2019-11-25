@@ -64,9 +64,12 @@ class WLan(ApiGroup):
 
     def host_list(self) -> dict:
         # Make sure Hosts->Host is a list
-        # (It may be returned as a single dict if only one is associated)
+        # It may be returned as a single dict if only one is associated,
+        # as well as sometimes None.
         hosts = self._connection.get('wlan/host-list')
-        host = hosts.get('Hosts', {}).get('Host')
+        if hosts.get('Hosts') is None:
+            hosts['Hosts'] = {}
+        host = hosts['Hosts'].setdefault('Host', [])
         if isinstance(host, dict):
             hosts['Hosts']['Host'] = [host]
         return hosts
