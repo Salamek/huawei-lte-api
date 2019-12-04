@@ -94,6 +94,7 @@ class Sms(ApiGroup):
             from_date = datetime.datetime.utcnow()
         dicttoxml_xargs = {
             'item_func': lambda x: x[:-1]
+            'attr_type': False
         }
 
         return self._connection.post('sms/send-sms', OrderedDict((
