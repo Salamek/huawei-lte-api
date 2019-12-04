@@ -93,7 +93,7 @@ class Sms(ApiGroup):
         if from_date is None:
             from_date = datetime.datetime.utcnow()
         dicttoxml_xargs = {
-            'item_func': lambda x: x[:-1]
+            'item_func': lambda x: x[:-1],
             'attr_type': False
         }
 
