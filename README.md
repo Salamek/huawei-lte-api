@@ -87,3 +87,9 @@ Result dict
 ### SMS
 
 * Relay received SMS into your email https://github.com/chenwei791129/Huawei-LTE-Router-SMS-to-E-mail-Sender
+
+
+## Donations
+
+* 250 CZK (9,79 EUR) for B535-232 fund, thx @larsvinc !
+
