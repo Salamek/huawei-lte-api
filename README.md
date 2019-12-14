@@ -9,6 +9,8 @@ Tested on:
 * Huawei B715s-23c
 * Huawei E3131
 * Huawei E5186s-22a
+* Huawei B528s
+* (probably will work for other Huawei LTE devices too)
 
 Will NOT work on:
 * Huawei B2368-22 (Incompatible firmware, testing device needed!)
