@@ -21,8 +21,7 @@ class AuthorizedConnection(Connection):
         username = username if username else parsed_url.username
         password = password if password else parsed_url.password
 
-        from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import
-
+        from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import,import-outside-toplevel
         self.user = User(self, username, password)
 
         if not login_on_demand:

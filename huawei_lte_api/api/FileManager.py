@@ -12,7 +12,7 @@ class FileManager(ApiGroup):
         :return: str
         """
         uploadfile_basename = os.path.basename(uploadfile_name)
-        filename, extension = os.path.splitext(uploadfile_basename)
+        _, extension = os.path.splitext(uploadfile_basename)
 
         if extension not in ['bin', 'zip']:
             raise Exception('Only *.bin or *.zip is allowed')
