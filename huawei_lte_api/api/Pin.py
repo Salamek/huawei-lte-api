@@ -1,18 +1,21 @@
+from typing import Optional
 
-from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType, SetResponseType
 
 
 class Pin(ApiGroup):
-    def status(self) -> dict:
+    def status(self) -> GetResponseType:
         return self._connection.get('pin/status')
 
-    def simlock(self) -> dict:
+    def simlock(self) -> GetResponseType:
         return self._connection.get('pin/simlock')
 
-    def save_pin(self) -> dict:
+    def save_pin(self) -> GetResponseType:
         return self._connection.get('pin/save-pin')
 
-    def operate(self, operate_type: int = 0, current_pin: int = None, new_pin: int = None, puk_code: int = None) -> dict:
+    def operate(self, operate_type: int = 0, current_pin: Optional[int] = None,
+                new_pin: Optional[int] = None, puk_code: Optional[int] = None) \
+                -> SetResponseType:
         """
         Parameters
         ----------
@@ -34,7 +37,7 @@ class Pin(ApiGroup):
             'item_func': lambda x: x[:-1]
         }
 
-        return self._connection.post('pin/operate', {
+        return self._connection.post_set('pin/operate', {
             'OperateType': operate_type,
             'CurrentPin': current_pin,
             'NewPin': new_pin,

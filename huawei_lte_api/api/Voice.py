@@ -1,24 +1,24 @@
-from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType
 
 
 class Voice(ApiGroup):
-    def featureswitch(self) -> dict:
+    def featureswitch(self) -> GetResponseType:
         return self._connection.get('voice/featureswitch')
 
-    def sipaccount(self) -> dict:
+    def sipaccount(self) -> GetResponseType:
         return self._connection.get('voice/sipaccount')
 
-    def sipadvance(self) -> dict:
+    def sipadvance(self) -> GetResponseType:
         return self._connection.get('voice/sipadvance')
 
-    def sipserver(self) -> dict:
+    def sipserver(self) -> GetResponseType:
         return self._connection.get('voice/sipserver')
 
-    def speeddial(self) -> dict:
+    def speeddial(self) -> GetResponseType:
         return self._connection.get('voice/speeddial')
 
-    def functioncode(self) -> dict:
+    def functioncode(self) -> GetResponseType:
         return self._connection.get('voice/functioncode')
 
-    def voiceadvance(self) -> dict:
+    def voiceadvance(self) -> GetResponseType:
         return self._connection.get('voice/voiceadvance')

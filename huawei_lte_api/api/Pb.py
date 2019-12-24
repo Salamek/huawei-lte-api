@@ -1,15 +1,15 @@
 from collections import OrderedDict
-from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType
 
 
 class Pb(ApiGroup):
-    def get_pb_match(self, phone_number: str) -> dict:
+    def get_pb_match(self, phone_number: str) -> GetResponseType:
         """
     Find number in PhoneBook
     :param phone_number:
     :return:
     """
-        return self._connection.post('pb/pb-match', {
+        return self._connection.post_get('pb/pb-match', {
             'Phone': phone_number
         })
 
@@ -18,8 +18,8 @@ class Pb(ApiGroup):
                     key_word: str='',
                     group_id: int=0,
                     read_count: int=50
-                    ) -> dict:
-        return self._connection.post('pb/pb-list', OrderedDict((
+                    ) -> GetResponseType:
+        return self._connection.post_get('pb/pb-list', OrderedDict((
             ('GroupID', group_id),
             ('PageIndex', page),
             ('ReadCount', read_count),

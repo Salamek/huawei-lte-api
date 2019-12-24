@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, TypeVar, Union, cast
 import urllib.parse
 import dicttoxml
 import xmltodict
@@ -16,9 +16,12 @@ from huawei_lte_api.exceptions import \
 
 _LOGGER = logging.getLogger(__name__)
 
+T = TypeVar("T")
+GetResponseType = Dict[str, Any]
+SetResponseType = str
 
-def _try_or_reload_and_retry(fn):
-    def wrapped(*args, **kw):
+def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
+    def wrapped(*args: Any, **kw: Any) -> T:
         try:
             return fn(*args, **kw)
         except ResponseErrorLoginCsrfException:
@@ -40,11 +43,11 @@ class Connection:
             self.url += '/'
         self._initialize_csrf_tokens_and_session()
 
-    def reload(self):
+    def reload(self) -> None:
         self._initialize_csrf_tokens_and_session()
 
     @staticmethod
-    def _create_request_xml(data: dict, dicttoxml_xargs: Optional[dict]=None) -> str:
+    def _create_request_xml(data: Union[dict, list], dicttoxml_xargs: Optional[dict]=None) -> bytes:
         if not dicttoxml_xargs:
             dicttoxml_xargs = {}
 
@@ -67,7 +70,7 @@ class Connection:
             raise
 
     @staticmethod
-    def _check_response_status(data: dict) -> dict:
+    def _check_response_status(data: dict) -> Union[dict, str]:
         error_code_to_message = {
             ResponseCodeEnum.ERROR_SYSTEM_BUSY: 'System busy',
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: 'No rights (needs login)',
@@ -97,7 +100,7 @@ class Connection:
         response = data['response'] if 'response' in data else data
         return response if response is not None else {}
 
-    def _initialize_csrf_tokens_and_session(self):
+    def _initialize_csrf_tokens_and_session(self) -> None:
         # Reset
         self.request_verification_tokens = []
 
@@ -114,14 +117,38 @@ class Connection:
     def _build_final_url(self, endpoint: str, prefix: str='api') -> str:
         return urllib.parse.urljoin(self.url + '{}/'.format(prefix), endpoint)
 
+    def post_get(self,
+                 endpoint: str,
+                 data: Union[dict, list, None]=None,
+                 refresh_csrf: bool=False,
+                 prefix: str='api',
+                 dicttoxml_xargs: Optional[dict]=None) \
+                 -> GetResponseType:
+        return cast(
+            GetResponseType,
+            self._post(endpoint, data, refresh_csrf, prefix, dicttoxml_xargs)
+        )
+
+    def post_set(self,
+                 endpoint: str,
+                 data: Union[dict, list, None]=None,
+                 refresh_csrf: bool=False,
+                 prefix: str='api',
+                 dicttoxml_xargs: Optional[dict]=None) \
+                 -> SetResponseType:
+        return cast(
+            SetResponseType,
+            self._post(endpoint, data, refresh_csrf, prefix, dicttoxml_xargs)
+        )
+
     @_try_or_reload_and_retry
-    def post(self,
-             endpoint: str,
-             data: Optional[dict]=None,
-             refresh_csrf: bool=False,
-             prefix: str='api',
-             dicttoxml_xargs: Optional[dict]=None
-             ) -> dict:
+    def _post(self,
+              endpoint: str,
+              data: Union[dict, list, None]=None,
+              refresh_csrf: bool=False,
+              prefix: str='api',
+              dicttoxml_xargs: Optional[dict]=None) \
+              -> Union[GetResponseType, SetResponseType]:
 
         headers = {
             'Content-Type': 'application/xml'
@@ -134,13 +161,13 @@ class Connection:
 
         response = self.session.post(
             self._build_final_url(endpoint, prefix),
-            data=self._create_request_xml(data, dicttoxml_xargs) if data else '',
+            data=self._create_request_xml(data, dicttoxml_xargs) if data else b'',
             headers=headers,
             timeout=self.timeout,
         )
         response.raise_for_status()
 
-        data = self._check_response_status(self._process_response_xml(response))
+        response_data = cast(str, self._check_response_status(self._process_response_xml(response)))
 
         if refresh_csrf:
             self.request_verification_tokens = []
@@ -154,7 +181,7 @@ class Connection:
         else:
             _LOGGER.debug('Failed to get CSRF from POST response headers')
 
-        return data
+        return response_data
 
     def post_file(self,
                   endpoint: str,
@@ -189,9 +216,9 @@ class Connection:
             timeout=self.timeout,
         )
 
-        return self._check_response_status(self._process_response_xml(response))
+        return cast(dict, self._check_response_status(self._process_response_xml(response)))
 
-    def _get_token(self):
+    def _get_token(self) -> Optional[str]:
         try:
             data = self.get('webserver/token')
         except ResponseErrorNotSupportedException:

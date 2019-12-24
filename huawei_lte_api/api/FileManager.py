@@ -1,10 +1,10 @@
 import os
 from typing import BinaryIO
-from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.ApiGroup import ApiGroup, SetResponseType
 
 
 class FileManager(ApiGroup):
-    def upload(self, uploadfile: BinaryIO, uploadfile_name: str) -> str:
+    def upload(self, uploadfile: BinaryIO, uploadfile_name: str) -> SetResponseType:
         """
         Uploads firmware update and triggers it
         :param uploadfile: filehandle on file to upload

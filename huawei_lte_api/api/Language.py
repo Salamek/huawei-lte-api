@@ -1,12 +1,11 @@
-
-from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType, SetResponseType
 
 
 class Language(ApiGroup):
-    def set_current_language(self, current_language: str):
-        return self._connection.post('language/current-language', {
+    def set_current_language(self, current_language: str) -> SetResponseType:
+        return self._connection.post_set('language/current-language', {
             'CurrentLanguage': current_language
         })
 
-    def current_language(self) -> dict:
+    def current_language(self) -> GetResponseType:
         return self._connection.get('language/current-language')

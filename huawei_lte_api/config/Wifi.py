@@ -1,12 +1,12 @@
-from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType
 
 
 class Wifi(ApiGroup):
-    def configure(self):
+    def configure(self) -> GetResponseType:
         return self._connection.get('wifi/configure.xml', prefix='config')
 
-    def country_channel(self):
+    def country_channel(self) -> GetResponseType:
         return self._connection.get('wifi/countryChannel.xml', prefix='config')
 
-    def channel_auto_match_hardware(self):
+    def channel_auto_match_hardware(self) -> GetResponseType:
         return self._connection.get('wifi/channelAutoMatchHardware.xml', prefix='config')

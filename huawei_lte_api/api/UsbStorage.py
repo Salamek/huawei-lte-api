@@ -1,10 +1,10 @@
-from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType
 
 
 class UsbStorage(ApiGroup):
 
-    def fsstatus(self) -> dict:
+    def fsstatus(self) -> GetResponseType:
         return self._connection.get('usbstorage/fsstatus')
 
-    def usbaccount(self) -> dict:
+    def usbaccount(self) -> GetResponseType:
         return self._connection.get('usbstorage/usbaccount')

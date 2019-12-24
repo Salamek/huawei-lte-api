@@ -1,24 +1,24 @@
 from collections import OrderedDict
-from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType, SetResponseType
 
 
 class SdCard(ApiGroup):
 
-    def dlna_setting(self) -> dict:
+    def dlna_setting(self) -> GetResponseType:
         return self._connection.get('sdcard/dlna-setting')
 
     def set_dlna_setting(self, enabled: bool, share_all: bool,
-                         share_path: str = '/'):
-        return self._connection.post('sdcard/dlna-setting', {
+                         share_path: str = '/') -> SetResponseType:
+        return self._connection.post_set('sdcard/dlna-setting', {
             'enabled': int(enabled),
             'sharepath': share_path,
             'shareallpath': int(share_all),
         })
 
-    def sdcard(self) -> dict:
+    def sdcard(self) -> GetResponseType:
         return self._connection.get('sdcard/sdcard')
 
-    def sdcardsamba(self) -> dict:
+    def sdcardsamba(self) -> GetResponseType:
         return self._connection.get('sdcard/sdcardsamba')
 
     def set_sdcardsamba(self, enabled: bool,
@@ -26,8 +26,8 @@ class SdCard(ApiGroup):
                         server_description: str = 'samba server',
                         workgroup_name: str = 'WORKGROUP',
                         anonymous_access: bool = False,
-                        printer_enabled: bool = True):
-        return self._connection.post('sdcard/sdcardsamba', OrderedDict((
+                        printer_enabled: bool = True) -> SetResponseType:
+        return self._connection.post_set('sdcard/sdcardsamba', OrderedDict((
             ('enabled', int(enabled)),
             ('servername', server_name),
             ('serverdescription', server_description),
@@ -36,8 +36,8 @@ class SdCard(ApiGroup):
             ('printerenable', int(printer_enabled)),
         )))
 
-    def printerlist(self) -> dict:
+    def printerlist(self) -> GetResponseType:
         return self._connection.get('sdcard/printerlist')
 
-    def share_account(self) -> dict:
+    def share_account(self) -> GetResponseType:
         return self._connection.get('sdcard/share-account')
