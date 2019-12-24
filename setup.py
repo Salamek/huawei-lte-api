@@ -10,6 +10,7 @@ setup(
         'huawei_lte_api.enums',
         'huawei_lte_api.config'
     ],
+    package_data={'huawei_lte_api': ['py.typed']},
     install_requires=[
         'requests',
         'dicttoxml',
