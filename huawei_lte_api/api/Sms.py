@@ -39,11 +39,13 @@ class Sms(ApiGroup):
             ('UnreadPreferred', unread_preferred),
         )))
 
-    def delete_sms(self, sms_ids: list):
-        data = []
-        for sms_id in sms_ids:
-            data.append({'Index': sms_id})
-        return self._connection.post('sms/delete-sms', data)
+    def delete_sms(self, sms_id: int):
+        """
+        Delete single SMS by its ID
+        :param sms_id: Id of SMS you wish to delete
+        :return: dict
+        """
+        return self._connection.post('sms/delete-sms', {'Index': sms_id})
 
     def backup_sim(self, from_date: datetime.datetime, is_move: bool=False):
         return self._connection.post('sms/backup-sim', OrderedDict((
