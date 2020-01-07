@@ -11,13 +11,18 @@ class AuthorizedConnection(Connection):
 
     def __init__(self, url: str, username: Optional[str]=None, password: Optional[str]=None,
                  login_on_demand: bool=False, timeout: Union[float, Tuple[float, float], None] = None):
-        super(AuthorizedConnection, self).__init__(url, timeout=timeout)
         parsed_url = urlparse(url)
-
+        clear_url = '{scheme}://{hostname}{path}'.format(
+            scheme=parsed_url.scheme,
+            hostname=parsed_url.hostname,
+            path=parsed_url.path
+        )
+        super(AuthorizedConnection, self).__init__(clear_url, timeout=timeout)
         username = username if username else parsed_url.username
         password = password if password else parsed_url.password
 
         from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import
+
         self.user = User(self, username, password)
 
         if not login_on_demand:
