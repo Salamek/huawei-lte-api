@@ -16,6 +16,7 @@ from huawei_lte_api.exceptions import \
 
 _LOGGER = logging.getLogger(__name__)
 
+
 def _try_or_reload_and_retry(fn):
     def wrapped(*args, **kw):
         try:
@@ -46,6 +47,8 @@ class Connection:
     def _create_request_xml(data: dict, dicttoxml_xargs: Optional[dict]=None) -> str:
         if not dicttoxml_xargs:
             dicttoxml_xargs = {}
+
+        dicttoxml_xargs['attr_type'] = False
         return dicttoxml.dicttoxml(data, custom_root='request', **dicttoxml_xargs)
 
     @staticmethod
