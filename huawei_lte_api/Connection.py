@@ -156,6 +156,26 @@ class Connection:
 
         return data
 
+    def post_file(self,
+                  endpoint: str,
+                  files: dict,
+                  data: Optional[dict]=None,
+                  prefix: str = 'api',
+                  ) -> str:
+
+        if self.request_verification_tokens:
+            data['csrf_token'] = self.request_verification_tokens[0]
+
+        response = self.session.post(
+            self._build_final_url(endpoint, prefix),
+            files=files,
+            data=data,
+            timeout=self.timeout
+        )
+        response.raise_for_status()
+
+        return response.content.lower()
+
     @_try_or_reload_and_retry
     def get(self, endpoint: str, params: Optional[dict]=None, prefix: str='api') -> dict:
         headers = {}
