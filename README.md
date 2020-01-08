@@ -85,6 +85,7 @@ Result dict
 ### Monitoring
 
 * Monitoring traffic and signal https://github.com/littlejo/huawei-lte-examples
+* Set band, show signal level and bandwidth for Huawei mobile broadband B525s-23a. https://github.com/octave21/huawei-lte
 
 ### SMS
 
