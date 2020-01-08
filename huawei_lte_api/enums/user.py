@@ -4,6 +4,7 @@ import enum
 @enum.unique
 class PasswordTypeEnum(enum.IntEnum):
     BASE_64 = 0
+    BASE_64_AFTER_PASSWORD_CHANGE = 3  # Im not sure about this name...
     SHA256 = 4
 
 
