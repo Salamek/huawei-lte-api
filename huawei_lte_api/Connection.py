@@ -191,6 +191,8 @@ class Connection:
                   ) -> str:
 
         if self.request_verification_tokens:
+            if data is None:
+                data = {}
             data['csrf_token'] = self.request_verification_tokens[0]
 
         response = self.session.post(
@@ -201,7 +203,7 @@ class Connection:
         )
         response.raise_for_status()
 
-        return response.content.lower()
+        return response.content.decode('UTF-8').lower()
 
     @_try_or_reload_and_retry
     def get(self, endpoint: str, params: Optional[dict]=None, prefix: str='api') -> dict:
