@@ -20,6 +20,7 @@ T = TypeVar("T")
 GetResponseType = Dict[str, Any]
 SetResponseType = str
 
+
 def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
     def wrapped(*args: Any, **kw: Any) -> T:
         try:
@@ -104,12 +105,14 @@ class Connection:
         # Reset
         self.request_verification_tokens = []
 
+        # Lets try to parse csrf_token from homepage html head meta[name="csrf_token"]
         response = self.session.get(self.url, timeout=self.timeout)
 
         csrf_tokens = self.csrf_re.findall(response.content.decode('UTF-8'))
         if csrf_tokens:
             self.request_verification_tokens = csrf_tokens
         else:
+            # If we did not find anything in HTML, lets try to ask API for it
             token = self._get_token()
             if token is not None:
                 self.request_verification_tokens.append(token)
@@ -223,6 +226,10 @@ class Connection:
     def _get_token(self) -> Optional[str]:
         try:
             data = self.get('webserver/token')
+            return data['token']
         except ResponseErrorNotSupportedException:
-            return None
-        return data['token']
+            try:
+                data = self.get('webserver/SesTokInfo')
+                return data['TokInfo']
+            except ResponseErrorNotSupportedException:
+                return None
