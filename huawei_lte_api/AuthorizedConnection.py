@@ -21,8 +21,7 @@ class AuthorizedConnection(Connection):
         username = username if username else parsed_url.username
         password = password if password else parsed_url.password
 
-        from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import
-
+        from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import,import-outside-toplevel
         self.user = User(self, username, password)
 
         if not login_on_demand:
@@ -36,7 +35,7 @@ class AuthorizedConnection(Connection):
         logout_time = self.login_time + datetime.timedelta(seconds=self.LOGOUT_TIMEOUT)
         return logout_time < datetime.datetime.utcnow()
 
-    def enforce_authorized_connection(self):
+    def enforce_authorized_connection(self) -> bool:
         # Check if connection timeouted or not
         if not self.logged_in or self._is_login_timeout():
             # Connection timeouted, relogin

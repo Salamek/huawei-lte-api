@@ -1,58 +1,59 @@
 from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.Connection import GetResponseType, SetResponseType
 from huawei_lte_api.enums.device import AntennaTypeEnum
 
 
 class Device(ApiGroup):
-    def information(self) ->dict:
+    def information(self) -> GetResponseType:
         return self._connection.get('device/information')
 
-    def autorun_version(self) ->dict:
+    def autorun_version(self) -> GetResponseType:
         return self._connection.get('device/autorun-version')
 
-    def device_feature_switch(self) ->dict:
+    def device_feature_switch(self) -> GetResponseType:
         return self._connection.get('device/device-feature-switch')
 
-    def basic_information(self) ->dict:
+    def basic_information(self) -> GetResponseType:
         return self._connection.get('device/basic_information')
 
-    def basicinformation(self) ->dict:
+    def basicinformation(self) -> GetResponseType:
         return self._connection.get('device/basicinformation')
 
-    def usb_tethering_switch(self) ->dict:
+    def usb_tethering_switch(self) -> GetResponseType:
         return self._connection.get('device/usb-tethering-switch')
 
-    def boot_time(self) ->dict:
+    def boot_time(self) -> GetResponseType:
         return self._connection.get('device/boot_time')
 
-    def set_control(self, control: int=4):
-        return self._connection.post('device/control', {
+    def set_control(self, control: int=4) -> SetResponseType:
+        return self._connection.post_set('device/control', {
             'Control': control
         })
 
-    def signal(self) ->dict:
+    def signal(self) -> GetResponseType:
         return self._connection.get('device/signal')
 
-    def control(self, control: int):
-        return self._connection.post('device/control', {
+    def control(self, control: int) -> SetResponseType:
+        return self._connection.post_set('device/control', {
             'Control': control
         })
 
-    def reboot(self) -> dict:
+    def reboot(self) -> SetResponseType:
         return self.control(1)
 
-    def antenna_status(self) -> dict:
+    def antenna_status(self) -> GetResponseType:
         return self._connection.get('device/antenna_status')
 
-    def get_antenna_settings(self) -> dict:
+    def get_antenna_settings(self) -> GetResponseType:
         return self._connection.get('device/antenna_settings')
 
-    def set_antenna_settings(self, antenna_type: AntennaTypeEnum=AntennaTypeEnum.AUTO) -> dict:
-        return self._connection.post('device/antenna_settings', {
+    def set_antenna_settings(self, antenna_type: AntennaTypeEnum=AntennaTypeEnum.AUTO) -> SetResponseType:
+        return self._connection.post_set('device/antenna_settings', {
             'antenna_type': antenna_type.value
         })
 
-    def antenna_type(self) -> dict:
+    def antenna_type(self) -> GetResponseType:
         return self._connection.get('device/antenna_type')
 
-    def antenna_set_type(self) -> dict:
+    def antenna_set_type(self) -> GetResponseType:
         return self._connection.get('device/antenna_set_type')
