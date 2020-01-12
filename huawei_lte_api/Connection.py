@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, TypeVar, Union, cast
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, cast
 import urllib.parse
 import dicttoxml
 import xmltodict
@@ -72,20 +72,20 @@ class Connection:
     @staticmethod
     def _check_response_status(data: dict) -> Union[dict, str]:
         error_code_to_message = {
-            ResponseCodeEnum.ERROR_SYSTEM_BUSY: 'System busy',
-            ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: 'No rights (needs login)',
-            ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: 'No support',
-            ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN: 'Unknown',
-            ResponseCodeEnum.ERROR_SYSTEM_CSRF: 'Session error'
-        }  # type: Dict[int, str]
+            ResponseCodeEnum.ERROR_SYSTEM_BUSY.value: 'System busy',
+            ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS.value: 'No rights (needs login)',
+            ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT.value: 'No support',
+            ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN.value: 'Unknown',
+            ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: 'Session error'
+        }
 
         error_code_to_exception = {
-            ResponseCodeEnum.ERROR_SYSTEM_BUSY: ResponseErrorSystemBusyException,
-            ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS: ResponseErrorLoginRequiredException,
-            ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT: ResponseErrorNotSupportedException,
-            ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN:  ResponseErrorException,
-            ResponseCodeEnum.ERROR_SYSTEM_CSRF: ResponseErrorLoginCsrfException
-        }  # type: Dict[int, Type[ResponseErrorException]]
+            ResponseCodeEnum.ERROR_SYSTEM_BUSY.value: ResponseErrorSystemBusyException,
+            ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS.value: ResponseErrorLoginRequiredException,
+            ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT.value: ResponseErrorNotSupportedException,
+            ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN.value:  ResponseErrorException,
+            ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: ResponseErrorLoginCsrfException
+        }
         if 'error' in data:
             error_code = int(data['error']['code'])
             if not data['error']['message']:
