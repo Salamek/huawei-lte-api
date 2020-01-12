@@ -11,3 +11,11 @@ class WebServer(ApiGroup):
 
     def white_list_switch(self) -> GetResponseType:
         return self._connection.get('webserver/white_list_switch')
+
+    def ses_tok_info(self) -> GetResponseType:
+        """
+        Get session token info
+        ~Valid for: B310s-22
+        :return: GetResponseType
+        """
+        return self._connection.get('webserver/SesTokInfo')
