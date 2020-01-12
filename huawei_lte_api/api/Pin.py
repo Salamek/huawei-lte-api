@@ -1,6 +1,7 @@
 from typing import Optional
 
-from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType, SetResponseType
+from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.Connection import GetResponseType, SetResponseType
 
 
 class Pin(ApiGroup):

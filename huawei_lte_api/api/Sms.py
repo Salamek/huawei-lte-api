@@ -1,7 +1,8 @@
 import datetime
 from collections import OrderedDict
 from typing import Optional
-from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType, SetResponseType
+from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.Connection import GetResponseType, SetResponseType
 from huawei_lte_api.enums.sms import BoxTypeEnum, TextModeEnum, SaveModeEnum, SendTypeEnum, PriorityEnum
 
 

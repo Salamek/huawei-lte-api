@@ -3,8 +3,8 @@ import hashlib
 from typing import Optional
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
-from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType, SetResponseType
-from huawei_lte_api.Connection import Connection
+from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.Connection import Connection, GetResponseType, SetResponseType
 from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorAlreadyLoginException, \
     LoginErrorUsernamePasswordModifyException, \

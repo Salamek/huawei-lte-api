@@ -1,6 +1,7 @@
 import datetime
 from collections import OrderedDict
-from huawei_lte_api.ApiGroup import ApiGroup, SetResponseType
+from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.Connection import SetResponseType
 
 
 class Host(ApiGroup):

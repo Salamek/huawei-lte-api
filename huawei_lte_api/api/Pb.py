@@ -1,5 +1,6 @@
 from collections import OrderedDict
-from huawei_lte_api.ApiGroup import ApiGroup, GetResponseType
+from huawei_lte_api.ApiGroup import ApiGroup
+from huawei_lte_api.Connection import GetResponseType
 
 
 class Pb(ApiGroup):
