@@ -57,3 +57,10 @@ class Device(ApiGroup):
 
     def antenna_set_type(self) -> GetResponseType:
         return self._connection.get('device/antenna_set_type')
+
+    def logsetting(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('device/logsetting')

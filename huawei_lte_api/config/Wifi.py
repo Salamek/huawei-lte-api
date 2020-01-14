@@ -3,6 +3,9 @@ from huawei_lte_api.Connection import GetResponseType
 
 
 class Wifi(ApiGroup):
+    def config(self) -> GetResponseType:
+        return self._connection.get('wifi/config.xml', prefix='config')
+
     def configure(self) -> GetResponseType:
         return self._connection.get('wifi/configure.xml', prefix='config')
 

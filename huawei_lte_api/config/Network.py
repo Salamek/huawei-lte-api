@@ -14,3 +14,6 @@ class Network(ApiGroup):
 
     def networkband_null(self) -> GetResponseType:
         return self._connection.get('network/networkband_null.xml', prefix='config')
+
+    def set_only_4g(self) -> GetResponseType:
+        return self._connection.get('network/setOnly4g.xml', prefix='config')

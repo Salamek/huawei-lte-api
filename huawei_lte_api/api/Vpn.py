@@ -18,3 +18,10 @@ class Vpn(ApiGroup):
 
     def pptp_settings(self) -> GetResponseType:
         return self._connection.get('vpn/pptp_settings')
+
+    def status(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('vpn/status')

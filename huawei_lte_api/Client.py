@@ -18,6 +18,19 @@ from huawei_lte_api.config.Wifi import Wifi as WifiConfig
 from huawei_lte_api.config.PcAssistant import PcAssistant
 from huawei_lte_api.config.DeviceInformation import DeviceInformation
 from huawei_lte_api.config.WebUICfg import WebUICfg
+from huawei_lte_api.config.Device import Device as DeviceConfig
+from huawei_lte_api.config.FastBoot import FastBoot
+from huawei_lte_api.config.Firewall import Firewall
+from huawei_lte_api.config.IPv6 import IPv6
+from huawei_lte_api.config.Ota import Ota as OtaConfig
+from huawei_lte_api.config.Pb import Pb as PbConfig
+from huawei_lte_api.config.Sntp import Sntp
+from huawei_lte_api.config.Stk import Stk
+from huawei_lte_api.config.Update import Update
+from huawei_lte_api.config.UPnp import UPnp
+from huawei_lte_api.config.Ussd import Ussd
+from huawei_lte_api.config.WebSd import WebSd
+from huawei_lte_api.usermanual.PublicSysResources import PublicSysResources
 from huawei_lte_api.api.Ota import Ota
 from huawei_lte_api.api.Net import Net
 from huawei_lte_api.api.DialUp import DialUp
@@ -48,6 +61,8 @@ from huawei_lte_api.api.Lan import Lan
 from huawei_lte_api.api.Led import Led
 from huawei_lte_api.api.Statistic import Statistic
 from huawei_lte_api.api.TimeRule import TimeRule
+from huawei_lte_api.api.Bluetooth import Bluetooth
+from huawei_lte_api.api.MLog import MLog
 
 
 class Client:
@@ -70,6 +85,19 @@ class Client:
         self.config_pc_assistant = PcAssistant(connection)
         self.config_device_information = DeviceInformation(connection)
         self.config_web_ui_cfg = WebUICfg(connection)
+        self.config_device = DeviceConfig(connection)
+        self.config_fast_boot = FastBoot(connection)
+        self.config_firewall = Firewall(connection)
+        self.config_ipv6 = IPv6(connection)
+        self.config_ota = OtaConfig(connection)
+        self.config_pb = PbConfig(connection)
+        self.config_sntp = Sntp(connection)
+        self.config_stk = Stk(connection)
+        self.config_update = Update(connection)
+        self.config_u_pnp = UPnp(connection)
+        self.config_ussd = Ussd(connection)
+        self.config_web_sd = WebSd(connection)
+        self.usermanual_public_sys_resources = PublicSysResources(connection)
         self.ota = Ota(connection)
         self.net = Net(connection)
         self.dial_up = DialUp(connection)
@@ -101,3 +129,5 @@ class Client:
         self.led = Led(connection)
         self.statistic = Statistic(connection)
         self.timerule = TimeRule(connection)
+        self.bluetooth = Bluetooth(connection)
+        self.mlog = MLog(connection)

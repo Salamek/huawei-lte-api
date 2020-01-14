@@ -42,3 +42,38 @@ class SdCard(ApiGroup):
 
     def share_account(self) -> GetResponseType:
         return self._connection.get('sdcard/share-account')
+
+    def sdfile(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sdcard/sdfile')
+
+    def fileupload(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sdcard/fileupload')
+
+    def check_file_exist(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sdcard/Check_file_exist')
+
+    def createdir(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sdcard/createdir')
+
+    def deletefile(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sdcard/deletefile')

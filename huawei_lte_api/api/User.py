@@ -119,3 +119,24 @@ class User(ApiGroup):
 
     def web_feature_switch(self) -> GetResponseType:
         return self._connection.get('user/web-feature-switch')
+
+    def input_event(self) -> GetResponseType:
+        """
+       Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+       :return:
+       """
+        return self._connection.get('user/input_event')
+
+    def screen_state(self) -> GetResponseType:
+        """
+       Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+       :return:
+       """
+        return self._connection.get('user/screen_state')
+
+    def session(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('user/session')

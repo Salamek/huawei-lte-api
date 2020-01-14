@@ -133,3 +133,24 @@ class WLan(ApiGroup):
 
     def status_switch_settings(self) -> GetResponseType:
         return self._connection.get('wlan/status-switch-settings')
+
+    def wifiprofile(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
+        :return:
+        """
+        return self._connection.get('wlan/wifiprofile')
+
+    def wififrequence(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
+        :return:
+        """
+        return self._connection.get('wlan/wififrequence')
+
+    def wifiscanresult(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
+        :return:
+        """
+        return self._connection.get('wlan/wifiscanresult')

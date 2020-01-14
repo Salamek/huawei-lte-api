@@ -78,3 +78,10 @@ class Security(ApiGroup):
 
     def white_url_filter(self) -> GetResponseType:
         return self._connection.get('security/white-url-filter')
+
+    def acls(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
+        :return:
+        """
+        return self._connection.get('security/acls')

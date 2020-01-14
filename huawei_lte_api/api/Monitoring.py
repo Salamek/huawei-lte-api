@@ -62,3 +62,10 @@ class Monitoring(ApiGroup):
         return self._connection.post_set('monitoring/clear-traffic', {
             'ClearTraffic': 1
         })
+
+    def wifi_month_setting(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
+        :return:
+        """
+        return self._connection.get('monitoring/wifi-month-setting')

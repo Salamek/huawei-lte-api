@@ -138,3 +138,45 @@ class Sms(ApiGroup):
 
     def sms_count_contact(self) -> GetResponseType:
         return self._connection.get('sms/sms-count-contact')
+
+    def get_sms_list_pdu(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sms/sms-list-pdu')
+
+    def split_sms(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sms/split-sms')
+
+    def send_sms_pdu(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sms/send-sms-pdu')
+
+    def recover_sms(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sms/recover-sms')
+
+    def copy_sms(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sms/copy-sms')
+
+    def move_sms(self) -> GetResponseType:
+        """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
+        return self._connection.get('sms/move-sms')
