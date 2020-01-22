@@ -4,6 +4,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 
 Tested on:
 * Huawei B310s-22
+* Huawei B315s-22
 * Huawei B525s-23a
 * Huawei B525s-65a
 * Huawei B715s-23c
