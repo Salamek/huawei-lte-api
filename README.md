@@ -31,8 +31,8 @@ You can also use these repositories maintained by me
 Add repository by running these commands
 
 ```
-$ wget -O - https://apt.salamek.cz/apt/conf/salamek.gpg.key|sudo apt-key add -
-$ echo "deb     https://apt.salamek.cz/apt all main" | sudo tee /etc/apt/sources.list.d/salamek.cz.list
+$ wget -O - https://repository.salamek.cz/deb/salamek.gpg.key|sudo apt-key add -
+$ echo "deb     https://repository.salamek.cz/deb/pub all main" | sudo tee /etc/apt/sources.list.d/salamek.cz.list
 ```
 
 And then you can install a package python3-huawei-lte-api
@@ -47,7 +47,7 @@ Add repository by adding this at end of file /etc/pacman.conf
 
 ```
 [salamek]
-Server = https://arch.salamek.cz/any
+Server = https://repository.salamek.cz/arch/pub
 SigLevel = Optional
 ```
 
