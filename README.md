@@ -47,7 +47,7 @@ Add repository by adding this at end of file /etc/pacman.conf
 
 ```
 [salamek]
-Server = https://repository.salamek.cz/arch/pub
+Server = https://repository.salamek.cz/arch/pub/any
 SigLevel = Optional
 ```
 
