@@ -44,6 +44,7 @@ dump(client.device.boot_time)
 dump(client.device.signal)
 dump(client.device.antenna_status)
 dump(client.device.antenna_type)
+dump(client.device.logsetting)
 
 dump(client.user.state_login)
 dump(client.user.remind)
@@ -55,6 +56,8 @@ dump(client.user.hilink_login)
 dump(client.user.history_login)
 dump(client.user.heartbeat)
 dump(client.user.web_feature_switch)
+dump(client.user.screen_state)
+dump(client.user.session)
 
 dump(client.monitoring.converged_status)
 dump(client.monitoring.status)
@@ -64,6 +67,7 @@ dump(client.monitoring.start_date)
 dump(client.monitoring.start_date_wlan)
 dump(client.monitoring.month_statistics)
 dump(client.monitoring.month_statistics_wlan)
+dump(client.monitoring.wifi_month_setting)
 
 dump(client.security.bridgemode)
 dump(client.security.get_firewall_switch)
@@ -79,10 +83,13 @@ dump(client.security.nat)
 dump(client.security.special_applications)
 dump(client.security.white_lan_ip_filter)
 dump(client.security.white_url_filter)
+dump(client.security.acls)
 
 dump(client.webserver.publickey)
 dump(client.webserver.token)
 dump(client.webserver.white_list_switch)
+
+dump(client.global_.module_switch)
 
 dump(client.wlan.wifi_feature_switch)
 dump(client.wlan.station_information)
@@ -103,6 +110,9 @@ dump(client.wlan.wps_appin)
 dump(client.wlan.wps_pbc)
 dump(client.wlan.wps_switch)
 dump(client.wlan.status_switch_settings)
+dump(client.wlan.wifiprofile)
+dump(client.wlan.wififrequence)
+dump(client.wlan.wifiscanresult)
 
 dump(client.cradle.status_info)
 dump(client.cradle.feature_switch)
@@ -135,6 +145,7 @@ dump(client.config_network.networkmode)
 dump(client.config_network.networkband_null)
 
 dump(client.config_pc_assistant.config)
+dump(client.config_pc_assistant.updateautorun)
 
 dump(client.config_pincode.config)
 
@@ -147,6 +158,33 @@ dump(client.config_web_ui_cfg.config)
 dump(client.config_wifi.configure)
 dump(client.config_wifi.country_channel)
 dump(client.config_wifi.channel_auto_match_hardware)
+
+dump(client.config_device.config)
+
+dump(client.config_fast_boot.config)
+
+dump(client.config_firewall.config)
+
+dump(client.config_ipv6.config)
+
+dump(client.config_ota.config)
+
+dump(client.config_pb.config)
+
+dump(client.config_sntp.config)
+
+dump(client.config_stk.config)
+
+dump(client.config_update.config)
+
+dump(client.config_u_pnp.config)
+
+dump(client.config_ussd.prepaidussd)
+dump(client.config_ussd.postpaidussd)
+
+dump(client.config_web_sd.config)
+
+dump(client.usermanual_public_sys_resources.config)
 
 dump(client.ota.status)
 
@@ -172,6 +210,7 @@ dump(client.sms.send_status)
 dump(client.sms.get_sms_list)
 dump(client.sms.config)
 dump(client.sms.sms_count_contact)
+dump(client.sms.get_sms_list_pdu)
 
 dump(client.redirection.homepage)
 
@@ -179,6 +218,8 @@ dump(client.v_sim.operateswitch_vsim)
 
 dump(client.dhcp.settings)
 dump(client.dhcp.feature_switch)
+dump(client.dhcp.dhcp_host_info)
+dump(client.dhcp.static_addr_info)
 
 dump(client.d_dns.get_ddns_list)
 dump(client.d_dns.get_status)
@@ -223,11 +264,14 @@ dump(client.vpn.br_list)
 dump(client.vpn.ipsec_settings)
 dump(client.vpn.l2tp_settings)
 dump(client.vpn.pptp_settings)
+dump(client.vpn.status)
 
 dump(client.ntwk.lan_upnp_portmapping)
 dump(client.ntwk.celllock)
 
 dump(client.pb.get_pb_list)
+dump(client.pb.pb_count)
+dump(client.pb.group_count)
 
 dump(client.syslog.querylog)
 
@@ -238,6 +282,7 @@ dump(client.voice.sipserver)
 dump(client.voice.speeddial)
 dump(client.voice.functioncode)
 dump(client.voice.voiceadvance)
+dump(client.voice.codec)
 
 dump(client.cwmp.basic_info)
 
@@ -248,6 +293,11 @@ dump(client.led.nightmode)
 dump(client.statistic.feature_roam_statistic)
 
 dump(client.timerule.timerule)
+
+dump(client.bluetooth.settings)
+dump(client.bluetooth.scan)
+
+dump(client.mlog.mobile_logger)
 
 if isinstance(connection, AuthorizedConnection):
     client.user.logout()
