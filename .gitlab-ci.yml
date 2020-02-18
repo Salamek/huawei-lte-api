@@ -17,7 +17,7 @@ test:archlinux:
   stage: test
   script:
     - echo "[salamek]" >> /etc/pacman.conf
-    - echo "https://repository.salamek.cz/arch/pub/any" >> /etc/pacman.conf
+    - echo "Server = https://repository.salamek.cz/arch/pub/any" >> /etc/pacman.conf
     - echo "SigLevel = Optional" >> /etc/pacman.conf
     - pacman -Sy python-pytest-runner python-pytest python-pylint python-pytest-cov python-xmltodict python-dicttoxml python-requests --noconfirm
     - python setup.py test
