@@ -23,6 +23,13 @@ class Net(ApiGroup):
     def register(self) -> GetResponseType:
         return self._connection.get('net/register')
 
+    def set_register(self, mode: str, plmn: str, rat: str) -> SetResponseType:
+        return self._connection.post_set('net/register', OrderedDict((
+            ('Mode', mode),
+            ('Plmn', plmn),
+            ('Rat', rat)
+        )))
+
     def net_mode_list(self) -> GetResponseType:
         return self._connection.get('net/net-mode-list')
 
