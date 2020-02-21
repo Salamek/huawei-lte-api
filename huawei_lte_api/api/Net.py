@@ -24,6 +24,15 @@ class Net(ApiGroup):
         return self._connection.get('net/register')
 
     def set_register(self, mode: str, plmn: str, rat: str) -> SetResponseType:
+        """
+        Sets network selection
+        :param mode: "1": manual network selection, "0": auto
+        :param plmn: Plmn code ("Numeric" value returned by net_mode_list()),
+            "" for auto
+        :param rat: "0": "2G", "2": "3G", "7": "4G" ("Rat" value returned by
+            net_mode_list()), "" for auto
+        :return: str
+        """
         return self._connection.post_set('net/register', OrderedDict((
             ('Mode', mode),
             ('Plmn', plmn),
