@@ -74,18 +74,17 @@ class User(ApiGroup):
         return result == ResponseEnum.OK.value
 
     def login(self, force_new_login: bool=False) -> bool:
-        retries = 5
-        for i in range(retries):
+        tries = 5
+        for i in range(tries):
             try:
                 state_login = self.state_login()
             except ConnectionError as e:
                 # Some models reportedly close the connection if we attempt to access login state too soon after
                 # setting up the session etc. In that case, retry a few times. The error is reported to be
                 # ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-                if i == retries - 1 or not isinstance(
-                        getattr(e, '__context__', getattr(e, '__cause__', None)), ConnectionResetError):
+                if i == tries - 1:
                     raise
-                time.sleep(i/10)
+                time.sleep((i + 1)/10)
             except ResponseErrorNotSupportedException:
                 return True
 
