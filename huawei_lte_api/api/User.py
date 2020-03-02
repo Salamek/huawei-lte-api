@@ -1,6 +1,7 @@
 import base64
 import hashlib
 from typing import Optional
+from requests.exceptions import ConnectionError
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
 from huawei_lte_api.ApiGroup import ApiGroup
@@ -73,10 +74,19 @@ class User(ApiGroup):
         return result == ResponseEnum.OK.value
 
     def login(self, force_new_login: bool=False) -> bool:
-        try:
-            state_login = self.state_login()
-        except ResponseErrorNotSupportedException:
-            return True
+        tries = 5
+        for i in range(tries):
+            try:
+                state_login = self.state_login()
+            except ConnectionError as e:
+                # Some models reportedly close the connection if we attempt to access login state too soon after
+                # setting up the session etc. In that case, retry a few times. The error is reported to be
+                # ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+                if i == tries - 1:
+                    raise
+                time.sleep((i + 1)/10)
+            except ResponseErrorNotSupportedException:
+                return True
 
         if LoginStateEnum(int(state_login['State'])) == LoginStateEnum.LOGGED_IN and not force_new_login:
             return True
