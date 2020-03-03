@@ -68,8 +68,6 @@ packagetest:debian:
     - debian
   dependencies:
     - package:debian
-  only:
-    - tags
 
 packagetest:archlinux:
   stage: packagetest
@@ -84,8 +82,6 @@ packagetest:archlinux:
     - archlinux
   dependencies:
     - package:archlinux
-  only:
-    - tags
 
 repoupdate:
   stage: deploy
