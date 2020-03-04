@@ -1,16 +1,10 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 setup(
     name='huawei-lte-api',
     version='1.4.10',
-    packages=[
-        'huawei_lte_api',
-        'huawei_lte_api.api',
-        'huawei_lte_api.enums',
-        'huawei_lte_api.config',
-        'huawei_lte_api.usermanual',
-    ],
+    packages=find_packages(exclude=['tests', 'tests.*']),
     package_data={'huawei_lte_api': ['py.typed']},
     install_requires=[
         'requests',
