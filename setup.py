@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='huawei-lte-api',
-    version='1.4.9',
+    version='1.4.10',
     packages=[
         'huawei_lte_api',
         'huawei_lte_api.api',
