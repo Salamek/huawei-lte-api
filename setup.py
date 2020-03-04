@@ -8,7 +8,8 @@ setup(
         'huawei_lte_api',
         'huawei_lte_api.api',
         'huawei_lte_api.enums',
-        'huawei_lte_api.config'
+        'huawei_lte_api.config',
+        'huawei_lte_api.usermanual',
     ],
     package_data={'huawei_lte_api': ['py.typed']},
     install_requires=[
