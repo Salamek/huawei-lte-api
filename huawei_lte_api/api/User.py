@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import time
 from typing import Optional
 from requests.exceptions import ConnectionError
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
