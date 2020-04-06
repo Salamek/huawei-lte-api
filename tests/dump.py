@@ -299,5 +299,7 @@ dump(client.bluetooth.scan)
 
 dump(client.mlog.mobile_logger)
 
+dump(client.voice.voicebusy)
+
 if isinstance(connection, AuthorizedConnection):
     client.user.logout()
