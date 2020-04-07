@@ -24,6 +24,9 @@ class Voice(ApiGroup):
     def voiceadvance(self) -> GetResponseType:
         return self._connection.get('voice/voiceadvance')
 
+    def voicebusy(self) -> GetResponseType:
+        return self._connection.get('voice/voicebusy')
+
     def codec(self) -> GetResponseType:
         """
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
