@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional, Tuple, Union
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 from huawei_lte_api.Connection import Connection
 
 
@@ -11,12 +11,13 @@ class AuthorizedConnection(Connection):
 
     def __init__(self, url: str, username: Optional[str]=None, password: Optional[str]=None,
                  login_on_demand: bool=False, timeout: Union[float, Tuple[float, float], None] = None):
+        # Auth info embedded in the URL may reportedly cause problems, strip it
         parsed_url = urlparse(url)
-        clear_url = '{scheme}://{hostname}{path}'.format(
-            scheme=parsed_url.scheme,
-            hostname=parsed_url.hostname,
-            path=parsed_url.path
-        )
+        clear_url = urlunparse((
+            parsed_url.scheme,
+            parsed_url.netloc.rpartition("@")[-1],
+            *parsed_url[2:]
+        ))
         super(AuthorizedConnection, self).__init__(clear_url, timeout=timeout)
         username = username if username else parsed_url.username
         password = password if password else parsed_url.password
