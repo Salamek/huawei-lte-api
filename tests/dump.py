@@ -173,6 +173,8 @@ dump(client.config_pb.config)
 
 dump(client.config_sntp.config)
 
+dump(client.config_statistic.config)
+
 dump(client.config_stk.config)
 
 dump(client.config_update.config)
