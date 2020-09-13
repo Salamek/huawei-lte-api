@@ -82,7 +82,8 @@ class User(ApiGroup):
             except ConnectionError as e:
                 # Some models reportedly close the connection if we attempt to access login state too soon after
                 # setting up the session etc. In that case, retry a few times. The error is reported to be
-                # ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+                # ConnectionError: (
+                #     'Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
                 if i == tries - 1:
                     raise
                 time.sleep((i + 1)/10)
