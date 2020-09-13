@@ -79,7 +79,7 @@ class User(ApiGroup):
         for i in range(tries):
             try:
                 state_login = self.state_login()
-            except ConnectionError as e:
+            except ConnectionError:
                 # Some models reportedly close the connection if we attempt to access login state too soon after
                 # setting up the session etc. In that case, retry a few times. The error is reported to be
                 # ConnectionError: (
