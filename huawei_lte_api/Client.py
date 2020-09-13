@@ -66,7 +66,7 @@ from huawei_lte_api.api.MLog import MLog
 
 
 class Client:
-    def __init__(self, connection: Connection):
+    def __init__(self, connection: Connection):  # pylint: disable=too-many-statements
         self.monitoring = Monitoring(connection)
         self.security = Security(connection)
         self.webserver = WebServer(connection)
