@@ -22,7 +22,7 @@ class User(ApiGroup):
     _password = None
 
     def __init__(self, connection: Connection, username: Optional[str]=None, password: Optional[str]=None):
-        super(User, self).__init__(connection)
+        super().__init__(connection)
         self._username = username if username else 'admin'
         self._password = password
 

@@ -1,6 +1,6 @@
 class ResponseErrorException(Exception):
     def __init__(self, message: str, code: int) -> None:
-        super(ResponseErrorException, self).__init__(message)
+        super().__init__(message)
         self.code = code
 
 
