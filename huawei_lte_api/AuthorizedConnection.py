@@ -18,7 +18,7 @@ class AuthorizedConnection(Connection):
             parsed_url.netloc.rpartition("@")[-1],
             *parsed_url[2:]
         ))
-        super(AuthorizedConnection, self).__init__(clear_url, timeout=timeout)
+        super().__init__(clear_url, timeout=timeout)
         username = username if username else parsed_url.username
         password = password if password else parsed_url.password
 
