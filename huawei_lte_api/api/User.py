@@ -2,7 +2,7 @@ import base64
 import hashlib
 import time
 from typing import Optional
-from requests.exceptions import ConnectionError
+import requests
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
 from huawei_lte_api.ApiGroup import ApiGroup
@@ -79,7 +79,7 @@ class User(ApiGroup):
         for i in range(tries):
             try:
                 state_login = self.state_login()
-            except ConnectionError:
+            except requests.exceptions.ConnectionError:
                 # Some models reportedly close the connection if we attempt to access login state too soon after
                 # setting up the session etc. In that case, retry a few times. The error is reported to be
                 # ConnectionError: (
