@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='huawei-lte-api',
-    version='1.4.13',
+    version='1.4.14',
     packages=find_packages(exclude=['tests', 'tests.*']),
     package_data={'huawei_lte_api': ['py.typed']},
     install_requires=[
