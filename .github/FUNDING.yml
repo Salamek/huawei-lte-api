@@ -9,4 +9,4 @@ community_bridge: # Replace with a single Community Bridge project-name e.g., cl
 liberapay: # Replace with a single Liberapay username
 issuehunt: # Replace with a single IssueHunt username
 otechie: # Replace with a single Otechie username
-custom: ['https://www.paypal.me/salamek', 'bitcoin:BC1Q9MR6WH7045D5UD93HX7NQ873AQQMWR8P44WCKM', 'monero:8BFNqfoXu7b8WjXyUQavUnend3RXCDAd7VHHCeEUFYzRCyUB9HULiHLEVR7qTaJS4wDTshomkNgFsbexbVeSJNRoP6i1yd7']
+custom: ['https://www.paypal.me/salamek', 'bitcoin://BC1Q9MR6WH7045D5UD93HX7NQ873AQQMWR8P44WCKM', 'monero://8BFNqfoXu7b8WjXyUQavUnend3RXCDAd7VHHCeEUFYzRCyUB9HULiHLEVR7qTaJS4wDTshomkNgFsbexbVeSJNRoP6i1yd7']
