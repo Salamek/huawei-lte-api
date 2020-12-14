@@ -48,7 +48,14 @@ class Pb(ApiGroup):
         return self._connection.post_get('pb/group-count')
 
 
-    def pb_new(self, name: str, mobile_phone: str, home_phone: str, work_phone: str, work_email: str) -> SetResponseType:
+    def pb_new( self, 
+                group_id: int=0,
+                save_type: int=0,
+                name: str='', 
+                mobile_phone: str='', 
+                home_phone: str='', 
+                work_phone: str='', 
+                work_email: str='') -> SetResponseType:
         """
         Add new entry to global PhoneBook
         :param
@@ -62,8 +69,8 @@ class Pb(ApiGroup):
                 return self._name
 
         data = OrderedDict([
-            ('GroupID', ''),
-            ('SaveType', ''),
+            ('GroupID',  group_id),
+            ('SaveType', save_type),
             (Node('Field'), {
                 'Name': 'FormattedName',
                 'Value': name
@@ -141,4 +148,3 @@ class Pb(ApiGroup):
 # pb/pb-update
 # pb/pb-move
 # pb/pb-match
-
