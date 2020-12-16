@@ -67,7 +67,6 @@ class Connection:
         smstype=re.search(b'<SmsType>\d</SmsType>',xml)
         if smstype!=None:
             smstype=smstype.group().replace(b'<SmsType>',b'').replace(b'</SmsType>',b'')
-            print(smstype)
             if int(smstype)==5:
                 xml = re.sub(b"[\x00-\x08\x0b-\x0c\x0e-\x1f]+", b"", xml)
         try:
