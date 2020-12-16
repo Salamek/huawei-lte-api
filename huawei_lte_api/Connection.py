@@ -62,9 +62,14 @@ class Connection:
         # parse as XML (even though it's labeled XHTML). Try to detect
         # such cases, and return a generated "not supported" error
         # instead of letting the XML parse error pass through.
-        xml = response.text
-        #彩信无法正常显示，在转换为xml格式时有非法字符，故替换所有非法字符，从而可以让程序完整运行下去
-        xml=re.sub(u"[\x00-\x08\x0b-\x0c\x0e-\x1f]+",u"",xml)
+        xml = response.content
+        # if sms's smsType=5,then replace illegal character with ''
+        smstype=re.search(b'<SmsType>\d</SmsType>',xml)
+        if smstype!=None:
+            smstype=smstype.group().replace(b'<SmsType>',b'').replace(b'</SmsType>',b'')
+            print(smstype)
+            if int(smstype)==5:
+                xml = re.sub(b"[\x00-\x08\x0b-\x0c\x0e-\x1f]+", b"", xml)
         try:
             return xmltodict.parse(xml, dict_constructor=dict) if xml else {}
         except:
