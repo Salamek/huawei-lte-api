@@ -2,12 +2,9 @@ import enum
 
 
 @enum.unique
-class NetworkPreferredMode(enum.IntEnum):
-    AUTO = 0
-    2G_ONLY = 1
-    3G_ONLY = 2
-    4G_ONLY = 3
-    4G_3G_AUTO = 302
-    LTE_800_ONLY = 5
-    LTE_1800_ONLY = 6
-    LTE_2600_ONLY = 7
+class NetworkModeEnum(enum.Enum):
+    MODE_AUTO = '00'
+    MODE_2G_ONLY = '01'
+    MODE_3G_ONLY = '02'
+    MODE_4G_ONLY = '03'
+    MODE_4G_3G_AUTO = '0302'

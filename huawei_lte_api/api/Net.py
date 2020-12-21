@@ -1,4 +1,6 @@
 from collections import OrderedDict
+from typing import Union
+from huawei_lte_api.enums.net import NetworkModeEnum
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Connection import GetResponseType, SetResponseType
 
@@ -10,9 +12,9 @@ class Net(ApiGroup):
     def net_mode(self) -> GetResponseType:
         return self._connection.get('net/net-mode')
 
-    def set_net_mode(self, lteband: str, networkband: str, networkmode: str) -> SetResponseType:
+    def set_net_mode(self, lteband: str, networkband: str, networkmode: Union[NetworkModeEnum, str]) -> SetResponseType:
         return self._connection.post_set('net/net-mode', OrderedDict((
-            ('NetworkMode', networkmode),
+            ('NetworkMode', networkmode if isinstance(networkmode, str) else networkmode.value),
             ('NetworkBand', networkband),
             ('LTEBand', lteband)
         )))
