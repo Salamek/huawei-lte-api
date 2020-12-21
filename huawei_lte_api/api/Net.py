@@ -12,10 +12,10 @@ class Net(ApiGroup):
     def net_mode(self) -> GetResponseType:
         return self._connection.get('net/net-mode')
 
-    def set_net_mode(self, lteband: str, networkband: Union[int, str], networkmode: Union[NetworkModeEnum, str]) -> SetResponseType:
+    def set_net_mode(self, lteband: Union[str, int], networkband: Union[int, str], networkmode: Union[NetworkModeEnum, str]) -> SetResponseType:
         """
-        :param lteband: bitmask of LTE band ints or'd together, where each band N is represented as 2**(N-1), in hex
-            without leading '0x'. For example B1,B3,B20: hex(2**(1-1) | 2**(3-1) | 2**(20-1))[2:] = '80005'.
+        :param lteband: bitmask of LTE band ints or'd together, where each band N is represented as 2**(N-1), as int,
+            or hex str without leading '0x'. For example B1,B3,B20: 2**(1-1) | 2**(3-1) | 2**(20-1) = 0x80005.
             Use ALL for all or when not applicable (not 4G mode). All values or combinations of them may not be
             supported.
         :param networkband: bitmask of 3G network band ints or'd together, as int, or hex str without leading '0x'.
@@ -27,7 +27,7 @@ class Net(ApiGroup):
         return self._connection.post_set('net/net-mode', OrderedDict((
             ('NetworkMode', networkmode if isinstance(networkmode, str) else networkmode.value),
             ('NetworkBand', networkband if isinstance(networkband, str) else hex(networkband)[2:]),
-            ('LTEBand', lteband)
+            ('LTEBand', lteband if isinstance(lteband, str) else hex(lteband)[2:]),
         )))
 
     def network(self) -> GetResponseType:
