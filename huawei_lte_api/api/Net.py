@@ -1,6 +1,11 @@
 from collections import OrderedDict
+from typing import Union
+from huawei_lte_api.enums.net import NetworkModeEnum
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Connection import GetResponseType, SetResponseType
+
+
+ALL_BANDS = '7fffffffffffffff'
 
 
 class Net(ApiGroup):
@@ -10,9 +15,17 @@ class Net(ApiGroup):
     def net_mode(self) -> GetResponseType:
         return self._connection.get('net/net-mode')
 
-    def set_net_mode(self, lteband: str, networkband: str, networkmode: str) -> SetResponseType:
+    def set_net_mode(self, lteband: str, networkband: str, networkmode: Union[NetworkModeEnum, str]) -> SetResponseType:
+        """
+        :param lteband: bitmask of per band ints or'd together, where each band N is represented as 2**(N-1), in hex
+            without leading '0x'. For example B1,B3,B20: hex(2**(1-1) | 2**(3-1) | 2**(20-1))[2:] = '80005'.
+            Use ALL_BANDS to indicate all bands. All values or combinations of them may not be supported.
+        :param networkband:
+        :param networkmode: network mode, see NetworkModeEnum; str supported for deprecated backwards compatiblity
+        :return:
+        """
         return self._connection.post_set('net/net-mode', OrderedDict((
-            ('NetworkMode', networkmode),
+            ('NetworkMode', networkmode if isinstance(networkmode, str) else networkmode.value),
             ('NetworkBand', networkband),
             ('LTEBand', lteband)
         )))
