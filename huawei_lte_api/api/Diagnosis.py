@@ -19,7 +19,7 @@ class Diagnosis(ApiGroup):
         return self._connection.get('diagnosis/diagnose_traceroute')
 
     def set_diagnose_traceroute(self, host: str, timeout: int = 4000, max_hop_count: int = 30) -> SetResponseType:
-        return self._connection.post_set('diagnosis/diagnose_ping', dict(
+        return self._connection.post_set('diagnosis/diagnose_traceroute', dict(
             Host=host,
             MaxHopCount=max_hop_count,
             Timeout=timeout,
