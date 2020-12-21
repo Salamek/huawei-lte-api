@@ -39,3 +39,10 @@ class NetworkBandEnum(enum.IntEnum):
 
     ALL = 0x3fffffff
     """Use alone, do not 'or' this with others."""
+
+
+@enum.unique
+class LTEBandEnum(enum.IntEnum):
+    """For other values besides ALL, see set_net_mode docs."""
+    ALL = 0x7fffffffffffffff
+    """Use alone, do not 'or' this with others."""

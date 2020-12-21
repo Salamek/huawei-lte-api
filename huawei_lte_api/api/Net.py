@@ -5,9 +5,6 @@ from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Connection import GetResponseType, SetResponseType
 
 
-ALL_BANDS = '7fffffffffffffff'
-
-
 class Net(ApiGroup):
     def current_plmn(self) -> GetResponseType:
         return self._connection.get('net/current-plmn')
@@ -19,7 +16,8 @@ class Net(ApiGroup):
         """
         :param lteband: bitmask of LTE band ints or'd together, where each band N is represented as 2**(N-1), in hex
             without leading '0x'. For example B1,B3,B20: hex(2**(1-1) | 2**(3-1) | 2**(20-1))[2:] = '80005'.
-            Use ALL_BANDS to indicate all bands. All values or combinations of them may not be supported.
+            Use ALL for all or when not applicable (not 4G mode). All values or combinations of them may not be
+            supported.
         :param networkband: bitmask of 3G network band ints or'd together, as int, or hex str without leading '0x'.
             See NetworkBandEnum, use ALL for all or when not applicable (not 3G mode). All values or combinations
             of them may not be supported.
