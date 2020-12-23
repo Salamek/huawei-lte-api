@@ -1,6 +1,7 @@
 import logging
 import re
 from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, cast
+from urllib.parse import urlparse, urlunparse
 import urllib.parse
 import dicttoxml
 import xmltodict
@@ -36,13 +37,44 @@ class Connection:
     csrf_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
     request_verification_tokens = []  # type: List[str]
 
-    def __init__(self, url: str, timeout: Union[float, Tuple[float, float], None] = None):
+    def __init__(self,
+                 url: str,
+                 username: Optional[str] = None,
+                 password: Optional[str] = None,
+                 timeout: Union[float, Tuple[float, float], None] = None
+                 ):
+
+        # Auth info embedded in the URL may reportedly cause problems, strip it
+        parsed_url = urlparse(url)
+        clear_url = urlunparse((
+            parsed_url.scheme,
+            parsed_url.netloc.rpartition("@")[-1],
+            *parsed_url[2:]
+        ))
+
         self.session = requests.Session()
-        self.url = url
+        if not clear_url.endswith('/'):
+            clear_url += '/'
+        self.url = clear_url
         self.timeout = timeout
-        if not self.url.endswith('/'):
-            self.url += '/'
-        self._initialize_csrf_tokens_and_session()
+
+        # Try catch to close session correctly when _initialize_csrf_tokens_and_session or login fails
+        try:
+            self._initialize_csrf_tokens_and_session()
+
+            # User login code
+            username = username if username else parsed_url.username
+            password = password if password else parsed_url.password
+
+            # If username is provided, login
+            if username:
+                from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import,import-outside-toplevel
+                self.user = User(self, username, password)
+
+                self.user.login(True)
+        except Exception:
+            self.session.close()
+            raise
 
     def reload(self) -> None:
         self._initialize_csrf_tokens_and_session()
@@ -233,3 +265,6 @@ class Connection:
                 return data['TokInfo']
             except ResponseErrorNotSupportedException:
                 return None
+
+    def close(self):
+        self.session.close()
