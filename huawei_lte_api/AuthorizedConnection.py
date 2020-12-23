@@ -11,6 +11,10 @@ class AuthorizedConnection(Connection):
                  login_on_demand: bool = False,
                  timeout: Union[float, Tuple[float, float], None] = None
                  ):
+        warnings.warn(
+            "AuthorizedConnection is deprecated, use Connection instead with the ~same arguments! (minus login_on_demand)",
+            DeprecationWarning
+        )
 
         if login_on_demand:
             warnings.warn(
