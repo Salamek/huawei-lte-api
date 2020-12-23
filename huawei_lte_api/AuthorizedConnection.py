@@ -1,6 +1,7 @@
 import warnings
 from typing import Optional, Tuple, Union
 from huawei_lte_api.Connection import Connection
+from urllib.parse import urlparse
 
 
 class AuthorizedConnection(Connection):
@@ -11,10 +12,16 @@ class AuthorizedConnection(Connection):
                  login_on_demand: bool = False,
                  timeout: Union[float, Tuple[float, float], None] = None
                  ):
-        warnings.warn(
-            "AuthorizedConnection is deprecated, use Connection instead with the ~same arguments! (minus login_on_demand)",
-            DeprecationWarning
-        )
+        parsed_url = urlparse(url)
+
+        # User login code
+        username = username if username else parsed_url.username
+        password = password if password else parsed_url.password
+
+        from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import,import-outside-toplevel
+        super().__init__(url, timeout=timeout)
+        self.user = User(self)
+        self.user.login(username, password, True)
 
         if login_on_demand:
             warnings.warn(
@@ -22,7 +29,17 @@ class AuthorizedConnection(Connection):
                 DeprecationWarning
             )
 
-        super().__init__(url, username=username, password=password, timeout=timeout)
+    def close(self):
+        self.user.logout()
+        super(AuthorizedConnection, self).close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
+
 
 
 

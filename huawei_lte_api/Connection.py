@@ -39,8 +39,6 @@ class Connection:
 
     def __init__(self,
                  url: str,
-                 username: Optional[str] = None,
-                 password: Optional[str] = None,
                  timeout: Union[float, Tuple[float, float], None] = None,
                  session_kwargs: dict = None
                  ):
@@ -66,20 +64,9 @@ class Connection:
         self.url = clear_url
         self.timeout = timeout
 
-        # Try catch to close session correctly when _initialize_csrf_tokens_and_session or login fails
+        # Try catch to close session correctly when _initialize_csrf_tokens_and_session fails
         try:
             self._initialize_csrf_tokens_and_session()
-
-            # User login code
-            username = username if username else parsed_url.username
-            password = password if password else parsed_url.password
-
-            # If username is provided, login
-            if username:
-                from huawei_lte_api.api.User import User  # pylint: disable=cyclic-import,import-outside-toplevel
-                self.user = User(self, username, password)
-
-                self.user.login(True)
         except Exception:
             self.session.close()
             raise
