@@ -1,12 +1,11 @@
 import base64
 import hashlib
 import time
-from typing import Optional
 import requests
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Connection import Connection, GetResponseType, SetResponseType
+from huawei_lte_api.Connection import GetResponseType, SetResponseType, Connection
 from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorAlreadyLoginException, \
     LoginErrorUsernamePasswordModifyException, \
@@ -17,35 +16,43 @@ from huawei_lte_api.exceptions import ResponseErrorException, \
     ResponseErrorNotSupportedException
 
 
-class User(ApiGroup):
-    _username = 'admin'
-    _password = None
+class UserSession:
+    def __init__(self, connection: Connection, username: str, password: str = None):
+        self.user = User(connection)
+        self.user.login(username, password, True)
 
-    def __init__(self, connection: Connection, username: Optional[str]=None, password: Optional[str]=None):
-        super().__init__(connection)
-        self._username = username if username else 'admin'
-        self._password = password
+    def close(self):
+        self.user.logout()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
+
+class User(ApiGroup):
 
     def state_login(self) -> GetResponseType:
         return self._connection.get('user/state-login')
 
-    def _login(self, password_type: PasswordTypeEnum=PasswordTypeEnum.BASE_64) -> bool:
-        if not self._password:
+    def _login(self, username: str, password: str, password_type: PasswordTypeEnum=PasswordTypeEnum.BASE_64) -> bool:
+        if not password:
             password = b''
         else:
             if password_type == PasswordTypeEnum.SHA256:
                 concentrated = b''.join([
-                    self._username.encode('UTF-8'),
-                    base64.b64encode(hashlib.sha256(self._password.encode('UTF-8')).hexdigest().encode('ascii')),
+                    username.encode('UTF-8'),
+                    base64.b64encode(hashlib.sha256(password.encode('UTF-8')).hexdigest().encode('ascii')),
                     self._connection.request_verification_tokens[0].encode('UTF-8')
                 ])
                 password = base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
             else:
-                password = base64.b64encode(self._password.encode('UTF-8'))
+                password = base64.b64encode(password.encode('UTF-8'))
 
         try:
             result = self._connection.post_set('user/login', {
-                'Username': self._username,
+                'Username': username,
                 'Password': password.decode('UTF-8'),
                 'password_type': password_type.value
             }, refresh_csrf=True)
@@ -74,7 +81,8 @@ class User(ApiGroup):
 
         return result == ResponseEnum.OK.value
 
-    def login(self, force_new_login: bool=False) -> bool:
+    def login(self, username: str, password: str, force_new_login: bool=False) -> bool:
+        username = username if username else 'admin'
         tries = 5
         for i in range(tries):
             try:
@@ -93,7 +101,7 @@ class User(ApiGroup):
         if LoginStateEnum(int(state_login['State'])) == LoginStateEnum.LOGGED_IN and not force_new_login:
             return True
 
-        return self._login(PasswordTypeEnum(int(state_login['password_type'])))
+        return self._login(username, password, PasswordTypeEnum(int(state_login['password_type'])))
 
     def logout(self) -> SetResponseType:
         return self._connection.post_set('user/logout', {
