@@ -41,7 +41,8 @@ class Connection:
                  url: str,
                  username: Optional[str] = None,
                  password: Optional[str] = None,
-                 timeout: Union[float, Tuple[float, float], None] = None
+                 timeout: Union[float, Tuple[float, float], None] = None,
+                 session_kwargs: dict = None
                  ):
 
         # Auth info embedded in the URL may reportedly cause problems, strip it
@@ -53,6 +54,13 @@ class Connection:
         ))
 
         self.session = requests.Session()
+
+        if session_kwargs:
+            for (key, value) in session_kwargs.items():
+                if not hasattr(self.session, key):
+                    raise AttributeError('Session has no attribute {}'.format(key))
+                setattr(self.session, key, value)
+
         if not clear_url.endswith('/'):
             clear_url += '/'
         self.url = clear_url
