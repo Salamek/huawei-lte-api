@@ -17,6 +17,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 (Device must support NETWork mode aka. "HiLink" version, it wont work with serial mode)
 * Huawei E3131
 * Huawei E3531
+* Huawei E3372
 
 
 (probably will work for other Huawei LTE devices too)
