@@ -66,6 +66,13 @@ and then install by running
 $ pacman -Sy python-huawei-lte-api
 ```
 
+#### Gentoo
+
+```
+$ emerge dev-python/huawei-lte-api
+```
+
+
 ## Usage
 
 ```python3
