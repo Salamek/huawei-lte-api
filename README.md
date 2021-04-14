@@ -115,4 +115,5 @@ Result dict
 ## Donations
 
 * 250 CZK (9,79 EUR) for B535-232 fund, thx @larsvinc !
+* 371,69 CZK (14,32 EUR) by Oleg Jusaew
 
