@@ -1,6 +1,7 @@
 import logging
 import re
 from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, cast
+from urllib.parse import urlparse, urlunparse
 import urllib.parse
 import dicttoxml
 import xmltodict
@@ -36,13 +37,39 @@ class Connection:
     csrf_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
     request_verification_tokens = []  # type: List[str]
 
-    def __init__(self, url: str, timeout: Union[float, Tuple[float, float], None] = None):
+    def __init__(self,
+                 url: str,
+                 timeout: Union[float, Tuple[float, float], None] = None,
+                 session_kwargs: dict = None
+                 ):
+
+        # Auth info embedded in the URL may reportedly cause problems, strip it
+        parsed_url = urlparse(url)
+        clear_url = urlunparse((
+            parsed_url.scheme,
+            parsed_url.netloc.rpartition("@")[-1],
+            *parsed_url[2:]
+        ))
+
         self.session = requests.Session()
-        self.url = url
+
+        if session_kwargs:
+            for (key, value) in session_kwargs.items():
+                if not hasattr(self.session, key):
+                    raise AttributeError('Session has no attribute {}'.format(key))
+                setattr(self.session, key, value)
+
+        if not clear_url.endswith('/'):
+            clear_url += '/'
+        self.url = clear_url
         self.timeout = timeout
-        if not self.url.endswith('/'):
-            self.url += '/'
-        self._initialize_csrf_tokens_and_session()
+
+        # Try catch to close session correctly when _initialize_csrf_tokens_and_session fails
+        try:
+            self._initialize_csrf_tokens_and_session()
+        except Exception:
+            self.session.close()
+            raise
 
     def reload(self) -> None:
         self._initialize_csrf_tokens_and_session()
@@ -233,3 +260,12 @@ class Connection:
                 return data['TokInfo']
             except ResponseErrorNotSupportedException:
                 return None
+
+    def close(self):
+        self.session.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
