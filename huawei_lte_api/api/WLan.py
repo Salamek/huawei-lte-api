@@ -50,17 +50,30 @@ class WLan(ApiGroup):
     def multi_basic_settings(self) -> GetResponseType:
         return self._connection.get('wlan/multi-basic-settings')
 
-    def set_multi_basic_settings(self, clients: list) -> SetResponseType:
+    def set_multi_basic_settings(self, ssids: list) -> SetResponseType:
         """
-
-   :param clients: list of dicts with format {'wifihostname': hostname,'WifiMacFilterMac': mac}
+   :param ssids: list of dicts with format {
+        'Index': index,
+        'WifiBroadcast': wifiBroadcast,
+        'wifiguestofftime': wifiguestofftime,
+        'WifiAuthmode': wifiAuthmode,
+        'ID': id,
+        'WifiEnable': wifiEnable,
+        'wifiisguestnetwork': wifiisguestnetwork,
+        'WifiMac': wifiMac,
+        'WifiSsid': wifiSsid,
+        'WifiRadiusKey': wifiRadiusKey,
+        'WifiWpaencryptionmodes': wifiWpaencryptionmodes,
+        'WifiWepKeyIndex': wifiWepKeyIndex,
+    }
    """
-        return self._connection.post_set('wlan/multi-basic-settings', {
-            'Ssids': {
-                'Ssid': clients
+        return self._connection.post_set(
+            endpoint='wlan/multi-basic-settings',
+            data={
+                'Ssids': ssids,
+                'WifiRestart': 1
             },
-            'WifiRestart': 1
-        })
+            dicttoxml_xargs={'item_func': lambda x: 'Ssid'})
 
     def host_list(self) -> GetResponseType:
         # Make sure Hosts->Host is a list
