@@ -4,6 +4,38 @@ from huawei_lte_api.Connection import GetResponseType, SetResponseType
 from huawei_lte_api.enums.wlan import AuthModeEnum, WepEncryptModeEnum, WpaEncryptModeEnum
 
 
+def _to_multi_basic_settings_ssid_body(ssid):
+    return {
+        'Index': ssid['Index'],
+        'WifiBroadcast': ssid['WifiBroadcast'],
+        'wifiguestofftime': ssid['wifiguestofftime'],
+        'WifiAuthmode': ssid['WifiAuthmode'],
+        'ID': ssid['ID'],
+        'WifiEnable': ssid['WifiEnable'],
+        'wifiisguestnetwork': ssid['wifiisguestnetwork'],
+        'WifiMac': ssid['WifiMac'],
+        'WifiSsid': ssid['WifiSsid'],
+        'WifiRadiusKey': ssid['WifiRadiusKey'],
+        'WifiWpaencryptionmodes': ssid['WifiWpaencryptionmodes'],
+        'WifiWepKeyIndex': ssid['WifiWepKeyIndex'],
+    }
+
+
+def _set_wifi_enable(ssid: dict, status: bool):
+    if ssid['wifiisguestnetwork'] == '0':
+        return ssid
+
+    if status is None:
+        wifiEnable = '1' if ssid['WifiEnable'] == '0' else '0'
+    elif status:
+        wifiEnable = '1'
+    else:
+        wifiEnable = '0'
+
+    ssid['WifiEnable'] = wifiEnable
+    return wifiEnable
+
+
 class WLan(ApiGroup):
     def wifi_feature_switch(self) -> GetResponseType:
         return self._connection.get('wlan/wifi-feature-switch')
@@ -14,7 +46,7 @@ class WLan(ApiGroup):
     def basic_settings(self) -> GetResponseType:
         return self._connection.get('wlan/basic-settings')
 
-    def set_basic_settings(self, ssid: str, hide: bool=False, wifi_restart: bool=False) -> SetResponseType:
+    def set_basic_settings(self, ssid: str, hide: bool = False, wifi_restart: bool = False) -> SetResponseType:
         return self._connection.post_set('wlan/basic-settings', OrderedDict((
             ('WifiSsid', ssid),
             ('WifiHide', hide),
@@ -26,11 +58,11 @@ class WLan(ApiGroup):
 
     def set_security_settings(self,
                               wpa_psk: str,
-                              wep_key: str='',
-                              wpa_encryption_mode: WpaEncryptModeEnum=WpaEncryptModeEnum.MIX,
-                              wep_encryption_mode: WepEncryptModeEnum=WepEncryptModeEnum.WEP128,
-                              auth_mode: AuthModeEnum=AuthModeEnum.AUTO,
-                              wifi_restart: bool=True
+                              wep_key: str = '',
+                              wpa_encryption_mode: WpaEncryptModeEnum = WpaEncryptModeEnum.MIX,
+                              wep_encryption_mode: WepEncryptModeEnum = WepEncryptModeEnum.WEP128,
+                              auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
+                              wifi_restart: bool = True
                               ) -> SetResponseType:
         return self._connection.post_set('wlan/security-settings', OrderedDict((
             ('WifiAuthmode', auth_mode.value),
@@ -52,21 +84,21 @@ class WLan(ApiGroup):
 
     def set_multi_basic_settings(self, ssids: list) -> SetResponseType:
         """
-   :param ssids: list of dicts with format {
-        'Index': index,
-        'WifiBroadcast': wifiBroadcast,
-        'wifiguestofftime': wifiguestofftime,
-        'WifiAuthmode': wifiAuthmode,
-        'ID': id,
-        'WifiEnable': wifiEnable,
-        'wifiisguestnetwork': wifiisguestnetwork,
-        'WifiMac': wifiMac,
-        'WifiSsid': wifiSsid,
-        'WifiRadiusKey': wifiRadiusKey,
-        'WifiWpaencryptionmodes': wifiWpaencryptionmodes,
-        'WifiWepKeyIndex': wifiWepKeyIndex,
-    }
-   """
+        :param ssids: list of dicts with format {
+            'Index': index,
+            'WifiBroadcast': wifiBroadcast,
+            'wifiguestofftime': wifiguestofftime,
+            'WifiAuthmode': wifiAuthmode,
+            'ID': id,
+            'WifiEnable': wifiEnable,
+            'wifiisguestnetwork': wifiisguestnetwork,
+            'WifiMac': wifiMac,
+            'WifiSsid': wifiSsid,
+            'WifiRadiusKey': wifiRadiusKey,
+            'WifiWpaencryptionmodes': wifiWpaencryptionmodes,
+            'WifiWepKeyIndex': wifiWepKeyIndex,
+        }
+        """
         return self._connection.post_set(
             endpoint='wlan/multi-basic-settings',
             data={
@@ -167,3 +199,14 @@ class WLan(ApiGroup):
         :return:
         """
         return self._connection.get('wlan/wifiscanresult')
+
+    def wifi_guest_network_switch(self, status: bool = None) -> SetResponseType:
+        """
+        Switch on/off wifi guest network
+        :param status: on/off or None
+        """
+        multi_basic_settings = self.wlan.multi_basic_settings()
+        ssids = map(lambda ssid: _to_multi_basic_settings_ssid_body(ssid), multi_basic_settings['Ssids']['Ssid'])
+        ssids = map(lambda ssid: _set_wifi_enable(ssid, status), ssids)
+        ssids = list(ssids)
+        return self.set_multi_basic_settings(ssids)
