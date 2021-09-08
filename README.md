@@ -69,11 +69,10 @@ $ pacman -Sy python-huawei-lte-api
 
 ```python3
 from huawei_lte_api.Client import Client
-from huawei_lte_api.AuthorizedConnection import AuthorizedConnection
 from huawei_lte_api.Connection import Connection
 
 # with Connection('http://192.168.8.1/') as connection: For limited access, I have valid credentials no need for limited access
-with AuthorizedConnection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/') as connection:
+with Connection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/') as connection:
 
     client = Client(connection) # This just simplifies access to separate API groups, you can use device = Device(connection) if you want
 

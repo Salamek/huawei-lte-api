@@ -1,7 +1,7 @@
-from huawei_lte_api.Connection import Connection
+from huawei_lte_api.Session import Session
 
 
 class ApiGroup:
 
-    def __init__(self, connection: Connection):
-        self._connection = connection
+    def __init__(self, session: Session):
+        self._session = session

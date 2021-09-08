@@ -5,7 +5,7 @@ import requests
 from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.enums.client import ResponseEnum
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Connection import GetResponseType, SetResponseType, Connection
+from huawei_lte_api.Session import GetResponseType, SetResponseType, Session
 from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorAlreadyLoginException, \
     LoginErrorUsernamePasswordModifyException, \
@@ -17,8 +17,8 @@ from huawei_lte_api.exceptions import ResponseErrorException, \
 
 
 class UserSession:
-    def __init__(self, connection: Connection, username: str, password: str = None):
-        self.user = User(connection)
+    def __init__(self, session: Session, username: str, password: str = None):
+        self.user = User(session)
         self.user.login(username, password, True)
 
     def close(self):
@@ -34,7 +34,7 @@ class UserSession:
 class User(ApiGroup):
 
     def state_login(self) -> GetResponseType:
-        return self._connection.get('user/state-login')
+        return self._session.get('user/state-login')
 
     def _login(self, username: str, password: str, password_type: PasswordTypeEnum=PasswordTypeEnum.BASE_64) -> bool:
         if not password:
@@ -44,14 +44,14 @@ class User(ApiGroup):
                 concentrated = b''.join([
                     username.encode('UTF-8'),
                     base64.b64encode(hashlib.sha256(password.encode('UTF-8')).hexdigest().encode('ascii')),
-                    self._connection.request_verification_tokens[0].encode('UTF-8')
+                    self._session.request_verification_tokens[0].encode('UTF-8')
                 ])
                 password = base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
             else:
                 password = base64.b64encode(password.encode('UTF-8'))
 
         try:
-            result = self._connection.post_set('user/login', {
+            result = self._session.post_set('user/login', {
                 'Username': username,
                 'Password': password.decode('UTF-8'),
                 'password_type': password_type.value
@@ -104,59 +104,59 @@ class User(ApiGroup):
         return self._login(username, password, PasswordTypeEnum(int(state_login['password_type'])))
 
     def logout(self) -> SetResponseType:
-        return self._connection.post_set('user/logout', {
+        return self._session.post_set('user/logout', {
             'Logout': 1
         })
 
     def remind(self) -> GetResponseType:
-        return self._connection.get('user/remind')
+        return self._session.get('user/remind')
 
     def password(self) -> GetResponseType:
-        return self._connection.get('user/password')
+        return self._session.get('user/password')
 
     def pwd(self) -> GetResponseType:
-        return self._connection.get('user/pwd')
+        return self._session.get('user/pwd')
 
     def set_remind(self, remind_state: str) -> SetResponseType:
-        return self._connection.post_set('user/remind', {
+        return self._session.post_set('user/remind', {
             'remindstate': remind_state
         })
 
     def authentication_login(self) -> GetResponseType:
-        return self._connection.get('user/authentication_login')
+        return self._session.get('user/authentication_login')
 
     def challenge_login(self) -> GetResponseType:
-        return self._connection.get('user/challenge_login')
+        return self._session.get('user/challenge_login')
 
     def hilink_login(self) -> GetResponseType:
-        return self._connection.get('user/hilink_login')
+        return self._session.get('user/hilink_login')
 
     def history_login(self) -> GetResponseType:
-        return self._connection.get('user/history-login')
+        return self._session.get('user/history-login')
 
     def heartbeat(self) -> GetResponseType:
-        return self._connection.get('user/heartbeat')
+        return self._session.get('user/heartbeat')
 
     def web_feature_switch(self) -> GetResponseType:
-        return self._connection.get('user/web-feature-switch')
+        return self._session.get('user/web-feature-switch')
 
     def input_event(self) -> GetResponseType:
         """
        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
        :return:
        """
-        return self._connection.get('user/input_event')
+        return self._session.get('user/input_event')
 
     def screen_state(self) -> GetResponseType:
         """
        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
        :return:
        """
-        return self._connection.get('user/screen_state')
+        return self._session.get('user/screen_state')
 
     def session(self) -> GetResponseType:
         """
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage
         :return:
         """
-        return self._connection.get('user/session')
+        return self._session.get('user/session')

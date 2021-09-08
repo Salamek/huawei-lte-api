@@ -6,17 +6,17 @@ default:
 	@echo "    make test       # Tests entire application with pytest."
 
 style:
-	flake8 --max-line-length=160 --statistics fire_jack tests
+	flake8 --max-line-length=160 --statistics huawei_lte_api tests
 
 lint:
-	pylint3 --max-line-length=160 --max-args=7  fire_jack
+	pylint3 --max-line-length=160 --max-args=7  huawei_lte_api
 
 test:
-	py.test-3 --cov-report term-missing --cov fire_jack tests
+	py.test-3 --cov-report term-missing --cov huawei_lte_api tests
 
 testpdb:
 	py.test-3 --pdb tests
 
 testcovweb:
-	py.test-3 --cov-report html --cov fire_jack tests
+	py.test-3 --cov-report html --cov huawei_lte_api tests
 	open htmlcov/index.html
