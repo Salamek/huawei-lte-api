@@ -93,11 +93,7 @@ class Pb(ApiGroup):
             }),
         ])
 
-        dicttoxml_xargs = {
-            'attr_type': False
-        }
-
-        return self._session.post_set('pb/pb-new', data, dicttoxml_xargs=dicttoxml_xargs)
+        return self._session.post_set('pb/pb-new', data)
 
     def pb_delete(self, pb_index: int) -> SetResponseType:
         """
