@@ -12,11 +12,13 @@ you can use this to simply send SMS, get information about your internet usage, 
 * Huawei E5186s-22a
 * Huawei B528s
 * Huawei B535-232
+* Huawei B818-263
 
 #### 3G/LTE USB sticks:
 (Device must support NETWork mode aka. "HiLink" version, it wont work with serial mode)
 * Huawei E3131
 * Huawei E3531
+* Huawei E3372
 
 
 (probably will work for other Huawei LTE devices too)
@@ -65,6 +67,13 @@ and then install by running
 $ pacman -Sy python-huawei-lte-api
 ```
 
+#### Gentoo
+
+```
+$ emerge dev-python/huawei-lte-api
+```
+
+
 ## Usage
 
 ```python3
@@ -73,7 +82,6 @@ from huawei_lte_api.Connection import Connection
 
 # with Connection('http://192.168.8.1/') as connection: For limited access, I have valid credentials no need for limited access
 with Connection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/') as connection:
-
     client = Client(connection) # This just simplifies access to separate API groups, you can use device = Device(connection) if you want
 
     print(client.device.signal())  # Can be accessed without authorization
@@ -105,4 +113,5 @@ Result dict
 ## Donations
 
 * 250 CZK (9,79 EUR) for B535-232 fund, thx @larsvinc !
+* 371,69 CZK (14,32 EUR) by Oleg Jusaew
 

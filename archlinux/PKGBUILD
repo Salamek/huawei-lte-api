@@ -1,5 +1,5 @@
 pkgname=python-huawei-lte-api
-pkgver=1.4.17
+pkgver=1.4.18
 pkgdesc="API For huawei LAN/WAN LTE Modems"
 pkgrel=1
 arch=('any')
