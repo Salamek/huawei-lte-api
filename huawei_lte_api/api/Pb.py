@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Connection import GetResponseType, SetResponseType
+from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class Pb(ApiGroup):
@@ -10,7 +10,7 @@ class Pb(ApiGroup):
         :param phone_number:
         :return:
         """
-        return self._connection.post_get('pb/pb-match', {
+        return self._session.post_get('pb/pb-match', {
             'Phone': phone_number
         })
 
@@ -23,7 +23,7 @@ class Pb(ApiGroup):
                     sort_type: int=1,
                     ascending: int=1
                     ) -> GetResponseType:
-        return self._connection.post_get('pb/pb-list', OrderedDict((
+        return self._session.post_get('pb/pb-list', OrderedDict((
             ('GroupID', group_id),
             ('PageIndex', page),
             ('ReadCount', read_count),
@@ -38,14 +38,14 @@ class Pb(ApiGroup):
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage
         :return:
         """
-        return self._connection.post_get('pb/pb-count')
+        return self._session.post_get('pb/pb-count')
 
     def group_count(self) -> GetResponseType:
         """
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage
         :return:
         """
-        return self._connection.post_get('pb/group-count')
+        return self._session.post_get('pb/group-count')
 
 
     def pb_new( self, 
@@ -97,7 +97,7 @@ class Pb(ApiGroup):
             'attr_type': False
         }
 
-        return self._connection.post_set('pb/pb-new', data, dicttoxml_xargs=dicttoxml_xargs)
+        return self._session.post_set('pb/pb-new', data, dicttoxml_xargs=dicttoxml_xargs)
 
     def pb_delete(self, pb_index: int) -> SetResponseType:
         """
@@ -105,7 +105,7 @@ class Pb(ApiGroup):
         :param pb_index: Id of PB Item you wish to delete
         :return: dict
         """
-        return self._connection.post_set('pb/pb-delete', {'Index': pb_index})
+        return self._session.post_set('pb/pb-delete', {'Index': pb_index})
 
     def group_delete(self, group_id: int) -> SetResponseType:
         """
@@ -113,7 +113,7 @@ class Pb(ApiGroup):
         :param group_id: Id of Group you wish to delete
         :return:
         """
-        return self._connection.post_set('pb/group-delete', {'GroupID': group_id})
+        return self._session.post_set('pb/group-delete', {'GroupID': group_id})
 
     def group_list(self,
                     page: int = 1,
@@ -121,7 +121,7 @@ class Pb(ApiGroup):
                     sort_type: int=1,
                     ascending: int=1
                     ) -> GetResponseType:
-        return self._connection.post_get('pb/group-list', OrderedDict((
+        return self._session.post_get('pb/group-list', OrderedDict((
             ('PageIndex', page),
             ('ReadCount', read_count),
             ('SortType', sort_type),
@@ -134,7 +134,7 @@ class Pb(ApiGroup):
         :param name_str: name of PB Group you wish to delete
         :return:
         """
-        return self._connection.post_set('pb/group-new', {'GroupName': name_str})
+        return self._session.post_set('pb/group-new', {'GroupName': name_str})
 
 # missing functions
 #

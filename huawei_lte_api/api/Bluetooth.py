@@ -1,5 +1,5 @@
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Connection import GetResponseType
+from huawei_lte_api.Session import GetResponseType
 
 
 class Bluetooth(ApiGroup):
@@ -8,11 +8,11 @@ class Bluetooth(ApiGroup):
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage
         :return:
         """
-        return self._connection.get('bluetooth/settings')
+        return self._session.get('bluetooth/settings')
 
     def scan(self) -> GetResponseType:
         """
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage
         :return:
         """
-        return self._connection.get('bluetooth/scan')
+        return self._session.get('bluetooth/scan')

@@ -78,16 +78,14 @@ $ emerge dev-python/huawei-lte-api
 
 ```python3
 from huawei_lte_api.Client import Client
-from huawei_lte_api.AuthorizedConnection import AuthorizedConnection
 from huawei_lte_api.Connection import Connection
 
-# connection = Connection('http://192.168.8.1/') For limited access, I have valid credentials no need for limited access
-connection = AuthorizedConnection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/')
+# with Connection('http://192.168.8.1/') as connection: For limited access, I have valid credentials no need for limited access
+with Connection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/') as connection:
+    client = Client(connection) # This just simplifies access to separate API groups, you can use device = Device(connection) if you want
 
-client = Client(connection) # This just simplifies access to separate API groups, you can use device = Device(connection) if you want
-
-print(client.device.signal())  # Can be accessed without authorization
-print(client.device.information())  # Needs valid authorization, will throw exception if invalid credentials are passed in URL
+    print(client.device.signal())  # Can be accessed without authorization
+    print(client.device.information())  # Needs valid authorization, will throw exception if invalid credentials are passed in URL
 
 
 # For more API calls just look on code in the huawei_lte_api/api folder, there is no separate DOC yet
