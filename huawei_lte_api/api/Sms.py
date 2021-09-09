@@ -70,19 +70,16 @@ class Sms(ApiGroup):
 
         if from_date is None:
             from_date = datetime.datetime.utcnow()
-        dicttoxml_xargs = {
-            'item_func': lambda x: x[:-1]
-        }
 
         return self._session.post_set('sms/save-sms', OrderedDict((
             ('Index', sms_index),
-            ('Phones',  phone_numbers),
+            ('Phones', OrderedDict([('Phone', phone_number) for phone_number in phone_numbers])),
             ('Sca', sca),
             ('Content', message),
             ('Length', len(message)),
             ('Reserved', text_mode.value),
             ('Date', from_date.strftime("%Y-%m-%d %H:%M:%S"))
-        )), dicttoxml_xargs=dicttoxml_xargs)
+        )))
 
     def send_sms(self,
                  phone_numbers: list,
@@ -95,26 +92,19 @@ class Sms(ApiGroup):
 
         if from_date is None:
             from_date = datetime.datetime.utcnow()
-        dicttoxml_xargs = {
-            'item_func': lambda x: x[:-1]
-        }
-
+        
         return self._session.post_set('sms/send-sms', OrderedDict((
             ('Index', sms_index),
-            ('Phones', phone_numbers),
+            ('Phones', OrderedDict([('Phone', phone_number) for phone_number in phone_numbers])),
             ('Sca', sca),
             ('Content', message),
             ('Length', len(message)),
             ('Reserved', text_mode.value),
             ('Date', from_date.strftime("%Y-%m-%d %H:%M:%S"))
-        )), dicttoxml_xargs=dicttoxml_xargs)
+        )))
 
     def cancel_send(self) -> SetResponseType:
-        return self._session.post_set('sms/cancel-send', {
-            'request': 1,
-        }, dicttoxml_xargs={
-            'root': False,
-        })
+        return self._session.post_set('sms/cancel-send', 1)
 
     def config(self) -> GetResponseType:
         return self._session.get('sms/config')

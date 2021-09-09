@@ -34,13 +34,9 @@ class Pin(ApiGroup):
         puk_code : int
             PUK code to use in case it is required by the device (default is `None`).
         """
-        dicttoxml_xargs = {
-            'item_func': lambda x: x[:-1]
-        }
-
         return self._session.post_set('pin/operate', {
             'OperateType': operate_type,
             'CurrentPin': current_pin,
             'NewPin': new_pin,
             'PukCode': puk_code
-        }, dicttoxml_xargs=dicttoxml_xargs)
+        })

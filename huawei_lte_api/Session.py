@@ -3,7 +3,6 @@ import re
 from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, cast
 from urllib.parse import urlparse, urlunparse
 import urllib.parse
-import dicttoxml
 import xmltodict
 import requests
 from huawei_lte_api.enums.client import ResponseCodeEnum
@@ -69,12 +68,12 @@ class Session:
         self._initialize_csrf_tokens_and_session()
 
     @staticmethod
-    def _create_request_xml(data: Union[dict, list], dicttoxml_xargs: Optional[dict]=None) -> bytes:
-        if not dicttoxml_xargs:
-            dicttoxml_xargs = {}
+    def _create_request_xml(data: Union[dict, list, int]) -> bytes:
+        wrapped_in_request = {
+            'request': data
+        }
 
-        dicttoxml_xargs['attr_type'] = False
-        return dicttoxml.dicttoxml(data, custom_root='request', **dicttoxml_xargs)
+        return xmltodict.unparse(wrapped_in_request)
 
     @staticmethod
     def _process_response_xml(response: requests.Response) -> dict:
@@ -143,35 +142,32 @@ class Session:
 
     def post_get(self,
                  endpoint: str,
-                 data: Union[dict, list, None]=None,
+                 data: Union[dict, list, int, None]=None,
                  refresh_csrf: bool=False,
-                 prefix: str='api',
-                 dicttoxml_xargs: Optional[dict]=None) \
+                 prefix: str='api') \
                  -> GetResponseType:
         return cast(
             GetResponseType,
-            self._post(endpoint, data, refresh_csrf, prefix, dicttoxml_xargs)
+            self._post(endpoint, data, refresh_csrf, prefix)
         )
 
     def post_set(self,
                  endpoint: str,
-                 data: Union[dict, list, None]=None,
+                 data: Union[dict, list, int, None]=None,
                  refresh_csrf: bool=False,
-                 prefix: str='api',
-                 dicttoxml_xargs: Optional[dict]=None) \
+                 prefix: str='api') \
                  -> SetResponseType:
         return cast(
             SetResponseType,
-            self._post(endpoint, data, refresh_csrf, prefix, dicttoxml_xargs)
+            self._post(endpoint, data, refresh_csrf, prefix)
         )
 
     @_try_or_reload_and_retry
     def _post(self,
               endpoint: str,
-              data: Union[dict, list, None]=None,
+              data: Union[dict, list, int, None]=None,
               refresh_csrf: bool=False,
-              prefix: str='api',
-              dicttoxml_xargs: Optional[dict]=None) \
+              prefix: str='api') \
               -> Union[GetResponseType, SetResponseType]:
 
         headers = {
@@ -185,7 +181,7 @@ class Session:
 
         response = self.requests_session.post(
             self._build_final_url(endpoint, prefix),
-            data=self._create_request_xml(data, dicttoxml_xargs) if data else b'',
+            data=self._create_request_xml(data) if data else b'',
             headers=headers,
             timeout=self.timeout,
         )
