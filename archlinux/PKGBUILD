@@ -9,7 +9,6 @@ makedepends=('python-setuptools')
 depends=(
     'python'
     'python-xmltodict'
-    'python-dicttoxml'
     'python-requests'
 )
 
