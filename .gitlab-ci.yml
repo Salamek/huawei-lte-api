@@ -8,7 +8,7 @@ test:debian:
   stage: test
   script:
     - apt-get update -qy
-    - apt-get install -y python3-setuptools python3-pytest-runner python3-pytest python3-pylint-common python3-pytest-cov python3-xmltodict python3-requests python3-tox python3-pycryptodome
+    - apt-get install -y python3-setuptools python3-pytest-runner python3-pytest python3-pylint-common python3-pytest-cov python3-xmltodict python3-requests tox python3-pycryptodome
     - tox
   tags:
     - debian
@@ -17,7 +17,7 @@ test:archlinux:
   stage: test
   script:
     - pacman -Sy python-pytest-runner python-pytest python-pylint python-pytest-cov python-xmltodict python-requests python-tox python-pycryptodomex --noconfirm
-    - tox
+    - tox -e py39
   tags:
     - archlinux
 
