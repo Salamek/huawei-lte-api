@@ -2,6 +2,8 @@
 API For huawei LAN/WAN LTE Modems,
 you can use this to simply send SMS, get information about your internet usage, signal, and tons of other stuff
 
+[![Tox tests](https://github.com/Salamek/huawei-lte-api/actions/workflows/python-test.yml/badge.svg)](https://github.com/Salamek/huawei-lte-api/actions/workflows/python-test.yml)
+
 ## Tested on:
 #### 3G/LTE Routers:
 * Huawei B310s-22
