@@ -6,6 +6,36 @@ from huawei_lte_api.enums.wlan import AuthModeEnum, WepEncryptModeEnum, WpaEncry
 from huawei_lte_api.Tools import Tools
 
 
+def _to_multi_basic_settings_ssid_body(ssid: dict) -> dict:
+    return {
+        'Index': ssid['Index'],
+        'WifiBroadcast': ssid['WifiBroadcast'],
+        'wifiguestofftime': ssid['wifiguestofftime'],
+        'WifiAuthmode': ssid['WifiAuthmode'],
+        'ID': ssid['ID'],
+        'WifiEnable': ssid['WifiEnable'],
+        'wifiisguestnetwork': ssid['wifiisguestnetwork'],
+        'WifiMac': ssid['WifiMac'],
+        'WifiSsid': ssid['WifiSsid'],
+        'WifiRadiusKey': ssid['WifiRadiusKey'],
+        'WifiWpaencryptionmodes': ssid['WifiWpaencryptionmodes'],
+        'WifiWepKeyIndex': ssid['WifiWepKeyIndex'],
+    }
+
+
+def _set_wifi_enable(ssid: dict, status: bool) -> dict:
+    if ssid['wifiisguestnetwork'] == '0':
+        return ssid
+
+    if status:
+        wifiEnable = '1'
+    else:
+        wifiEnable = '0'
+
+    ssid['WifiEnable'] = wifiEnable
+    return ssid
+
+
 class WLan(ApiGroup):
     def wifi_feature_switch(self) -> GetResponseType:
         return self._session.get('wlan/wifi-feature-switch')
@@ -151,3 +181,13 @@ class WLan(ApiGroup):
         :return:
         """
         return self._session.get('wlan/wifiscanresult')
+
+    def wifi_guest_network_switch(self, status: bool) -> SetResponseType:
+        """
+        Turn on/off wifi guest network
+        :param status: True->on, False->off
+        """
+        multi_basic_settings = self.multi_basic_settings()
+        ssids = map(_to_multi_basic_settings_ssid_body, multi_basic_settings['Ssids']['Ssid'])
+        ssids = map(lambda ssid: _set_wifi_enable(ssid, status), ssids)
+        return self.set_multi_basic_settings(list(ssids))
