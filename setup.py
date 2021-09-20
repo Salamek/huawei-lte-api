@@ -35,15 +35,6 @@ setup(
         'Topic :: Software Development',
     ],
     python_requires='>=3.4',
-    setup_requires=[
-        'pytest-runner'
-    ],
-    tests_require=[
-        'pytest',
-        'pylint',
-        'tox',
-        'pytest-cov'
-    ],
     project_urls={
         'Release notes': 'https://github.com/Salamek/huawei-lte-api/releases',
     },
