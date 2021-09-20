@@ -15,6 +15,7 @@ from huawei_lte_api.exceptions import \
     ResponseErrorNotSupportedException, \
     ResponseErrorSystemBusyException, \
     ResponseErrorLoginCsrfException
+from huawei_lte_api.Tools import Tools
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -35,6 +36,7 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
 
 
 class Session:
+    encryption_key = None
     csrf_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
     request_verification_tokens = []  # type: List[str]
 
@@ -75,7 +77,7 @@ class Session:
             'request': data
         }
 
-        return xmltodict.unparse(wrapped_in_request)
+        return xmltodict.unparse(wrapped_in_request).encode('utf-8')
 
     @staticmethod
     def _process_response_xml(response: requests.Response) -> dict:
@@ -142,26 +144,36 @@ class Session:
     def _build_final_url(self, endpoint: str, prefix: str = 'api') -> str:
         return urllib.parse.urljoin(self.url + '{}/'.format(prefix), endpoint)
 
+    def _encrypt_data(self, data: bytes) -> bytes:
+        pubkey_data = self._get_encryption_key()
+        rsa_e = pubkey_data.get('encpubkeye')
+        rsa_n = pubkey_data.get('encpubkeyn')
+        if not rsa_n or not rsa_e:
+            raise Exception('No pub key was found')
+        return Tools.rsa_encrypt(rsa_e, rsa_n, data)
+
     def post_get(self,
                  endpoint: str,
                  data: Union[dict, list, int, None] = None,
                  refresh_csrf: bool = False,
-                 prefix: str = 'api') \
+                 prefix: str = 'api',
+                 is_encrypted: bool = False) \
             -> GetResponseType:
         return cast(
             GetResponseType,
-            self._post(endpoint, data, refresh_csrf, prefix)
+            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted)
         )
 
     def post_set(self,
                  endpoint: str,
                  data: Union[dict, list, int, None] = None,
                  refresh_csrf: bool = False,
-                 prefix: str = 'api') \
+                 prefix: str = 'api',
+                 is_encrypted: bool = False) \
             -> SetResponseType:
         return cast(
             SetResponseType,
-            self._post(endpoint, data, refresh_csrf, prefix)
+            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted)
         )
 
     @_try_or_reload_and_retry
@@ -169,21 +181,27 @@ class Session:
               endpoint: str,
               data: Union[dict, list, int, None] = None,
               refresh_csrf: bool = False,
-              prefix: str = 'api') \
+              prefix: str = 'api',
+              is_encrypted: bool = False) \
             -> Union[GetResponseType, SetResponseType]:
 
         headers = {
-            'Content-Type': 'application/xml'
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' if is_encrypted else 'application/xml'
         }
+
+        if is_encrypted:
+            headers['encrypt_transmit'] = 'encrypt_transmit'
+
         if self.request_verification_tokens:
             if len(self.request_verification_tokens) > 1:
                 headers['__RequestVerificationToken'] = self.request_verification_tokens.pop(0)
             else:
                 headers['__RequestVerificationToken'] = self.request_verification_tokens[0]
 
+        data_encoded = self._create_request_xml(data) if data else b''
         response = self.requests_session.post(
             self._build_final_url(endpoint, prefix),
-            data=self._create_request_xml(data) if data else b'',
+            data=self._encrypt_data(data_encoded) if is_encrypted else data_encoded,
             headers=headers,
             timeout=self.timeout,
         )
@@ -252,6 +270,11 @@ class Session:
                 return data['TokInfo']
             except ResponseErrorNotSupportedException:
                 return None
+
+    def _get_encryption_key(self) -> dict:
+        if not self.encryption_key:
+            self.encryption_key = self.get('webserver/publickey')
+        return self.encryption_key
 
     def close(self) -> None:
         self.requests_session.close()
