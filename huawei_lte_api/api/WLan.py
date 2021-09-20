@@ -1,4 +1,5 @@
 from collections import OrderedDict
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.enums.wlan import AuthModeEnum, WepEncryptModeEnum, WpaEncryptModeEnum
@@ -14,7 +15,7 @@ class WLan(ApiGroup):
     def basic_settings(self) -> GetResponseType:
         return self._session.get('wlan/basic-settings')
 
-    def set_basic_settings(self, ssid: str, hide: bool=False, wifi_restart: bool=False) -> SetResponseType:
+    def set_basic_settings(self, ssid: str, hide: bool = False, wifi_restart: bool = False) -> SetResponseType:
         return self._session.post_set('wlan/basic-settings', OrderedDict((
             ('WifiSsid', ssid),
             ('WifiHide', hide),
@@ -26,11 +27,11 @@ class WLan(ApiGroup):
 
     def set_security_settings(self,
                               wpa_psk: str,
-                              wep_key: str='',
-                              wpa_encryption_mode: WpaEncryptModeEnum=WpaEncryptModeEnum.MIX,
-                              wep_encryption_mode: WepEncryptModeEnum=WepEncryptModeEnum.WEP128,
-                              auth_mode: AuthModeEnum=AuthModeEnum.AUTO,
-                              wifi_restart: bool=True
+                              wep_key: str = '',
+                              wpa_encryption_mode: WpaEncryptModeEnum = WpaEncryptModeEnum.MIX,
+                              wep_encryption_mode: WepEncryptModeEnum = WepEncryptModeEnum.WEP128,
+                              auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
+                              wifi_restart: bool = True
                               ) -> SetResponseType:
         return self._session.post_set('wlan/security-settings', OrderedDict((
             ('WifiAuthmode', auth_mode.value),
@@ -79,10 +80,10 @@ class WLan(ApiGroup):
 
     def set_handover_setting(self, handover: int) -> SetResponseType:
         """
-    G3_PREFER = 0
-    WIFI_PREFER = 2
-    :param handover:
-    """
+        G3_PREFER = 0
+        WIFI_PREFER = 2
+        :param handover:
+        """
         return self._session.post_set('wlan/handover-setting', {
             'Handover': handover
         })

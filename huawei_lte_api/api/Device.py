@@ -25,7 +25,7 @@ class Device(ApiGroup):
     def boot_time(self) -> GetResponseType:
         return self._session.get('device/boot_time')
 
-    def set_control(self, control: int=4) -> SetResponseType:
+    def set_control(self, control: int = 4) -> SetResponseType:
         return self._session.post_set('device/control', {
             'Control': control
         })
@@ -47,7 +47,7 @@ class Device(ApiGroup):
     def get_antenna_settings(self) -> GetResponseType:
         return self._session.get('device/antenna_settings')
 
-    def set_antenna_settings(self, antenna_type: AntennaTypeEnum=AntennaTypeEnum.AUTO) -> SetResponseType:
+    def set_antenna_settings(self, antenna_type: AntennaTypeEnum = AntennaTypeEnum.AUTO) -> SetResponseType:
         return self._session.post_set('device/antenna_settings', {
             'antenna_type': antenna_type.value
         })

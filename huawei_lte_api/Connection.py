@@ -1,9 +1,11 @@
 import warnings
-import requests
 from typing import Optional, Tuple, Union
+from urllib.parse import urlparse
+
+import requests
+
 from huawei_lte_api.Session import Session
 from huawei_lte_api.api.User import UserSession
-from urllib.parse import urlparse
 
 
 class Connection(Session):
@@ -33,15 +35,10 @@ class Connection(Session):
     def close(self):
         if self.user_session:
             self.user_session.close()
-        super(Connection, self).close()
+        super().close()
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.close()
-
-
-
-
-

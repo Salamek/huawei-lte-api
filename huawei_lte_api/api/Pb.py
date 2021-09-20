@@ -1,4 +1,5 @@
 from collections import OrderedDict
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
 
@@ -16,12 +17,12 @@ class Pb(ApiGroup):
 
     def get_pb_list(self,
                     page: int = 1,
-                    key_word: str='',
-                    group_id: int=0,
-                    read_count: int=50,
-                    save_type: int=0,
-                    sort_type: int=1,
-                    ascending: int=1
+                    key_word: str = '',
+                    group_id: int = 0,
+                    read_count: int = 50,
+                    save_type: int = 0,
+                    sort_type: int = 1,
+                    ascending: int = 1
                     ) -> GetResponseType:
         return self._session.post_get('pb/pb-list', OrderedDict((
             ('GroupID', group_id),
@@ -29,7 +30,7 @@ class Pb(ApiGroup):
             ('ReadCount', read_count),
             ('SaveType', save_type),
             ('SortType', sort_type),
-            ('Ascending', ascending), 
+            ('Ascending', ascending),
             ('KeyWord', key_word)
         )))
 
@@ -47,20 +48,20 @@ class Pb(ApiGroup):
         """
         return self._session.post_get('pb/group-count')
 
-
-    def pb_new( self, 
-                group_id: int=0,
-                save_type: int=0,
-                name: str='', 
-                mobile_phone: str='', 
-                home_phone: str='', 
-                work_phone: str='', 
-                work_email: str='') -> SetResponseType:
+    def pb_new(self,
+               group_id: int = 0,
+               save_type: int = 0,
+               name: str = '',
+               mobile_phone: str = '',
+               home_phone: str = '',
+               work_phone: str = '',
+               work_email: str = '') -> SetResponseType:
         """
         Add new entry to global PhoneBook
         :param
         :return:
         """
+
         class Node:
             def __init__(self, name):
                 self._name = name
@@ -69,7 +70,7 @@ class Pb(ApiGroup):
                 return self._name
 
         data = OrderedDict([
-            ('GroupID',  group_id),
+            ('GroupID', group_id),
             ('SaveType', save_type),
             (Node('Field'), {
                 'Name': 'FormattedName',
@@ -112,11 +113,11 @@ class Pb(ApiGroup):
         return self._session.post_set('pb/group-delete', {'GroupID': group_id})
 
     def group_list(self,
-                    page: int = 1,
-                    read_count: int=50,
-                    sort_type: int=1,
-                    ascending: int=1
-                    ) -> GetResponseType:
+                   page: int = 1,
+                   read_count: int = 50,
+                   sort_type: int = 1,
+                   ascending: int = 1
+                   ) -> GetResponseType:
         return self._session.post_get('pb/group-list', OrderedDict((
             ('PageIndex', page),
             ('ReadCount', read_count),

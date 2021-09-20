@@ -1,10 +1,12 @@
 import logging
 import re
+import urllib.parse
 from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, cast
 from urllib.parse import urlparse, urlunparse
-import urllib.parse
-import xmltodict
+
 import requests
+import xmltodict
+
 from huawei_lte_api.enums.client import ResponseCodeEnum
 from huawei_lte_api.exceptions import \
     ResponseErrorException, \
@@ -12,7 +14,6 @@ from huawei_lte_api.exceptions import \
     ResponseErrorNotSupportedException, \
     ResponseErrorSystemBusyException, \
     ResponseErrorLoginCsrfException
-
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -104,7 +105,7 @@ class Session:
             ResponseCodeEnum.ERROR_SYSTEM_BUSY.value: ResponseErrorSystemBusyException,
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS.value: ResponseErrorLoginRequiredException,
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT.value: ResponseErrorNotSupportedException,
-            ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN.value:  ResponseErrorException,
+            ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN.value: ResponseErrorException,
             ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: ResponseErrorLoginCsrfException
         }
         if 'error' in data:
@@ -137,15 +138,15 @@ class Session:
             if token is not None:
                 self.request_verification_tokens.append(token)
 
-    def _build_final_url(self, endpoint: str, prefix: str='api') -> str:
+    def _build_final_url(self, endpoint: str, prefix: str = 'api') -> str:
         return urllib.parse.urljoin(self.url + '{}/'.format(prefix), endpoint)
 
     def post_get(self,
                  endpoint: str,
-                 data: Union[dict, list, int, None]=None,
-                 refresh_csrf: bool=False,
-                 prefix: str='api') \
-                 -> GetResponseType:
+                 data: Union[dict, list, int, None] = None,
+                 refresh_csrf: bool = False,
+                 prefix: str = 'api') \
+            -> GetResponseType:
         return cast(
             GetResponseType,
             self._post(endpoint, data, refresh_csrf, prefix)
@@ -153,10 +154,10 @@ class Session:
 
     def post_set(self,
                  endpoint: str,
-                 data: Union[dict, list, int, None]=None,
-                 refresh_csrf: bool=False,
-                 prefix: str='api') \
-                 -> SetResponseType:
+                 data: Union[dict, list, int, None] = None,
+                 refresh_csrf: bool = False,
+                 prefix: str = 'api') \
+            -> SetResponseType:
         return cast(
             SetResponseType,
             self._post(endpoint, data, refresh_csrf, prefix)
@@ -165,10 +166,10 @@ class Session:
     @_try_or_reload_and_retry
     def _post(self,
               endpoint: str,
-              data: Union[dict, list, int, None]=None,
-              refresh_csrf: bool=False,
-              prefix: str='api') \
-              -> Union[GetResponseType, SetResponseType]:
+              data: Union[dict, list, int, None] = None,
+              refresh_csrf: bool = False,
+              prefix: str = 'api') \
+            -> Union[GetResponseType, SetResponseType]:
 
         headers = {
             'Content-Type': 'application/xml'
@@ -206,7 +207,7 @@ class Session:
     def post_file(self,
                   endpoint: str,
                   files: dict,
-                  data: Optional[dict]=None,
+                  data: Optional[dict] = None,
                   prefix: str = 'api',
                   ) -> str:
 
@@ -226,7 +227,7 @@ class Session:
         return response.content.decode('UTF-8').lower()
 
     @_try_or_reload_and_retry
-    def get(self, endpoint: str, params: Optional[dict]=None, prefix: str='api') -> dict:
+    def get(self, endpoint: str, params: Optional[dict] = None, prefix: str = 'api') -> dict:
         headers = {}
         if len(self.request_verification_tokens) == 1:
             headers['__RequestVerificationToken'] = self.request_verification_tokens[0]

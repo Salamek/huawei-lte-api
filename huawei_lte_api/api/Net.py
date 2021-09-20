@@ -1,8 +1,9 @@
 from collections import OrderedDict
 from typing import Union
-from huawei_lte_api.enums.net import NetworkModeEnum
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
+from huawei_lte_api.enums.net import NetworkModeEnum
 
 
 class Net(ApiGroup):

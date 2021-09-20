@@ -1,6 +1,7 @@
 import datetime
 from collections import OrderedDict
 from typing import Optional
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.enums.sms import BoxTypeEnum, TextModeEnum, SaveModeEnum, SendTypeEnum, PriorityEnum
@@ -23,12 +24,12 @@ class Sms(ApiGroup):
         return self._session.get('sms/send-status')
 
     def get_sms_list(self,
-                     page: int=1,
-                     box_type: BoxTypeEnum=BoxTypeEnum.LOCAL_INBOX,
-                     read_count: int=20,
-                     sort_type: int=0,
-                     ascending: int=0,
-                     unread_preferred: int=0
+                     page: int = 1,
+                     box_type: BoxTypeEnum = BoxTypeEnum.LOCAL_INBOX,
+                     read_count: int = 20,
+                     sort_type: int = 0,
+                     ascending: int = 0,
+                     unread_preferred: int = 0
                      ) -> GetResponseType:
         # Note: at least the B525s-23a is order sensitive
         return self._session.post_get('sms/sms-list', OrderedDict((
@@ -48,7 +49,7 @@ class Sms(ApiGroup):
         """
         return self._session.post_set('sms/delete-sms', {'Index': sms_id})
 
-    def backup_sim(self, from_date: datetime.datetime, is_move: bool=False) -> SetResponseType:
+    def backup_sim(self, from_date: datetime.datetime, is_move: bool = False) -> SetResponseType:
         return self._session.post_set('sms/backup-sim', OrderedDict((
             ('IsMove', int(is_move)),
             ('Date', from_date.strftime("%Y-%m-%d %H:%M:%S"))
@@ -62,10 +63,10 @@ class Sms(ApiGroup):
     def save_sms(self,
                  phone_numbers: list,
                  message: str,
-                 sms_index: int=-1,
-                 sca: str='',
-                 text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
-                 from_date: Optional[datetime.datetime]=None,
+                 sms_index: int = -1,
+                 sca: str = '',
+                 text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT,
+                 from_date: Optional[datetime.datetime] = None,
                  ) -> SetResponseType:
 
         if from_date is None:
@@ -84,15 +85,14 @@ class Sms(ApiGroup):
     def send_sms(self,
                  phone_numbers: list,
                  message: str,
-                 sms_index: int=-1,
-                 sca: str='',
-                 text_mode: TextModeEnum=TextModeEnum.SEVEN_BIT,
-                 from_date: Optional[datetime.datetime]=None,
+                 sms_index: int = -1,
+                 sca: str = '',
+                 text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT,
+                 from_date: Optional[datetime.datetime] = None,
                  ) -> SetResponseType:
 
         if from_date is None:
             from_date = datetime.datetime.utcnow()
-        
         return self._session.post_set('sms/send-sms', OrderedDict((
             ('Index', sms_index),
             ('Phones', OrderedDict([('Phone', phone_number) for phone_number in phone_numbers])),
@@ -111,11 +111,11 @@ class Sms(ApiGroup):
 
     def set_config(self,
                    sca: str,
-                   save_mode: SaveModeEnum=SaveModeEnum.LOCAL,
-                   validity: int=10752,
-                   use_s_report: bool=False,
-                   send_type: SendTypeEnum=SendTypeEnum.SEND,
-                   priority: PriorityEnum=PriorityEnum.NORMAL
+                   save_mode: SaveModeEnum = SaveModeEnum.LOCAL,
+                   validity: int = 10752,
+                   use_s_report: bool = False,
+                   send_type: SendTypeEnum = SendTypeEnum.SEND,
+                   priority: PriorityEnum = PriorityEnum.NORMAL
                    ) -> SetResponseType:
         return self._session.post_set('sms/config', OrderedDict((
             ('SaveMode', save_mode.value),

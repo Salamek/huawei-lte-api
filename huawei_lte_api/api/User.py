@@ -1,11 +1,13 @@
 import base64
 import hashlib
 import time
+
 import requests
-from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
-from huawei_lte_api.enums.client import ResponseEnum
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType, Session
+from huawei_lte_api.enums.client import ResponseEnum
+from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
 from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorAlreadyLoginException, \
     LoginErrorUsernamePasswordModifyException, \
@@ -36,7 +38,7 @@ class User(ApiGroup):
     def state_login(self) -> GetResponseType:
         return self._session.get('user/state-login')
 
-    def _login(self, username: str, password: str, password_type: PasswordTypeEnum=PasswordTypeEnum.BASE_64) -> bool:
+    def _login(self, username: str, password: str, password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
         if not password:
             password = b''
         else:
@@ -81,7 +83,7 @@ class User(ApiGroup):
 
         return result == ResponseEnum.OK.value
 
-    def login(self, username: str, password: str, force_new_login: bool=False) -> bool:
+    def login(self, username: str, password: str, force_new_login: bool = False) -> bool:
         username = username if username else 'admin'
         tries = 5
         for i in range(tries):
@@ -94,7 +96,7 @@ class User(ApiGroup):
                 #     'Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
                 if i == tries - 1:
                     raise
-                time.sleep((i + 1)/10)
+                time.sleep((i + 1) / 10)
             except ResponseErrorNotSupportedException:
                 return True
 

@@ -1,4 +1,5 @@
 from collections import OrderedDict
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
 
@@ -12,11 +13,11 @@ class Security(ApiGroup):
         return self._session.get('security/firewall-switch')
 
     def set_firewall_switch(self,
-                            firewall: bool=True,
-                            ip_filter: bool=False,
-                            wan_ping_filter: bool=True,
-                            url_filter: bool=False,
-                            mac_filter: bool=False
+                            firewall: bool = True,
+                            ip_filter: bool = False,
+                            wan_ping_filter: bool = True,
+                            url_filter: bool = False,
+                            mac_filter: bool = False
                             ) -> SetResponseType:
         return self._session.post_set('security/firewall-switch', OrderedDict((
             ('FirewallMainSwitch', int(firewall)),

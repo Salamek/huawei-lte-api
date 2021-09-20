@@ -1,5 +1,6 @@
 import os
 from typing import BinaryIO
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import SetResponseType
 
@@ -21,5 +22,5 @@ class FileManager(ApiGroup):
         return self._session.post_file('filemanager/upload', {
             'uploadfile': uploadfile,
         }, {
-            'cur_path': 'OU:{}'.format(uploadfile_basename)
-        })
+                                           'cur_path': 'OU:{}'.format(uploadfile_basename)
+                                       })

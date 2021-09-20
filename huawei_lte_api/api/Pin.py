@@ -16,7 +16,7 @@ class Pin(ApiGroup):
 
     def operate(self, operate_type: int = 0, current_pin: Optional[int] = None,
                 new_pin: Optional[int] = None, puk_code: Optional[int] = None) \
-                -> SetResponseType:
+            -> SetResponseType:
         """
         Parameters
         ----------

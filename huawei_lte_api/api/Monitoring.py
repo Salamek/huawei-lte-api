@@ -1,4 +1,5 @@
 from collections import OrderedDict
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
 
@@ -49,7 +50,7 @@ class Monitoring(ApiGroup):
             ('StartDay', start_day),
             ('DataLimit', data_limit),
             ('MonthThreshold', month_threshold),
-            ('SettingEnable', 1)  #!FIXME
+            ('SettingEnable', 1)  # !FIXME
         )))
 
     def month_statistics(self) -> GetResponseType:
