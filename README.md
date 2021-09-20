@@ -97,6 +97,9 @@ Result dict
 ```
 
 ## Code examples
+
+Some code examples are in /examples folder
+
 ### Monitoring
 
 * Monitoring traffic and signal https://github.com/littlejo/huawei-lte-examples
