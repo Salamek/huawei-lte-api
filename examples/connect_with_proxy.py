@@ -13,13 +13,15 @@ from huawei_lte_api.Connection import Connection
 
 parser = ArgumentParser()
 parser.add_argument('url', type=str)
-parser.add_argument('proxy', type=str)
 parser.add_argument('--username', type=str)
 parser.add_argument('--password', type=str)
 args = parser.parse_args()
 
 my_custom_session = requests.Session()
-my_custom_session.proxies = [args.proxy]
+my_custom_session.proxies = {
+  "http": "http://10.10.1.10:3128",  # Http proxy
+  "https": "https://10.10.1.10:1080",  # Https proxy
+}
 
 with Connection(
         args.url,
