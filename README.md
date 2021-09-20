@@ -21,6 +21,9 @@ you can use this to simply send SMS, get information about your internet usage, 
 * Huawei E3372
 
 
+#### 5G Routers:
+* Huawei 5G CPE Pro 2 (H122-373)
+
 (probably will work for other Huawei LTE devices too)
 
 ### Will NOT work on:
