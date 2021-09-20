@@ -2,6 +2,8 @@
 API For huawei LAN/WAN LTE Modems,
 you can use this to simply send SMS, get information about your internet usage, signal, and tons of other stuff
 
+[![Tox tests](https://github.com/Salamek/huawei-lte-api/actions/workflows/python-test.yml/badge.svg)](https://github.com/Salamek/huawei-lte-api/actions/workflows/python-test.yml)
+
 ## Tested on:
 #### 3G/LTE Routers:
 * Huawei B310s-22
@@ -20,6 +22,9 @@ you can use this to simply send SMS, get information about your internet usage, 
 * Huawei E3531
 * Huawei E3372
 
+
+#### 5G Routers:
+* Huawei 5G CPE Pro 2 (H122-373)
 
 (probably will work for other Huawei LTE devices too)
 
@@ -78,17 +83,14 @@ $ emerge dev-python/huawei-lte-api
 
 ```python3
 from huawei_lte_api.Client import Client
-from huawei_lte_api.AuthorizedConnection import AuthorizedConnection
 from huawei_lte_api.Connection import Connection
 
-# connection = Connection('http://192.168.8.1/') For limited access, I have valid credentials no need for limited access
-# connection = AuthorizedConnection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/', login_on_demand=True) # If you wish to login on demand (when call requires authorization), pass login_on_demand=True
-connection = AuthorizedConnection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/')
+# with Connection('http://192.168.8.1/') as connection: For limited access, I have valid credentials no need for limited access
+with Connection('http://admin:MY_SUPER_TRUPER_PASSWORD@192.168.8.1/') as connection:
+    client = Client(connection) # This just simplifies access to separate API groups, you can use device = Device(connection) if you want
 
-client = Client(connection) # This just simplifies access to separate API groups, you can use device = Device(connection) if you want
-
-print(client.device.signal())  # Can be accessed without authorization
-print(client.device.information())  # Needs valid authorization, will throw exception if invalid credentials are passed in URL
+    print(client.device.signal())  # Can be accessed without authorization
+    print(client.device.information())  # Needs valid authorization, will throw exception if invalid credentials are passed in URL
 
 
 # For more API calls just look on code in the huawei_lte_api/api folder, there is no separate DOC yet
@@ -100,6 +102,9 @@ Result dict
 ```
 
 ## Code examples
+
+Some code examples are in /examples folder
+
 ### Monitoring
 
 * Monitoring traffic and signal https://github.com/littlejo/huawei-lte-examples

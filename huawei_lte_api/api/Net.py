@@ -1,16 +1,17 @@
 from collections import OrderedDict
 from typing import Union
-from huawei_lte_api.enums.net import NetworkModeEnum
+
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Connection import GetResponseType, SetResponseType
+from huawei_lte_api.Session import GetResponseType, SetResponseType
+from huawei_lte_api.enums.net import NetworkModeEnum
 
 
 class Net(ApiGroup):
     def current_plmn(self) -> GetResponseType:
-        return self._connection.get('net/current-plmn')
+        return self._session.get('net/current-plmn')
 
     def net_mode(self) -> GetResponseType:
-        return self._connection.get('net/net-mode')
+        return self._session.get('net/net-mode')
 
     def set_net_mode(self, lteband: Union[str, int], networkband: Union[int, str], networkmode: Union[NetworkModeEnum, str]) -> SetResponseType:
         """
@@ -24,17 +25,17 @@ class Net(ApiGroup):
         :param networkmode: network mode, see NetworkModeEnum; str supported for deprecated backwards compatibility
         :return:
         """
-        return self._connection.post_set('net/net-mode', OrderedDict((
+        return self._session.post_set('net/net-mode', OrderedDict((
             ('NetworkMode', networkmode if isinstance(networkmode, str) else networkmode.value),
             ('NetworkBand', networkband if isinstance(networkband, str) else hex(networkband)[2:]),
             ('LTEBand', lteband if isinstance(lteband, str) else hex(lteband)[2:]),
         )))
 
     def network(self) -> GetResponseType:
-        return self._connection.get('net/network')
+        return self._session.get('net/network')
 
     def register(self) -> GetResponseType:
-        return self._connection.get('net/register')
+        return self._session.get('net/register')
 
     def set_register(self, mode: str, plmn: str, rat: str) -> SetResponseType:
         """
@@ -46,27 +47,27 @@ class Net(ApiGroup):
             net_mode_list()), "" for auto
         :return: str
         """
-        return self._connection.post_set('net/register', OrderedDict((
+        return self._session.post_set('net/register', OrderedDict((
             ('Mode', mode),
             ('Plmn', plmn),
             ('Rat', rat)
         )))
 
     def net_mode_list(self) -> GetResponseType:
-        return self._connection.get('net/net-mode-list')
+        return self._session.get('net/net-mode-list')
 
     def plmn_list(self) -> GetResponseType:
         """
     !FIXME LOL DoS! no auth required :-D
     :return:
     """
-        return self._connection.get('net/plmn-list')
+        return self._session.get('net/plmn-list')
 
     def net_feature_switch(self) -> GetResponseType:
-        return self._connection.get('net/net-feature-switch')
+        return self._session.get('net/net-feature-switch')
 
     def cell_info(self) -> GetResponseType:
-        return self._connection.get('net/cell-info')
+        return self._session.get('net/cell-info')
 
     def csps_state(self) -> GetResponseType:
-        return self._connection.get('net/csps_state')
+        return self._session.get('net/csps_state')

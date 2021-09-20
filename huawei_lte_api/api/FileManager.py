@@ -1,7 +1,8 @@
 import os
 from typing import BinaryIO
+
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Connection import SetResponseType
+from huawei_lte_api.Session import SetResponseType
 
 
 class FileManager(ApiGroup):
@@ -18,8 +19,8 @@ class FileManager(ApiGroup):
         if extension.lower() not in ['.bin', '.zip']:
             raise Exception('Only *.bin or *.zip is allowed')
 
-        return self._connection.post_file('filemanager/upload', {
+        return self._session.post_file('filemanager/upload', {
             'uploadfile': uploadfile,
         }, {
-            'cur_path': 'OU:{}'.format(uploadfile_basename)
-        })
+                                           'cur_path': 'OU:{}'.format(uploadfile_basename)
+                                       })

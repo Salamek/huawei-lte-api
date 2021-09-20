@@ -1,23 +1,24 @@
 from collections import OrderedDict
+
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Connection import GetResponseType, SetResponseType
+from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class Monitoring(ApiGroup):
     def converged_status(self) -> GetResponseType:
-        return self._connection.get('monitoring/converged-status')
+        return self._session.get('monitoring/converged-status')
 
     def status(self) -> GetResponseType:
-        return self._connection.get('monitoring/status')
+        return self._session.get('monitoring/status')
 
     def check_notifications(self) -> GetResponseType:
-        return self._connection.get('monitoring/check-notifications')
+        return self._session.get('monitoring/check-notifications')
 
     def traffic_statistics(self) -> GetResponseType:
-        return self._connection.get('monitoring/traffic-statistics')
+        return self._session.get('monitoring/traffic-statistics')
 
     def start_date(self) -> GetResponseType:
-        return self._connection.get('monitoring/start_date')
+        return self._session.get('monitoring/start_date')
 
     def set_start_date(self, start_day: int, data_limit: str, month_threshold: int) -> SetResponseType:
         """
@@ -27,7 +28,7 @@ class Monitoring(ApiGroup):
         :param month_threshold: Alarm threshold in % as int number eg.: 90
         :return: dict
         """
-        return self._connection.post_set('monitoring/start_date', OrderedDict((
+        return self._session.post_set('monitoring/start_date', OrderedDict((
             ('StartDay', start_day),
             ('DataLimit', data_limit),
             ('MonthThreshold', month_threshold),
@@ -35,7 +36,7 @@ class Monitoring(ApiGroup):
         )))
 
     def start_date_wlan(self) -> GetResponseType:
-        return self._connection.get('monitoring/start_date_wlan')
+        return self._session.get('monitoring/start_date_wlan')
 
     def set_start_date_wlan(self, start_day: int, data_limit: str, month_threshold: int) -> SetResponseType:
         """
@@ -45,21 +46,21 @@ class Monitoring(ApiGroup):
         :param month_threshold: Alarm threshold in % as int number eg.: 90
         :return: dict
         """
-        return self._connection.post_set('monitoring/start_date_wlan', OrderedDict((
+        return self._session.post_set('monitoring/start_date_wlan', OrderedDict((
             ('StartDay', start_day),
             ('DataLimit', data_limit),
             ('MonthThreshold', month_threshold),
-            ('SettingEnable', 1)  #!FIXME
+            ('SettingEnable', 1)  # !FIXME
         )))
 
     def month_statistics(self) -> GetResponseType:
-        return self._connection.get('monitoring/month_statistics')
+        return self._session.get('monitoring/month_statistics')
 
     def month_statistics_wlan(self) -> GetResponseType:
-        return self._connection.get('monitoring/month_statistics_wlan')
+        return self._session.get('monitoring/month_statistics_wlan')
 
     def set_clear_traffic(self) -> SetResponseType:
-        return self._connection.post_set('monitoring/clear-traffic', {
+        return self._session.post_set('monitoring/clear-traffic', {
             'ClearTraffic': 1
         })
 
@@ -68,4 +69,4 @@ class Monitoring(ApiGroup):
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage, probably not implemented by Huawei
         :return:
         """
-        return self._connection.get('monitoring/wifi-month-setting')
+        return self._session.get('monitoring/wifi-month-setting')

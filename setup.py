@@ -1,6 +1,11 @@
 from setuptools import setup, find_packages
 
 
+def read_readme() -> str:
+    with open('README.md', 'r', encoding='utf-8') as f:
+        return f.read()
+
+
 setup(
     name='huawei-lte-api',
     version='1.4.18',
@@ -8,15 +13,17 @@ setup(
     package_data={'huawei_lte_api': ['py.typed']},
     install_requires=[
         'requests',
-        'dicttoxml',
         'xmltodict',
+    ],
+    tests_require=[
+        'tox'
     ],
     url='https://github.com/Salamek/huawei-lte-api',
     license='LGPL-3.0 ',
     author='Adam Schubert',
     author_email='adam.schubert@sg1-game.net',
     description='API For huawei LAN/WAN LTE Modems',
-    long_description=open('README.md', encoding='utf-8').read(),
+    long_description=read_readme(),
     long_description_content_type='text/markdown',
     test_suite='tests',
     classifiers=[
@@ -35,15 +42,6 @@ setup(
         'Topic :: Software Development',
     ],
     python_requires='>=3.4',
-    setup_requires=[
-        'pytest-runner'
-    ],
-    tests_require=[
-        'pytest',
-        'pylint',
-        'tox',
-        'pytest-cov'
-    ],
     project_urls={
         'Release notes': 'https://github.com/Salamek/huawei-lte-api/releases',
     },

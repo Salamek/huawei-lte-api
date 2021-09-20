@@ -1,22 +1,22 @@
 from typing import Optional
 
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Connection import GetResponseType, SetResponseType
+from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class Pin(ApiGroup):
     def status(self) -> GetResponseType:
-        return self._connection.get('pin/status')
+        return self._session.get('pin/status')
 
     def simlock(self) -> GetResponseType:
-        return self._connection.get('pin/simlock')
+        return self._session.get('pin/simlock')
 
     def save_pin(self) -> GetResponseType:
-        return self._connection.get('pin/save-pin')
+        return self._session.get('pin/save-pin')
 
     def operate(self, operate_type: int = 0, current_pin: Optional[int] = None,
                 new_pin: Optional[int] = None, puk_code: Optional[int] = None) \
-                -> SetResponseType:
+            -> SetResponseType:
         """
         Parameters
         ----------
@@ -34,13 +34,9 @@ class Pin(ApiGroup):
         puk_code : int
             PUK code to use in case it is required by the device (default is `None`).
         """
-        dicttoxml_xargs = {
-            'item_func': lambda x: x[:-1]
-        }
-
-        return self._connection.post_set('pin/operate', {
+        return self._session.post_set('pin/operate', {
             'OperateType': operate_type,
             'CurrentPin': current_pin,
             'NewPin': new_pin,
             'PukCode': puk_code
-        }, dicttoxml_xargs=dicttoxml_xargs)
+        })
