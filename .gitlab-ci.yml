@@ -28,7 +28,7 @@ package:debian:
   stage: package
   script:
     - apt-get update -qy
-    - apt-get install -y python-all python3-pytest-runner python3-stdeb python3-pytest python3-pylint-common python3-pytest-cov python3-xmltodict python3-dicttoxml python3-requests tox
+    - apt-get install -y python-all python3-pytest-runner python3-stdeb python3-pytest python3-pylint-common python3-pytest-cov python3-xmltodict python3-dicttoxml python3-requests tox dh-python
     - rm -rf "./deb_dist"
     - python3 setup.py --command-packages=stdeb.command bdist_deb
   tags:
