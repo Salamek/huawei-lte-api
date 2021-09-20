@@ -3,6 +3,7 @@ from collections import OrderedDict
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.enums.wlan import AuthModeEnum, WepEncryptModeEnum, WpaEncryptModeEnum
+from huawei_lte_api.Tools import Tools
 
 
 class WLan(ApiGroup):
@@ -64,16 +65,11 @@ class WLan(ApiGroup):
         })
 
     def host_list(self) -> GetResponseType:
+        hosts = self._session.get('wlan/host-list')
         # Make sure Hosts->Host is a list
         # It may be returned as a single dict if only one is associated,
         # as well as sometimes None.
-        hosts = self._session.get('wlan/host-list')
-        if hosts.get('Hosts') is None:
-            hosts['Hosts'] = {}
-        host = hosts['Hosts'].setdefault('Host', [])
-        if isinstance(host, dict):
-            hosts['Hosts']['Host'] = [host]
-        return hosts
+        return Tools.enforce_list_response(hosts, 'Host')
 
     def handover_setting(self) -> GetResponseType:
         return self._session.get('wlan/handover-setting')
