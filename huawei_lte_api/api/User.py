@@ -1,7 +1,8 @@
 import base64
 import hashlib
 import time
-
+from types import TracebackType
+from typing import Union, Type, Optional
 import requests
 
 from huawei_lte_api.ApiGroup import ApiGroup
@@ -19,17 +20,19 @@ from huawei_lte_api.exceptions import ResponseErrorException, \
 
 
 class UserSession:
-    def __init__(self, session: Session, username: str, password: str = None):
+    def __init__(self, session: Session, username: str, password: Union[str, None] = None):
         self.user = User(session)
         self.user.login(username, password, True)
 
-    def close(self):
+    def close(self) -> None:
         self.user.logout()
 
-    def __enter__(self):
+    def __enter__(self) -> 'UserSession':
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type: Optional[Type[BaseException]],
+                 exc_value: Optional[BaseException],
+                 traceback: Optional[TracebackType]) -> None:
         self.close()
 
 
@@ -38,9 +41,9 @@ class User(ApiGroup):
     def state_login(self) -> GetResponseType:
         return self._session.get('user/state-login')
 
-    def _login(self, username: str, password: str, password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
+    def _login(self, username: str, password: Union[str, None], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
         if not password:
-            password = b''
+            password_encoded = b''
         else:
             if password_type == PasswordTypeEnum.SHA256:
                 concentrated = b''.join([
@@ -48,14 +51,14 @@ class User(ApiGroup):
                     base64.b64encode(hashlib.sha256(password.encode('UTF-8')).hexdigest().encode('ascii')),
                     self._session.request_verification_tokens[0].encode('UTF-8')
                 ])
-                password = base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
+                password_encoded = base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
             else:
-                password = base64.b64encode(password.encode('UTF-8'))
+                password_encoded = base64.b64encode(password.encode('UTF-8'))
 
         try:
             result = self._session.post_set('user/login', {
                 'Username': username,
-                'Password': password.decode('UTF-8'),
+                'Password': password_encoded.decode('UTF-8'),
                 'password_type': password_type.value
             }, refresh_csrf=True)
         except ResponseErrorException as e:
@@ -83,7 +86,7 @@ class User(ApiGroup):
 
         return result == ResponseEnum.OK.value
 
-    def login(self, username: str, password: str, force_new_login: bool = False) -> bool:
+    def login(self, username: str, password: Union[str, None], force_new_login: bool = False) -> bool:
         username = username if username else 'admin'
         tries = 5
         for i in range(tries):

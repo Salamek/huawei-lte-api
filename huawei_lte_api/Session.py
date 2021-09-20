@@ -1,7 +1,8 @@
 import logging
 import re
 import urllib.parse
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, cast
+from types import TracebackType
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, Type, cast
 from urllib.parse import urlparse, urlunparse
 
 import requests
@@ -40,7 +41,7 @@ class Session:
     def __init__(self,
                  url: str,
                  timeout: Union[float, Tuple[float, float], None] = None,
-                 requests_session: requests.Session = None
+                 requests_session: Optional[requests.Session] = None
                  ):
 
         # Auth info embedded in the URL may reportedly cause problems, strip it
@@ -252,11 +253,13 @@ class Session:
             except ResponseErrorNotSupportedException:
                 return None
 
-    def close(self):
+    def close(self) -> None:
         self.requests_session.close()
 
-    def __enter__(self):
+    def __enter__(self) -> 'Session':
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type: Optional[Type[BaseException]],
+                 exc_value: Optional[BaseException],
+                 traceback: Optional[TracebackType]) -> None:
         self.close()

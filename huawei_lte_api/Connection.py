@@ -1,5 +1,6 @@
 import warnings
-from typing import Optional, Tuple, Union
+from types import TracebackType
+from typing import Optional, Tuple, Union, Type
 from urllib.parse import urlparse
 
 import requests
@@ -15,7 +16,7 @@ class Connection(Session):
                  password: Optional[str] = None,
                  login_on_demand: bool = False,
                  timeout: Union[float, Tuple[float, float], None] = None,
-                 requests_session: requests.Session = None
+                 requests_session: Optional[requests.Session] = None
                  ):
         parsed_url = urlparse(url)
 
@@ -32,13 +33,15 @@ class Connection(Session):
                 DeprecationWarning
             )
 
-    def close(self):
+    def close(self) -> None:
         if self.user_session:
             self.user_session.close()
         super().close()
 
-    def __enter__(self):
+    def __enter__(self) -> 'Connection':
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, exc_type: Optional[Type[BaseException]],
+                 exc_value: Optional[BaseException],
+                 traceback: Optional[TracebackType]) -> None:
         self.close()

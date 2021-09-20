@@ -63,10 +63,10 @@ class Pb(ApiGroup):
         """
 
         class Node:
-            def __init__(self, name):
-                self._name = name
+            def __init__(self, _name: str):
+                self._name = _name
 
-            def __str__(self):
+            def __str__(self) -> str:
                 return self._name
 
         data = OrderedDict([
