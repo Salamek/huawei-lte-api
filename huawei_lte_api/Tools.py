@@ -3,7 +3,7 @@ from typing import Union
 from binascii import hexlify
 import math
 import base64
-from Cryptodome.Cipher import PKCS1_v1_5
+from Cryptodome.Cipher import PKCS1_v1_5, PKCS1_OAEP
 from Cryptodome.PublicKey.RSA import construct
 
 
@@ -28,18 +28,30 @@ class Tools:
         return data
 
     @staticmethod
-    def rsa_encrypt(rsa_e: str, rsa_n: str, data: bytes) -> bytes:
-        modulus = int(rsa_n, 16)
-        exponent = int(rsa_e, 16)
+    def rsa_encrypt(rsa_e: str, rsa_n: str, data: bytes, rsa_padding: int = 0) -> bytes:
         b64data = base64.b64encode(data)
-        pubkey = construct((modulus, exponent))
-        cipher = PKCS1_v1_5.new(pubkey)
-        blocks = int(math.ceil(len(b64data) / 245.0))
+        pubkey = construct((int(rsa_n, 16), int(rsa_e, 16)))
+
+        cipher_module = {
+            0: PKCS1_v1_5,
+            1: PKCS1_OAEP
+        }.get(rsa_padding)
+
+        num = {
+            0: 245,
+            1: 214
+        }.get(rsa_padding)
+
+        if not cipher_module or not num:
+            raise Exception('Unknown rsa_padding value {}'.format(rsa_padding))
+
+        cipher = cipher_module.new(pubkey)  # type: ignore
+
+        blocks = int(math.ceil(len(b64data) / float(num)))
         result_chunks = []
         for i in range(blocks):
-            block = b64data[i * 245:(i + 1) * 245]
-            d = cipher.encrypt(block)
-            result_chunks.append(d)
+            block = b64data[i * num:(i + 1) * num]
+            result_chunks.append(cipher.encrypt(block))
         result = hexlify(b''.join(result_chunks))
         if (len(result) & 1) == 0:
             return result

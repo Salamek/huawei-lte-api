@@ -145,12 +145,13 @@ class Session:
         return urllib.parse.urljoin(self.url + '{}/'.format(prefix), endpoint)
 
     def _encrypt_data(self, data: bytes) -> bytes:
+        rsa_padding = self._get_rsa_padding()
         pubkey_data = self._get_encryption_key()
         rsa_e = pubkey_data.get('encpubkeye')
         rsa_n = pubkey_data.get('encpubkeyn')
         if not rsa_n or not rsa_e:
             raise Exception('No pub key was found')
-        return Tools.rsa_encrypt(rsa_e, rsa_n, data)
+        return Tools.rsa_encrypt(rsa_e, rsa_n, data, rsa_padding)
 
     def post_get(self,
                  endpoint: str,
@@ -186,7 +187,7 @@ class Session:
             -> Union[GetResponseType, SetResponseType]:
 
         headers = {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' if is_encrypted else 'application/xml'
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8;enc' if is_encrypted else 'application/xml'
         }
 
         if is_encrypted:
@@ -275,6 +276,10 @@ class Session:
         if not self.encryption_key:
             self.encryption_key = self.get('webserver/publickey')
         return self.encryption_key
+
+    def _get_rsa_padding(self) -> int:
+        state_login = self.get('user/state-login')
+        return int(state_login['rsapadingtype']) if 'rsapadingtype' in state_login else 0
 
     def close(self) -> None:
         self.requests_session.close()
