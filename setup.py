@@ -14,6 +14,7 @@ setup(
     install_requires=[
         'requests',
         'xmltodict',
+        'pycryptodomex'
     ],
     tests_require=[
         'tox'
