@@ -2,7 +2,7 @@
 
 """
 Example code on how to connect to your router using proxy, you can try it by running:
-python3 connect_with_proxy.py http://admin:PASSWORD@192.168.8.1/ http://proxy.example.com:1234
+python3 connect_with_proxy.py http://admin:PASSWORD@192.168.8.1/
 """
 from argparse import ArgumentParser
 
