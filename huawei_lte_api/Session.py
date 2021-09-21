@@ -186,12 +186,13 @@ class Session:
               is_encrypted: bool = False) \
             -> Union[GetResponseType, SetResponseType]:
 
-        headers = {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8;enc' if is_encrypted else 'application/xml'
-        }
+        headers = {}
 
         if is_encrypted:
+            headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8;enc'
             headers['encrypt_transmit'] = 'encrypt_transmit'
+        else:
+            headers['Content-Type'] = 'application/xml'
 
         if self.request_verification_tokens:
             if len(self.request_verification_tokens) > 1:
