@@ -103,7 +103,7 @@ Result dict
 
 ## Code examples
 
-Some code examples are in /examples folder
+Some code [examples](examples/) are in [/examples](examples/)  folder
 
 ### Monitoring
 
