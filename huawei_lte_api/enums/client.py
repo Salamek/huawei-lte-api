@@ -15,3 +15,4 @@ class ResponseCodeEnum(enum.IntEnum):
     ERROR_SYSTEM_CSRF = 125002
     """Deprecated misspelling, use ERROR_SYSTEM_CSRF instead."""
     ERROR_SYSTEM_CSFR = ERROR_SYSTEM_CSRF
+    ERROR_WRONG_SESSION_TOKEN = 125003

@@ -24,6 +24,10 @@ class ResponseErrorLoginCsrfException(ResponseErrorLoginCsfrException):
     pass
 
 
+class ResponseErrorWrongSessionToken(ResponseErrorException):
+    pass
+
+
 class LoginErrorUsernameWrongException(ResponseErrorException):
     pass
 
