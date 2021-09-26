@@ -67,7 +67,7 @@ class User(ApiGroup):
                 LoginErrorEnum.PASSWORD_WRONG.value: 'Password wrong',
                 LoginErrorEnum.ALREADY_LOGIN.value: 'Already login',
                 LoginErrorEnum.USERNAME_PWD_WRONG.value: 'Username and Password wrong',
-                LoginErrorEnum.USERNAME_PWD_ORERRUN.value: 'Password overrun',
+                LoginErrorEnum.USERNAME_PWD_OVERRUN.value: 'Password overrun',
                 LoginErrorEnum.USERNAME_PWD_MODIFY.value: 'Password modify',
             }
 
@@ -76,7 +76,7 @@ class User(ApiGroup):
                 LoginErrorEnum.PASSWORD_WRONG.value: LoginErrorPasswordWrongException,
                 LoginErrorEnum.ALREADY_LOGIN.value: LoginErrorAlreadyLoginException,
                 LoginErrorEnum.USERNAME_PWD_WRONG.value: LoginErrorUsernamePasswordWrongException,
-                LoginErrorEnum.USERNAME_PWD_ORERRUN.value: LoginErrorUsernamePasswordOverrunException,
+                LoginErrorEnum.USERNAME_PWD_OVERRUN.value: LoginErrorUsernamePasswordOverrunException,
                 LoginErrorEnum.USERNAME_PWD_MODIFY.value: LoginErrorUsernamePasswordModifyException,
             }
 
