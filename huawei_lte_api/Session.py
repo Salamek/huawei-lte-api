@@ -14,7 +14,8 @@ from huawei_lte_api.exceptions import \
     ResponseErrorLoginRequiredException, \
     ResponseErrorNotSupportedException, \
     ResponseErrorSystemBusyException, \
-    ResponseErrorLoginCsrfException
+    ResponseErrorLoginCsrfException, \
+    ResponseErrorWrongSessionToken
 from huawei_lte_api.Tools import Tools
 
 _LOGGER = logging.getLogger(__name__)
@@ -101,7 +102,8 @@ class Session:
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS.value: 'No rights (needs login)',
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT.value: 'No support',
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN.value: 'Unknown',
-            ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: 'Session error'
+            ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: 'Session error',
+            ResponseCodeEnum.ERROR_WRONG_SESSION_TOKEN.value: 'Wrong Session Token'
         }
 
         error_code_to_exception = {
@@ -109,7 +111,8 @@ class Session:
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS.value: ResponseErrorLoginRequiredException,
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT.value: ResponseErrorNotSupportedException,
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN.value: ResponseErrorException,
-            ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: ResponseErrorLoginCsrfException
+            ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: ResponseErrorLoginCsrfException,
+            ResponseCodeEnum.ERROR_WRONG_SESSION_TOKEN.value: ResponseErrorWrongSessionToken
         }
         if 'error' in data:
             error_code = int(data['error']['code'])
