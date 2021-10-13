@@ -1,6 +1,7 @@
+import warnings
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
-from huawei_lte_api.enums.device import AntennaTypeEnum
+from huawei_lte_api.enums.device import AntennaTypeEnum, ControlModeEnum
 
 
 class Device(ApiGroup):
@@ -25,21 +26,26 @@ class Device(ApiGroup):
     def boot_time(self) -> GetResponseType:
         return self._session.get('device/boot_time')
 
-    def set_control(self, control: int = 4) -> SetResponseType:
+    def set_control(self, control: ControlModeEnum = ControlModeEnum.POWER_OFF) -> SetResponseType:
+        """
+        Controls powerstate of device
+        :param control: ControlModeEnum REBOOT|POWER_OFF
+        :return:
+        """
         return self._session.post_set('device/control', {
-            'Control': control
+            'Control': control.value
         })
 
     def signal(self) -> GetResponseType:
         return self._session.get('device/signal')
 
-    def control(self, control: int) -> SetResponseType:
-        return self._session.post_set('device/control', {
-            'Control': control
-        })
+    def control(self, control: ControlModeEnum) -> SetResponseType:
+        warnings.warn("device.control is deprecated, use device.set_control instead", DeprecationWarning)
+        return self.set_control(control)
 
     def reboot(self) -> SetResponseType:
-        return self.control(1)
+        warnings.warn("device.reboot is deprecated, use device.set_control(ControlModeEnum.REBOOT) instead", DeprecationWarning)
+        return self.set_control(ControlModeEnum.REBOOT)
 
     def antenna_status(self) -> GetResponseType:
         return self._session.get('device/antenna_status')

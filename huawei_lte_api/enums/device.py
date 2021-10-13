@@ -7,3 +7,9 @@ class AntennaTypeEnum(enum.IntEnum):
     EXTERNAL_1_AND_2 = 1
     EXTERNAL_1 = 2
     AUTO = 3
+
+
+@enum.unique
+class ControlModeEnum(enum.IntEnum):
+    REBOOT = 1
+    POWER_OFF = 4
