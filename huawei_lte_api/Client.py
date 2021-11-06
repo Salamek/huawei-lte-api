@@ -30,6 +30,7 @@ from huawei_lte_api.api.Sms import Sms
 from huawei_lte_api.api.Staticroute import Staticroute
 from huawei_lte_api.api.Statistic import Statistic
 from huawei_lte_api.api.Syslog import Syslog
+from huawei_lte_api.api.System import System
 from huawei_lte_api.api.Time import Time
 from huawei_lte_api.api.TimeRule import TimeRule
 from huawei_lte_api.api.UsbPrinter import UsbPrinter
@@ -135,3 +136,4 @@ class Client:
         self.bluetooth = Bluetooth(connection)
         self.mlog = MLog(connection)
         self.staticroute = Staticroute(connection)
+        self.system = System(connection)

@@ -113,6 +113,8 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.wlan.wifiprofile)
     dump(client.wlan.wififrequence)
     dump(client.wlan.wifiscanresult)
+    dump(client.wlan.wlandbho)
+    dump(client.wlan.wlanintelligent)
 
     dump(client.cradle.status_info)
     dump(client.cradle.feature_switch)
@@ -307,3 +309,5 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.voice.voicebusy)
 
     dump(client.staticroute.wanpath)
+
+    dump(client.system.devcapacity)

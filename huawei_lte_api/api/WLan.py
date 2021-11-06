@@ -191,3 +191,9 @@ class WLan(ApiGroup):
         ssids = map(_to_multi_basic_settings_ssid_body, multi_basic_settings['Ssids']['Ssid'])
         ssids = map(lambda ssid: _set_wifi_enable(ssid, status), ssids)
         return self.set_multi_basic_settings(list(ssids))
+
+    def wlandbho(self) -> GetResponseType:
+        return self._session.get('wlan/wlandbho')
+
+    def wlanintelligent(self) -> GetResponseType:
+        return self._session.get('wlan/wlanintelligent')
