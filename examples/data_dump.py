@@ -67,6 +67,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.monitoring.month_statistics)
     dump(client.monitoring.month_statistics_wlan)
     dump(client.monitoring.wifi_month_setting)
+    dump(client.monitoring.daily_data_limit)
 
     dump(client.security.bridgemode)
     dump(client.security.get_firewall_switch)
@@ -224,6 +225,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
 
     dump(client.d_dns.get_ddns_list)
     dump(client.d_dns.get_status)
+    dump(client.d_dns.serverlist)
 
     dump(client.diagnosis.trace_route_result)
     dump(client.diagnosis.diagnose_ping)
@@ -269,6 +271,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
 
     dump(client.ntwk.lan_upnp_portmapping)
     dump(client.ntwk.celllock)
+    dump(client.ntwk.dualwaninfo)
 
     dump(client.pb.get_pb_list)
     dump(client.pb.pb_count)
@@ -290,6 +293,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.lan.host_info)
 
     dump(client.led.nightmode)
+    dump(client.led.appctrlled)
 
     dump(client.statistic.feature_roam_statistic)
 
@@ -301,3 +305,5 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.mlog.mobile_logger)
 
     dump(client.voice.voicebusy)
+
+    dump(client.staticroute.wanpath)

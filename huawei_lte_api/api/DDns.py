@@ -8,3 +8,6 @@ class DDns(ApiGroup):
 
     def get_status(self) -> GetResponseType:
         return self._session.get('ddns/status')
+
+    def serverlist(self) -> GetResponseType:
+        return self._session.get('ddns/serverlist')

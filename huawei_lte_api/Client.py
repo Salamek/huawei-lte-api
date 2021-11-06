@@ -27,6 +27,7 @@ from huawei_lte_api.api.SNtp import SNtp
 from huawei_lte_api.api.SdCard import SdCard
 from huawei_lte_api.api.Security import Security
 from huawei_lte_api.api.Sms import Sms
+from huawei_lte_api.api.Staticroute import Staticroute
 from huawei_lte_api.api.Statistic import Statistic
 from huawei_lte_api.api.Syslog import Syslog
 from huawei_lte_api.api.Time import Time
@@ -133,3 +134,4 @@ class Client:
         self.timerule = TimeRule(connection)
         self.bluetooth = Bluetooth(connection)
         self.mlog = MLog(connection)
+        self.staticroute = Staticroute(connection)
