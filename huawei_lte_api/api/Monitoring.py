@@ -70,3 +70,6 @@ class Monitoring(ApiGroup):
         :return:
         """
         return self._session.get('monitoring/wifi-month-setting')
+
+    def daily_data_limit(self) -> GetResponseType:
+        return self._session.get('monitoring/daily-data-limit')
