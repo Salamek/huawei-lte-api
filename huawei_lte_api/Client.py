@@ -39,6 +39,7 @@ from huawei_lte_api.api.Voice import Voice as Voice_
 from huawei_lte_api.api.Vpn import Vpn
 from huawei_lte_api.api.WLan import WLan
 from huawei_lte_api.api.WebServer import WebServer
+from huawei_lte_api.api.Ussd import Ussd
 from huawei_lte_api.config.Device import Device as DeviceConfig
 from huawei_lte_api.config.DeviceInformation import DeviceInformation
 from huawei_lte_api.config.DialUp import DialUp as DialUpConfig
@@ -58,7 +59,7 @@ from huawei_lte_api.config.Statistic import Statistic as ConfigStatistic
 from huawei_lte_api.config.Stk import Stk
 from huawei_lte_api.config.UPnp import UPnp
 from huawei_lte_api.config.Update import Update
-from huawei_lte_api.config.Ussd import Ussd
+from huawei_lte_api.config.Ussd import Ussd as ConfigUssd
 from huawei_lte_api.config.Voice import Voice
 from huawei_lte_api.config.WebSd import WebSd
 from huawei_lte_api.config.WebUICfg import WebUICfg
@@ -97,7 +98,7 @@ class Client:
         self.config_stk = Stk(connection)
         self.config_update = Update(connection)
         self.config_u_pnp = UPnp(connection)
-        self.config_ussd = Ussd(connection)
+        self.config_ussd = ConfigUssd(connection)
         self.config_web_sd = WebSd(connection)
         self.usermanual_public_sys_resources = PublicSysResources(connection)
         self.ota = Ota(connection)
@@ -133,3 +134,4 @@ class Client:
         self.timerule = TimeRule(connection)
         self.bluetooth = Bluetooth(connection)
         self.mlog = MLog(connection)
+        self.ussd = Ussd(connection)
