@@ -1,3 +1,4 @@
+# Api imports
 from huawei_lte_api.Connection import Connection
 from huawei_lte_api.api.Bluetooth import Bluetooth
 from huawei_lte_api.api.Cradle import Cradle
@@ -42,31 +43,35 @@ from huawei_lte_api.api.Vpn import Vpn
 from huawei_lte_api.api.WLan import WLan
 from huawei_lte_api.api.WebServer import WebServer
 from huawei_lte_api.api.Ussd import Ussd
+
+# Config imports
 from huawei_lte_api.config.Device import Device as DeviceConfig
 from huawei_lte_api.config.DeviceInformation import DeviceInformation
 from huawei_lte_api.config.DialUp import DialUp as DialUpConfig
-from huawei_lte_api.config.FastBoot import FastBoot
-from huawei_lte_api.config.Firewall import Firewall
-from huawei_lte_api.config.Global import Global
-from huawei_lte_api.config.IPv6 import IPv6
+from huawei_lte_api.config.FastBoot import FastBoot as FastBootConfig
+from huawei_lte_api.config.Firewall import Firewall as FirewallConfig
+from huawei_lte_api.config.Global import Global as GlobalConfig
+from huawei_lte_api.config.IPv6 import IPv6 as IPv6Config
 from huawei_lte_api.config.Lan import Lan as LanConfig
 from huawei_lte_api.config.Network import Network as NetworkConfig
 from huawei_lte_api.config.Ota import Ota as OtaConfig
 from huawei_lte_api.config.Pb import Pb as PbConfig
-from huawei_lte_api.config.PcAssistant import PcAssistant
+from huawei_lte_api.config.PcAssistant import PcAssistant as PcAssistantConfig
 from huawei_lte_api.config.Pincode import Pincode as PincodeConfig
 from huawei_lte_api.config.Sms import Sms as SmsConfig
-from huawei_lte_api.config.Sntp import Sntp
-from huawei_lte_api.config.Statistic import Statistic as ConfigStatistic
-from huawei_lte_api.config.Stk import Stk
-from huawei_lte_api.config.UPnp import UPnp
-from huawei_lte_api.config.Update import Update
-from huawei_lte_api.config.Ussd import Ussd as ConfigUssd
-from huawei_lte_api.config.Voice import Voice
-from huawei_lte_api.config.WebSd import WebSd
-from huawei_lte_api.config.WebUICfg import WebUICfg
+from huawei_lte_api.config.Sntp import Sntp as SntpConfig
+from huawei_lte_api.config.Statistic import Statistic as StatisticConfig
+from huawei_lte_api.config.Stk import Stk as StkConfig
+from huawei_lte_api.config.UPnp import UPnp as UPnpConfig
+from huawei_lte_api.config.Update import Update as UpdateConfig
+from huawei_lte_api.config.Ussd import Ussd as UssdConfig
+from huawei_lte_api.config.Voice import Voice as VoiceConfig
+from huawei_lte_api.config.WebSd import WebSd as WebSdConfig
+from huawei_lte_api.config.WebUICfg import WebUICfg as WebUICfgConfig
 from huawei_lte_api.config.Wifi import Wifi as WifiConfig
-from huawei_lte_api.usermanual.PublicSysResources import PublicSysResources
+
+# Usermanual imports
+from huawei_lte_api.usermanual.PublicSysResources import PublicSysResources as PublicSysResourcesUserManual
 
 
 class Client:
@@ -79,30 +84,30 @@ class Client:
         self.cradle = Cradle(connection)
         self.pin = Pin(connection)
         self.config_dialup = DialUpConfig(connection)
-        self.config_global = Global(connection)
+        self.config_global = GlobalConfig(connection)
         self.config_lan = LanConfig(connection)
         self.config_network = NetworkConfig(connection)
         self.config_pincode = PincodeConfig(connection)
         self.config_sms = SmsConfig(connection)
-        self.config_voice = Voice(connection)
+        self.config_voice = VoiceConfig(connection)
         self.config_wifi = WifiConfig(connection)
-        self.config_pc_assistant = PcAssistant(connection)
+        self.config_pc_assistant = PcAssistantConfig(connection)
         self.config_device_information = DeviceInformation(connection)
-        self.config_web_ui_cfg = WebUICfg(connection)
+        self.config_web_ui_cfg = WebUICfgConfig(connection)
         self.config_device = DeviceConfig(connection)
-        self.config_fast_boot = FastBoot(connection)
-        self.config_firewall = Firewall(connection)
-        self.config_ipv6 = IPv6(connection)
+        self.config_fast_boot = FastBootConfig(connection)
+        self.config_firewall = FirewallConfig(connection)
+        self.config_ipv6 = IPv6Config(connection)
         self.config_ota = OtaConfig(connection)
         self.config_pb = PbConfig(connection)
-        self.config_sntp = Sntp(connection)
-        self.config_statistic = ConfigStatistic(connection)
-        self.config_stk = Stk(connection)
-        self.config_update = Update(connection)
-        self.config_u_pnp = UPnp(connection)
-        self.config_ussd = ConfigUssd(connection)
-        self.config_web_sd = WebSd(connection)
-        self.usermanual_public_sys_resources = PublicSysResources(connection)
+        self.config_sntp = SntpConfig(connection)
+        self.config_statistic = StatisticConfig(connection)
+        self.config_stk = StkConfig(connection)
+        self.config_update = UpdateConfig(connection)
+        self.config_u_pnp = UPnpConfig(connection)
+        self.config_ussd = UssdConfig(connection)
+        self.config_web_sd = WebSdConfig(connection)
+        self.usermanual_public_sys_resources = PublicSysResourcesUserManual(connection)
         self.ota = Ota(connection)
         self.net = Net(connection)
         self.dial_up = DialUp(connection)
