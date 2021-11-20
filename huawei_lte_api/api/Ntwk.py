@@ -9,3 +9,6 @@ class Ntwk(ApiGroup):
 
     def celllock(self) -> GetResponseType:
         return self._session.get('ntwk/celllock')
+
+    def dualwaninfo(self) -> GetResponseType:
+        return self._session.get('ntwk/dualwaninfo')

@@ -1,3 +1,4 @@
+import json
 import logging
 import re
 import urllib.parse
@@ -81,15 +82,21 @@ class Session:
         return xmltodict.unparse(wrapped_in_request).encode('utf-8')
 
     @staticmethod
-    def _process_response_xml(response: requests.Response) -> dict:
+    def _process_response_data(response: requests.Response) -> dict:
+        data = response.content
+
+        # Some endpoints respond with JSON, some XML, but the Content-Type is always
+        # text/html, so we resort to content sniffing.
+        if data and data.startswith(b'{'):
+            return json.loads(data)
+
         # In some cases unsupported methods, e.g. in config namespace,
         # respond with a redirect to the home page, which may not
         # parse as XML (even though it's labeled XHTML). Try to detect
         # such cases, and return a generated "not supported" error
         # instead of letting the XML parse error pass through.
-        xml = response.content
         try:
-            return xmltodict.parse(xml, dict_constructor=dict) if xml else {}
+            return xmltodict.parse(data, dict_constructor=dict) if data else {}
         except:
             if response.history:
                 return dict(error=dict(code=ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT, message=''))
@@ -212,7 +219,7 @@ class Session:
         )
         response.raise_for_status()
 
-        response_data = cast(str, self._check_response_status(self._process_response_xml(response)))
+        response_data = cast(str, self._check_response_status(self._process_response_data(response)))
 
         if refresh_csrf:
             self.request_verification_tokens = []
@@ -263,7 +270,7 @@ class Session:
             timeout=self.timeout,
         )
 
-        return cast(dict, self._check_response_status(self._process_response_xml(response)))
+        return cast(dict, self._check_response_status(self._process_response_data(response)))
 
     def _get_token(self) -> Optional[str]:
         try:
