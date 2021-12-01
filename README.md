@@ -31,6 +31,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 ### Will NOT work on:
 #### LTE Routers:
 * Huawei B2368-22 (Incompatible firmware, testing device needed!)
+* Huawei B593s-22 (Incompatible firmware, testing device needed!)
 
 
 ## Installation
