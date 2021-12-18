@@ -22,7 +22,7 @@ args = parser.parse_args()
 
 
 def dump(method: Callable[[], Any]) -> None:
-    print("==== %s" % method)
+    print("==== %s" % method.__qualname__)
     try:
         pprint.pprint(method())
     except Exception as e:
