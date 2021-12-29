@@ -50,3 +50,7 @@ class LoginErrorUsernamePasswordOverrunException(ResponseErrorException):
 
 class LoginErrorUsernamePasswordModifyException(ResponseErrorException):
     pass
+
+
+class RequestFormatException(ResponseErrorException):
+    pass

@@ -16,7 +16,8 @@ from huawei_lte_api.exceptions import \
     ResponseErrorNotSupportedException, \
     ResponseErrorSystemBusyException, \
     ResponseErrorLoginCsrfException, \
-    ResponseErrorWrongSessionToken
+    ResponseErrorWrongSessionToken, \
+    RequestFormatException
 from huawei_lte_api.Tools import Tools
 
 _LOGGER = logging.getLogger(__name__)
@@ -110,7 +111,8 @@ class Session:
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT.value: 'No support',
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN.value: 'Unknown',
             ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: 'Session error',
-            ResponseCodeEnum.ERROR_WRONG_SESSION_TOKEN.value: 'Wrong Session Token'
+            ResponseCodeEnum.ERROR_WRONG_SESSION_TOKEN.value: 'Wrong Session Token',
+            ResponseCodeEnum.ERROR_FORMAT_ERROR.value: 'Request format error',
         }
 
         error_code_to_exception = {
@@ -119,7 +121,8 @@ class Session:
             ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT.value: ResponseErrorNotSupportedException,
             ResponseCodeEnum.ERROR_SYSTEM_UNKNOWN.value: ResponseErrorException,
             ResponseCodeEnum.ERROR_SYSTEM_CSRF.value: ResponseErrorLoginCsrfException,
-            ResponseCodeEnum.ERROR_WRONG_SESSION_TOKEN.value: ResponseErrorWrongSessionToken
+            ResponseCodeEnum.ERROR_WRONG_SESSION_TOKEN.value: ResponseErrorWrongSessionToken,
+            ResponseCodeEnum.ERROR_FORMAT_ERROR.value: RequestFormatException,
         }
         if 'error' in data:
             error_code = int(data['error']['code'])
