@@ -16,11 +16,7 @@ class ResponseErrorSystemBusyException(ResponseErrorException):
     pass
 
 
-class ResponseErrorLoginCsfrException(ResponseErrorException):
-    """Deprecated misspelling, use ResponseErrorLoginCsrfException instead."""
-
-
-class ResponseErrorLoginCsrfException(ResponseErrorLoginCsfrException):
+class ResponseErrorLoginCsrfException(ResponseErrorException):
     pass
 
 
