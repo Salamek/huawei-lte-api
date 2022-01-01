@@ -121,6 +121,7 @@ Some code [examples](examples/) are in [/examples](examples/)  folder
 ## Ports to other languages
 
 * TypeScript/JavaScript https://github.com/Salamek/huawei-lte-api-ts
+* PHP https://github.com/icetee/huawei-lte-api-php
 
 ## Donations
 
