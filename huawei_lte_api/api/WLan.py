@@ -7,32 +7,28 @@ from huawei_lte_api.Tools import Tools
 
 
 def _to_multi_basic_settings_ssid_body(ssid: dict) -> dict:
-    return {
-        'Index': ssid['Index'],
-        'WifiBroadcast': ssid['WifiBroadcast'],
-        'wifiguestofftime': ssid['wifiguestofftime'],
-        'WifiAuthmode': ssid['WifiAuthmode'],
-        'ID': ssid['ID'],
-        'WifiEnable': ssid['WifiEnable'],
-        'wifiisguestnetwork': ssid['wifiisguestnetwork'],
-        'WifiMac': ssid['WifiMac'],
-        'WifiSsid': ssid['WifiSsid'],
-        'WifiRadiusKey': ssid['WifiRadiusKey'],
-        'WifiWpaencryptionmodes': ssid['WifiWpaencryptionmodes'],
-        'WifiWepKeyIndex': ssid['WifiWepKeyIndex'],
-    }
+    wanted_items = (
+        'Index',
+        'WifiBroadcast',
+        'wifiguestofftime',
+        'WifiAuthmode',
+        'ID',
+        'WifiEnable',
+        'wifiisguestnetwork',
+        'WifiMac',
+        'WifiSsid',
+        'WifiRadiusKey',
+        'WifiWpaencryptionmodes',
+        'WifiWepKeyIndex'
+    )
+    return Tools.filter_dict(ssid, wanted_items)
 
 
 def _set_wifi_enable(ssid: dict, status: bool) -> dict:
-    if ssid['wifiisguestnetwork'] == '0':
+    if ssid.get('wifiisguestnetwork') == '0':
         return ssid
 
-    if status:
-        wifiEnable = '1'
-    else:
-        wifiEnable = '0'
-
-    ssid['WifiEnable'] = wifiEnable
+    ssid['WifiEnable'] = '1' if status else '0'
     return ssid
 
 
