@@ -18,8 +18,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 * Huawei E5186s-22a
 * Huawei E5576-320
 * Huawei E5577Cs-321
-
-* 
+ 
 #### 3G/LTE USB sticks:
 (Device must support NETWork mode aka. "HiLink" version, it wont work with serial mode)
 * Huawei E3131
@@ -122,6 +121,7 @@ Some code [examples](examples/) are in [/examples](examples/)  folder
 ## Ports to other languages
 
 * TypeScript/JavaScript https://github.com/Salamek/huawei-lte-api-ts
+* PHP https://github.com/icetee/huawei-lte-api-php
 
 ## Donations
 
