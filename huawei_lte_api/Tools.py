@@ -59,5 +59,5 @@ class Tools:
         return b'0' + result
 
     @staticmethod
-    def filter_dict(filtered_dict: dict, wanted_keys: Tuple[str, ...]):
+    def filter_dict(filtered_dict: dict, wanted_keys: Tuple[str, ...]) -> dict:
         return {i: filtered_dict[i] for i in filtered_dict if i in set(wanted_keys)}
