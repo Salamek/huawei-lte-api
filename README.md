@@ -45,7 +45,7 @@ $ pip install huawei-lte-api
 ```
 ### Repository
 You can also use these repositories maintained by me
-#### Debian and derivates
+#### Debian and derivatives
 
 Add repository by running these commands
 
