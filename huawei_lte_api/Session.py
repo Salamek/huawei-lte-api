@@ -57,7 +57,12 @@ class Session:
             *parsed_url[2:]
         ))
 
-        self.requests_session = requests_session if requests_session else requests.Session()
+        if requests_session:
+            self.requests_session = requests_session
+            self._custom_requests_session = True
+        else:
+            self.requests_session = requests.Session()
+            self._custom_requests_session = False
 
         if not clear_url.endswith('/'):
             clear_url += '/'
@@ -68,7 +73,8 @@ class Session:
         try:
             self._initialize_csrf_tokens_and_session()
         except Exception:
-            self.requests_session.close()
+            if not self._custom_requests_session:
+                self.requests_session.close()
             raise
 
     def reload(self) -> None:
@@ -296,7 +302,8 @@ class Session:
         return int(state_login['rsapadingtype']) if 'rsapadingtype' in state_login else 0
 
     def close(self) -> None:
-        self.requests_session.close()
+        if not self._custom_requests_session:
+            self.requests_session.close()
 
     def __enter__(self) -> 'Session':
         return self

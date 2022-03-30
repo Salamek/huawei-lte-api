@@ -18,6 +18,9 @@ class Connection(Session):
                  timeout: Union[float, Tuple[float, float], None] = None,
                  requests_session: Optional[requests.Session] = None
                  ):
+        """
+        :param requests_session: requests Session to use, closing it is the caller's responsibility
+        """
         parsed_url = urlparse(url)
 
         # User login code

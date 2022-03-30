@@ -23,7 +23,7 @@ my_custom_session.proxies = {
   "https": "https://10.10.1.10:1080",  # Https proxy
 }
 
-with Connection(
+with my_custom_session, Connection(
         args.url,
         username=args.username,
         password=args.password,
