@@ -23,7 +23,7 @@ my_custom_session = requests.Session()
 # Disable SSL verify
 my_custom_session.verify = False
 
-with Connection(
+with my_custom_session, Connection(
         args.url,
         username=args.username,
         password=args.password,
