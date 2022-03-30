@@ -35,7 +35,11 @@ class Connection(Session):
 
     def close(self) -> None:
         if self.user_session:
-            self.user_session.close()
+            try:
+                self.user_session.close()
+            except:
+                super().close()
+                raise
         super().close()
 
     def __enter__(self) -> 'Connection':
