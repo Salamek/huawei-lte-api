@@ -1,5 +1,6 @@
 # Api imports
 from huawei_lte_api.Connection import Connection
+from huawei_lte_api.api.App import App
 from huawei_lte_api.api.Bluetooth import Bluetooth
 from huawei_lte_api.api.Cradle import Cradle
 from huawei_lte_api.api.Cwmp import Cwmp
@@ -144,3 +145,4 @@ class Client:
         self.ussd = Ussd(connection)
         self.staticroute = Staticroute(connection)
         self.system = System(connection)
+        self.app = App(connection)

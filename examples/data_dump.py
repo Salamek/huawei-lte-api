@@ -68,6 +68,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.monitoring.month_statistics_wlan)
     dump(client.monitoring.wifi_month_setting)
     dump(client.monitoring.daily_data_limit)
+    dump(client.monitoring.statistic_feature_switch)
 
     dump(client.security.bridgemode)
     dump(client.security.get_firewall_switch)
@@ -215,6 +216,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.sms.config)
     dump(client.sms.sms_count_contact)
     dump(client.sms.get_sms_list_pdu)
+    dump(client.sms.sms_list_contact)
 
     dump(client.redirection.homepage)
 
@@ -311,3 +313,8 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.staticroute.wanpath)
 
     dump(client.system.devcapacity)
+    dump(client.system.deviceinfo)
+    dump(client.system.onlineupg)
+
+    dump(client.app.operatorinfo)
+    dump(client.app.privacypolicy)

@@ -73,3 +73,6 @@ class Monitoring(ApiGroup):
 
     def daily_data_limit(self) -> GetResponseType:
         return self._session.get('monitoring/daily-data-limit')
+
+    def statistic_feature_switch(self) -> GetResponseType:
+        return self._session.get('monitoring/statistic-feature-switch')

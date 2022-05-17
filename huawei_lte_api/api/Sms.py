@@ -129,6 +129,15 @@ class Sms(ApiGroup):
     def sms_count_contact(self) -> GetResponseType:
         return self._session.get('sms/sms-count-contact')
 
+    def sms_list_contact(self,
+                         pageindex: int = 1,
+                         readcount: int = 20,
+                         ) -> GetResponseType:
+        return self._session.post_get('sms/sms-list-contact', {
+            'pageindex': pageindex,
+            'readcount': readcount,
+        })
+
     def get_sms_list_pdu(self) -> GetResponseType:
         """
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage

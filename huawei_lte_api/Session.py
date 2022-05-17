@@ -177,11 +177,12 @@ class Session:
                  data: Union[dict, list, int, None] = None,
                  refresh_csrf: bool = False,
                  prefix: str = 'api',
-                 is_encrypted: bool = False) \
-            -> GetResponseType:
+                 is_encrypted: bool = False,
+                 is_json: bool = False,
+                 ) -> GetResponseType:
         return cast(
             GetResponseType,
-            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted)
+            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json)
         )
 
     def post_set(self,
@@ -189,11 +190,12 @@ class Session:
                  data: Union[dict, list, int, None] = None,
                  refresh_csrf: bool = False,
                  prefix: str = 'api',
-                 is_encrypted: bool = False) \
-            -> SetResponseType:
+                 is_encrypted: bool = False,
+                 is_json: bool = False,
+                 ) -> SetResponseType:
         return cast(
             SetResponseType,
-            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted)
+            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json)
         )
 
     @_try_or_reload_and_retry
@@ -202,8 +204,9 @@ class Session:
               data: Union[dict, list, int, None] = None,
               refresh_csrf: bool = False,
               prefix: str = 'api',
-              is_encrypted: bool = False) \
-            -> Union[GetResponseType, SetResponseType]:
+              is_encrypted: bool = False,
+              is_json: bool = False,
+              ) -> Union[GetResponseType, SetResponseType]:
 
         headers = {}
 
@@ -219,7 +222,10 @@ class Session:
             else:
                 headers['__RequestVerificationToken'] = self.request_verification_tokens[0]
 
-        data_encoded = self._create_request_xml(data) if data else b''
+        if data:
+            data_encoded = json.dumps(data).encode() if is_json else self._create_request_xml(data)
+        else:
+            data_encoded = b''
         response = self.requests_session.post(
             self._build_final_url(endpoint, prefix),
             data=self._encrypt_data(data_encoded) if is_encrypted else data_encoded,
