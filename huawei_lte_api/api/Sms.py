@@ -74,7 +74,7 @@ class Sms(ApiGroup):
 
         return self._session.post_set('sms/save-sms', OrderedDict((
             ('Index', sms_index),
-            ('Phones', OrderedDict([('Phone', phone_number) for phone_number in phone_numbers])),
+            ('Phones', {'Phone': phone_numbers}),
             ('Sca', sca),
             ('Content', message),
             ('Length', len(message)),
@@ -95,7 +95,7 @@ class Sms(ApiGroup):
             from_date = datetime.datetime.utcnow()
         return self._session.post_set('sms/send-sms', OrderedDict((
             ('Index', sms_index),
-            ('Phones', OrderedDict([('Phone', phone_number) for phone_number in phone_numbers])),
+            ('Phones', {'Phone': phone_numbers}),
             ('Sca', sca),
             ('Content', message),
             ('Length', len(message)),
