@@ -45,7 +45,7 @@ class Tools:
         if not cipher_module or not num:
             raise Exception('Unknown rsa_padding value {}'.format(rsa_padding))
 
-        cipher = cipher_module.new(pubkey)  # type: ignore
+        cipher = cipher_module.new(pubkey)
 
         blocks = int(math.ceil(len(b64data) / float(num)))
         result_chunks = []
