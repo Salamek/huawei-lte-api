@@ -40,7 +40,7 @@ class Connection(Session):
         if self.user_session:
             try:
                 self.user_session.close()
-            except:
+            except:  # noqa: E722
                 super().close()
                 raise
         super().close()
