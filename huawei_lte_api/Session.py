@@ -104,7 +104,7 @@ class Session:
         # instead of letting the XML parse error pass through.
         try:
             return xmltodict.parse(data, dict_constructor=dict) if data else {}
-        except:
+        except:  # noqa: E722
             if response.history:
                 return dict(error=dict(code=ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT, message=''))
             raise

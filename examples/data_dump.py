@@ -10,8 +10,8 @@ import sys
 from typing import Any, Callable
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir))
 
-from huawei_lte_api.Client import Client
-from huawei_lte_api.Connection import Connection
+from huawei_lte_api.Client import Client  # noqa: E402
+from huawei_lte_api.Connection import Connection  # noqa: E402
 
 
 parser = ArgumentParser()
