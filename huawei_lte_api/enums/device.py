@@ -12,5 +12,5 @@ class AntennaTypeEnum(enum.IntEnum):
 @enum.unique
 class ControlModeEnum(enum.IntEnum):
     REBOOT = 1
-    RESET = 2
+    RESET = 2  # Resets device into factory settings
     POWER_OFF = 4
