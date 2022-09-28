@@ -24,11 +24,15 @@ class ResponseErrorWrongSessionToken(ResponseErrorException):
     pass
 
 
-class LoginErrorUsernameWrongException(ResponseErrorException):
+class LoginErrorInvalidCredentialsException(ResponseErrorException):
+    """Base class for login errors caused by permanently invalid credentials."""
+
+
+class LoginErrorUsernameWrongException(LoginErrorInvalidCredentialsException):
     pass
 
 
-class LoginErrorPasswordWrongException(ResponseErrorException):
+class LoginErrorPasswordWrongException(LoginErrorInvalidCredentialsException):
     pass
 
 
@@ -36,7 +40,7 @@ class LoginErrorAlreadyLoginException(ResponseErrorException):
     pass
 
 
-class LoginErrorUsernamePasswordWrongException(ResponseErrorException):
+class LoginErrorUsernamePasswordWrongException(LoginErrorInvalidCredentialsException):
     pass
 
 
