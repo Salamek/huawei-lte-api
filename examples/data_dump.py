@@ -44,15 +44,20 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.device.antenna_status)
     dump(client.device.antenna_type)
     dump(client.device.logsetting)
+    dump(client.device.logport)
+    dump(client.device.datalock)
+    dump(client.device.vendorname)
 
     dump(client.user.state_login)
     dump(client.user.remind)
     dump(client.user.password)
     dump(client.user.pwd)
+    dump(client.user.remember_pwd)
     dump(client.user.authentication_login)
     dump(client.user.challenge_login)
     dump(client.user.hilink_login)
     dump(client.user.history_login)
+    dump(client.user.second_login)
     dump(client.user.heartbeat)
     dump(client.user.web_feature_switch)
     dump(client.user.screen_state)
@@ -90,6 +95,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.webserver.token)
     dump(client.webserver.white_list_switch)
 
+    dump(client.global_.custommenu_url)
     dump(client.global_.module_switch)
 
     dump(client.wlan.wifi_feature_switch)
@@ -276,6 +282,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.ntwk.lan_upnp_portmapping)
     dump(client.ntwk.celllock)
     dump(client.ntwk.dualwaninfo)
+    dump(client.ntwk.lan_wan_config)
 
     dump(client.pb.get_pb_list)
     dump(client.pb.pb_count)
@@ -291,6 +298,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.voice.functioncode)
     dump(client.voice.voiceadvance)
     dump(client.voice.codec)
+    dump(client.voice.voiperstatus)
 
     dump(client.cwmp.basic_info)
 
@@ -314,7 +322,11 @@ with Connection(args.url, username=args.username, password=args.password) as con
 
     dump(client.system.devcapacity)
     dump(client.system.deviceinfo)
+    dump(client.system.deviceinfoex)
     dump(client.system.onlineupg)
 
     dump(client.app.operatorinfo)
     dump(client.app.privacypolicy)
+
+    dump(client.developer.developermode_featureswitch)
+    dump(client.developer.atport_status)

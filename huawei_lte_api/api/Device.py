@@ -70,3 +70,14 @@ class Device(ApiGroup):
         :return:
         """
         return self._session.get('device/logsetting')
+
+    def logport(self) -> GetResponseType:
+        return self._session.get('device/logport')
+
+    def datalock(self) -> GetResponseType:
+        return self._session.get('device/datalock')
+
+    def vendorname(self, lang: str = 'en_us') -> GetResponseType:
+        return self._session.post_get('device/vendorname', {
+            'language': lang
+        })

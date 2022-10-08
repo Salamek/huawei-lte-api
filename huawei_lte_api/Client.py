@@ -5,6 +5,7 @@ from huawei_lte_api.api.Bluetooth import Bluetooth
 from huawei_lte_api.api.Cradle import Cradle
 from huawei_lte_api.api.Cwmp import Cwmp
 from huawei_lte_api.api.DDns import DDns
+from huawei_lte_api.api.Developer import Developer
 from huawei_lte_api.api.Device import Device
 from huawei_lte_api.api.Dhcp import Dhcp
 from huawei_lte_api.api.Diagnosis import Diagnosis
@@ -146,3 +147,4 @@ class Client:
         self.staticroute = Staticroute(connection)
         self.system = System(connection)
         self.app = App(connection)
+        self.developer = Developer(connection)

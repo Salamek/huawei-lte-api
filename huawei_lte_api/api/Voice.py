@@ -33,3 +33,6 @@ class Voice(ApiGroup):
         :return:
         """
         return self._session.get('voice/codec')
+
+    def voiperstatus(self) -> GetResponseType:
+        return self._session.get('voice/voiperstatus')

@@ -12,3 +12,6 @@ class Ntwk(ApiGroup):
 
     def dualwaninfo(self) -> GetResponseType:
         return self._session.get('ntwk/dualwaninfo')
+
+    def lan_wan_config(self) -> GetResponseType:
+        return self._session.get('ntwk/lan-wan-config')
