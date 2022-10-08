@@ -1,3 +1,4 @@
+from email.message import EmailMessage
 import json
 import logging
 import re
@@ -92,9 +93,25 @@ class Session:
     def _process_response_data(response: requests.Response) -> dict:
         data = response.content
 
-        # Some endpoints respond with JSON, some XML, but the Content-Type is always
-        # text/html, so we resort to content sniffing.
-        if data and data.startswith(b'{'):
+        is_json = None
+        content_type = response.headers.get('Content-Type')
+        if content_type:
+            # Weed out Content-Type parameters with EmailMessage
+            # (cgi.parse_header is deprecated as of Python 3.11)
+            msg = EmailMessage()
+            msg['Content-Type'] = content_type
+            content_type = msg.get_content_type()
+            if content_type.endswith('/json') or content_type.endswith('+json'):
+                is_json = True
+            elif content_type.endswith('/xml') or content_type.endswith('+xml'):
+                is_json = False
+            # Others are not conclusive, e.g. text/html may have JSON or XML
+
+        # Resort to content sniffing if Content-Type wasn't conclusive
+        if is_json is None and data and data.startswith(b'{'):
+            is_json = True
+
+        if is_json:
             return json.loads(data)
 
         # In some cases unsupported methods, e.g. in config namespace,
