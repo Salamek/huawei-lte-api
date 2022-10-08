@@ -165,3 +165,9 @@ class User(ApiGroup):
         :return:
         """
         return self._session.get('user/session')
+
+    def second_login(self) -> GetResponseType:
+        return self._session.get('user/second_login')
+
+    def remember_pwd(self) -> GetResponseType:
+        return self._session.get('user/remember-pwd')

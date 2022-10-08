@@ -12,3 +12,6 @@ class Global(ApiGroup):
         :return:
         """
         return self._session.get('global/storage-getitem')
+
+    def custommenu_url(self) -> GetResponseType:
+        return self._session.get('global/custommenu-url')

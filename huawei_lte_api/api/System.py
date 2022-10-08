@@ -9,6 +9,9 @@ class System(ApiGroup):
     def deviceinfo(self) -> GetResponseType:
         return self._session.get('system/deviceinfo')
 
+    def deviceinfoex(self) -> GetResponseType:
+        return self._session.get('system/deviceinfoex')
+
     def onlineupg(self) -> GetResponseType:
         return self._session.post_get(
             'system/onlineupg',
