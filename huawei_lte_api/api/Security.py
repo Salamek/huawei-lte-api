@@ -39,6 +39,12 @@ class Security(ApiGroup):
     def url_filter(self) -> GetResponseType:
         return self._session.get('security/url-filter')
 
+    def set_url_filter(self, urlfilters: GetResponseType) -> SetResponseType:
+        """
+        :param urlfilters: same structure as `url_filter` return value
+        """
+        return self._session.post_set('security/url-filter', urlfilters)
+
     def upnp(self) -> GetResponseType:
         return self._session.get('security/upnp')
 
@@ -79,6 +85,12 @@ class Security(ApiGroup):
 
     def white_url_filter(self) -> GetResponseType:
         return self._session.get('security/white-url-filter')
+
+    def set_white_url_filter(self, urlfilters: GetResponseType) -> SetResponseType:
+        """
+        :param urlfilters: same structure as `white_url_filter` return value
+        """
+        return self._session.post_set('security/white-url-filter', urlfilters)
 
     def acls(self) -> GetResponseType:
         """
