@@ -46,7 +46,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.device.logsetting)
     dump(client.device.logport)
     dump(client.device.datalock)
-    dump(client.device.vendorname)
+    # Breaks session with some devices: dump(client.device.vendorname)
 
     dump(client.user.state_login)
     dump(client.user.remind)
