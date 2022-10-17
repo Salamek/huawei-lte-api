@@ -108,7 +108,7 @@ class Session:
             # Others are not conclusive, e.g. text/html may have JSON or XML
 
         # Resort to content sniffing if Content-Type wasn't conclusive
-        if is_json is None and data and data.startswith(b'{'):
+        if is_json is None and data and data[0:1] in (b'{', b'['):
             is_json = True
 
         if is_json:
