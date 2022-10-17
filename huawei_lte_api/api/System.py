@@ -1,3 +1,5 @@
+from typing import List, cast
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType
 
@@ -17,4 +19,16 @@ class System(ApiGroup):
             'system/onlineupg',
             data={'action': 'check', 'data': {'UpdateAction': 1}},
             is_json=True,
+        )
+
+    def onlinestate(self, devid: str = 'all') -> List[GetResponseType]:
+        return cast(
+            List[GetResponseType],
+            self._session.get('system/onlinestate', {'devid': devid})
+        )
+
+    def hostinfo(self) -> List[GetResponseType]:
+        return cast(
+            List[GetResponseType],
+            self._session.get('system/HostInfo')
         )

@@ -323,6 +323,8 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.system.devcapacity)
     dump(client.system.deviceinfo)
     dump(client.system.deviceinfoex)
+    dump(client.system.hostinfo)
+    dump(client.system.onlinestate)
     dump(client.system.onlineupg)
 
     dump(client.app.operatorinfo)
