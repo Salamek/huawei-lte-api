@@ -78,6 +78,10 @@ class Device(ApiGroup):
         return self._session.get('device/datalock')
 
     def vendorname(self, lang: str = 'en_us') -> GetResponseType:
+        """
+        This endpoint is known to break the session with some devices
+        that don't support it. Approach with care.
+        """
         return self._session.post_get('device/vendorname', {
             'language': lang
         })
