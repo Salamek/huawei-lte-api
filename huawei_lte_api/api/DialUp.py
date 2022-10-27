@@ -85,3 +85,35 @@ class DialUp(ApiGroup):
                 'iptype': ip_type.value
             }
         }, is_encrypted=True)
+
+    def set_connection_settings(
+        self,
+        roam_auto_connect_enable: bool = True,
+        max_idle_time: int = 0,
+        connect_mode: int = 0,
+        mtu: int = 1500,
+        auto_dial_switch: bool = True,
+        pdp_always_on: bool = True,
+    ) -> SetResponseType:
+        """
+        Set connection settings.
+        :param roam_auto_connect_enable: Enable/Disable data roaming.
+        :param max_idle_time: Auto disconnect interval, 0 is always on.
+        :param connect_mode: Unknown usage.
+        :param mtu: Unknown usage.
+        :param auto_dial_switch: Unknown usage.
+        :param pdp_always_on: Unknown usage.
+        :return SetResponseType: Set response type.
+        """
+
+        return self._session.post_set(
+            'dialup/connection',
+            {
+                'RoamAutoConnectEnable': 1 if roam_auto_connect_enable else 0,
+                'MaxIdelTime': max_idle_time,
+                'ConnectMode': connect_mode,
+                'MTU': mtu,
+                'auto_dial_switch': 1 if auto_dial_switch else 0,
+                'pdp_always_on': 1 if pdp_always_on else 0,
+            }
+        )
