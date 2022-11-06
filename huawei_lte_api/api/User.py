@@ -2,7 +2,7 @@ import base64
 import hashlib
 import time
 from types import TracebackType
-from typing import Union, Type, Optional
+from typing import Type, Optional
 import requests
 
 from huawei_lte_api.ApiGroup import ApiGroup
@@ -18,9 +18,11 @@ from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorPasswordWrongException, \
     ResponseErrorNotSupportedException
 
+DEFAULT_USERNAME = 'admin'
+
 
 class UserSession:
-    def __init__(self, session: Session, username: str, password: Union[str, None] = None):
+    def __init__(self, session: Session, username: str = DEFAULT_USERNAME, password: Optional[str] = None):
         self.user = User(session)
         self.user.login(username, password, True)
 
@@ -41,7 +43,7 @@ class User(ApiGroup):
     def state_login(self) -> GetResponseType:
         return self._session.get('user/state-login')
 
-    def _login(self, username: str, password: Union[str, None], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
+    def _login(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
         if not password:
             password_encoded = b''
         else:
@@ -86,8 +88,9 @@ class User(ApiGroup):
 
         return result == ResponseEnum.OK.value
 
-    def login(self, username: str, password: Union[str, None], force_new_login: bool = False) -> bool:
-        username = username if username else 'admin'
+    def login(self, username: str = DEFAULT_USERNAME, password: Optional[str] = None, force_new_login: bool = False) -> bool:
+        if username == '':  # <= 1.6.4 backwards compatibility
+            username = DEFAULT_USERNAME
         tries = 5
         for i in range(tries):
             try:

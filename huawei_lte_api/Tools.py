@@ -1,4 +1,4 @@
-from typing import Union, Tuple
+from typing import Optional, Tuple
 
 from binascii import hexlify
 import math
@@ -10,7 +10,7 @@ from Cryptodome.PublicKey.RSA import construct
 class Tools:
 
     @staticmethod
-    def enforce_list_response(data: dict, singular_key_name: str, plural_key_name: Union[str, None] = None) -> dict:
+    def enforce_list_response(data: dict, singular_key_name: str, plural_key_name: Optional[str] = None) -> dict:
         """
         Make sure Hosts->Host is a list
         It may be returned as a single dict if only one is associated,
