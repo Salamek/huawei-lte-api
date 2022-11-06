@@ -28,7 +28,7 @@ class Connection(Session):
         password = password if password else parsed_url.password
 
         super().__init__(url, timeout=timeout, requests_session=requests_session)
-        self.user_session = UserSession(self, username, password) if username else None
+        self.user_session = UserSession(self, username, password) if username or password else None
 
         if login_on_demand:
             warnings.warn(

@@ -18,9 +18,11 @@ from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorPasswordWrongException, \
     ResponseErrorNotSupportedException
 
+DEFAULT_USERNAME = 'admin'
+
 
 class UserSession:
-    def __init__(self, session: Session, username: str, password: Union[str, None] = None):
+    def __init__(self, session: Session, username: str = DEFAULT_USERNAME, password: Union[str, None] = None):
         self.user = User(session)
         self.user.login(username, password, True)
 
@@ -86,8 +88,9 @@ class User(ApiGroup):
 
         return result == ResponseEnum.OK.value
 
-    def login(self, username: str, password: Union[str, None], force_new_login: bool = False) -> bool:
-        username = username if username else 'admin'
+    def login(self, username: str = DEFAULT_USERNAME, password: Union[str, None] = None, force_new_login: bool = False) -> bool:
+        if username == '':  # <= 1.6.4 backwards compatibility
+            username = DEFAULT_USERNAME
         tries = 5
         for i in range(tries):
             try:
