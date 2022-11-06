@@ -24,7 +24,7 @@ class Dhcp(ApiGroup):
         """
         return self._session.get('dhcp/static-addr-info')
 
-    def set_settings(
+    def set_settings(  # pylint: disable=too-many-arguments
         self,
         dhcp_ip_address: str = "192.168.0.1",
         dhcp_lan_netmask: str = "255.255.255.0",
@@ -51,7 +51,7 @@ class Dhcp(ApiGroup):
         :param show_dns_setting: Unknown usage.
         :return SetResponseType: Set response type.
         """
-        
+
         ip_address_parts = dhcp_ip_address.split(".")
         ip_address_parts.pop(-1)
         dhcp_start_ip_address = ".".join(ip_address_parts) + "." + str(dhcp_start_ip_range)
