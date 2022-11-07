@@ -36,21 +36,21 @@ package:debian:
       - deb_dist/*.deb
     expire_in: 1d
 
-package:archlinux:
-  stage: package
-  script:
-    - pacman -Sy python-pip sudo openssh binutils fakeroot python-xmltodict python-requests python-pycryptodomex python-setuptools --noconfirm
-    - useradd -m -G users -s /bin/bash package
-    - chown -R package:users archlinux
-    - cd archlinux
-    - sudo -H -u package makepkg -f
-  tags:
-    - archlinux
+#package:archlinux:
+#  stage: package
+#  script:
+#    - pacman -Sy python-pip sudo openssh binutils fakeroot python-xmltodict python-requests python-pycryptodomex python-setuptools --noconfirm
+#    - useradd -m -G users -s /bin/bash package
+#    - chown -R package:users archlinux
+#    - cd archlinux
+#    - sudo -H -u package makepkg -f
+#  tags:
+#    - archlinux
 
-  artifacts:
-    paths:
-      - archlinux/python-huawei-lte-api*
-    expire_in: 1d
+#  artifacts:
+#    paths:
+#      - archlinux/python-huawei-lte-api*
+#    expire_in: 1d
 
 packagetest:debian:
   stage: packagetest
@@ -63,19 +63,15 @@ packagetest:debian:
   dependencies:
     - package:debian
 
-packagetest:archlinux:
-  stage: packagetest
-  script:
-    - echo "[salamek]" >> /etc/pacman.conf
-    - echo "Server = https://repository.salamek.cz/arch/pub/any" >> /etc/pacman.conf
-    - echo "SigLevel = Optional" >> /etc/pacman.conf
-    - pacman -Sy --noconfirm
-    - cd archlinux
-    - pacman -U python-huawei-lte-api*.pkg.tar.zst --noconfirm
-  tags:
-    - archlinux
-  dependencies:
-    - package:archlinux
+#packagetest:archlinux:
+#  stage: packagetest
+#  script:
+#    - cd archlinux
+#    - pacman -U python-huawei-lte-api*.pkg.tar.zst --noconfirm
+#  tags:
+#    - archlinux
+#  dependencies:
+#    - package:archlinux
 
 repoupdate:
   stage: deploy
@@ -90,16 +86,16 @@ repoupdate:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
-    - ssh www-data@repository 'rm -rf /var/www/repository.salamek.cz/www/arch/pub/any/python-huawei-lte-api*.pkg.tar.zst'
+    #- ssh www-data@repository 'rm -rf /var/www/repository.salamek.cz/www/arch/pub/any/python-huawei-lte-api*.pkg.tar.zst'
     - ssh www-data@repository 'rm -rf /var/www/repository.salamek.cz/cache/deb/pub/all/python3-huawei-lte-api*.deb'
-    - scp archlinux/python-huawei-lte-api*.pkg.tar.zst www-data@repository:/var/www/repository.salamek.cz/www/arch/pub/any
+    #- scp archlinux/python-huawei-lte-api*.pkg.tar.zst www-data@repository:/var/www/repository.salamek.cz/www/arch/pub/any
     - scp deb_dist/*.deb www-data@repository:/var/www/repository.salamek.cz/cache/deb/pub/all
     - ssh www-data@repository '/var/www/repository.salamek.cz/deb-pub-update.sh'
-    - ssh www-data@repository '/var/www/repository.salamek.cz/arch-pub-update.sh'
+    #- ssh www-data@repository '/var/www/repository.salamek.cz/arch-pub-update.sh'
     - python3 setup.py sdist
     - twine upload dist/*
   dependencies:
-    - package:archlinux
+    #- package:archlinux
     - package:debian
   tags:
     - debian
