@@ -67,6 +67,7 @@ packagetest:archlinux:
   stage: packagetest
   script:
     - cd archlinux
+    - pacman -Sy
     - pacman -U python-huawei-lte-api*.pkg.tar.zst --noconfirm
   tags:
     - archlinux
