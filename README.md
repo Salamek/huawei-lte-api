@@ -4,6 +4,9 @@ you can use this to simply send SMS, get information about your internet usage, 
 
 [![Tox tests](https://github.com/Salamek/huawei-lte-api/actions/workflows/python-test.yml/badge.svg)](https://github.com/Salamek/huawei-lte-api/actions/workflows/python-test.yml)
 
+> Please consider sponsoring if you're using this package commercially, my time is not free :) You can sponsor me by clicking on "Sponsor" button in top button row. Thank You.
+
+
 ## Tested on:
 #### 3G/LTE Routers:
 * Huawei B310s-22
