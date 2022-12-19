@@ -109,7 +109,7 @@ class User(ApiGroup):
         if LoginStateEnum(int(state_login['State'])) == LoginStateEnum.LOGGED_IN and not force_new_login:
             return True
 
-        return self._login(username, password, PasswordTypeEnum(int(state_login['password_type'])))
+        return self._login(username, password, PasswordTypeEnum(int(state_login.get('password_type', 0))))
 
     def logout(self) -> SetResponseType:
         return self._session.post_set('user/logout', {
