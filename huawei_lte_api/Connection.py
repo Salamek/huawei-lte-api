@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import requests
 
 from huawei_lte_api.Session import Session
-from huawei_lte_api.api.User import DEFAULT_USERNAME, UserSession
+from huawei_lte_api.api.User import UserSession
 
 
 class Connection(Session):
@@ -24,7 +24,7 @@ class Connection(Session):
         parsed_url = urlparse(url)
 
         # User login code
-        username = username or parsed_url.username or DEFAULT_USERNAME
+        username = username or parsed_url.username
         password = password if password else parsed_url.password
 
         super().__init__(url, timeout=timeout, requests_session=requests_session)
