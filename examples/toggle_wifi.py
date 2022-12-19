@@ -11,15 +11,14 @@ from huawei_lte_api.enums.client import ResponseEnum
 
 parser = ArgumentParser()
 parser.add_argument('url', type=str)
-parser.add_argument('phone_number', type=str)
-parser.add_argument('message', type=str)
+parser.add_argument('enabled', type=bool)
 parser.add_argument('--username', type=str)
 parser.add_argument('--password', type=str)
 args = parser.parse_args()
 
 with Connection(args.url, username=args.username, password=args.password) as connection:
     client = Client(connection)
-    if client.sms.send_sms([args.phone_number], args.message) == ResponseEnum.OK.value:
-        print('SMS was send successfully')
+    if client.wlan.wifi_network_switch(args.enabled) == ResponseEnum.OK.value:
+        print('Wi-Fi was toggled successfully')
     else:
         print('Error')
