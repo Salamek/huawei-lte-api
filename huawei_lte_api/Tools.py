@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Iterator, TypeVar, Iterable
 
 from binascii import hexlify
 import math
@@ -6,6 +6,8 @@ import base64
 from Cryptodome.Cipher import PKCS1_v1_5, PKCS1_OAEP
 from Cryptodome.PublicKey.RSA import construct
 
+
+T = TypeVar('T')
 
 class Tools:
 
@@ -59,5 +61,24 @@ class Tools:
         return b'0' + result
 
     @staticmethod
-    def filter_dict(filtered_dict: dict, wanted_keys: Tuple[str, ...]) -> dict:
+    def strip_dict(filtered_dict: dict, wanted_keys: Tuple[str, ...]) -> dict:
+        """
+        Strips unwanted items from dict and keeps only wanted_keys
+        :param filtered_dict: Dict to filter
+        :param wanted_keys: Keys to keep
+        :return:
+        """
         return {i: filtered_dict[i] for i in filtered_dict if i in set(wanted_keys)}
+
+    @staticmethod
+    def filter_iter(data: Iterable[T], filter_options: dict) -> Iterator[T]:
+        for data_item in data:
+            for attr, value in filter_options.items():
+                if isinstance(data_item, dict):
+                    if data_item.get(attr) != value:
+                        break
+                else:
+                    if getattr(data_item, attr) != value:
+                        break
+            else:
+                yield data_item
