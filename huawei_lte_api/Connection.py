@@ -6,10 +6,12 @@ from urllib.parse import urlparse
 import requests
 
 from huawei_lte_api.Session import Session
-from huawei_lte_api.api.User import UserSession
+from huawei_lte_api.api.User import UserSession, DEFAULT_USERNAME
 
 
 class Connection(Session):
+    user_session: Optional[UserSession] = None
+
     def __init__(self,
                  url: str,
                  username: Optional[str] = None,
@@ -28,7 +30,12 @@ class Connection(Session):
         password = password if password else parsed_url.password
 
         super().__init__(url, timeout=timeout, requests_session=requests_session)
-        self.user_session = UserSession(self, username, password) if username or password else None
+        if username or password:
+            self.user_session = UserSession(
+                self,
+                username or DEFAULT_USERNAME,
+                password
+            )
 
         if login_on_demand:
             warnings.warn(
