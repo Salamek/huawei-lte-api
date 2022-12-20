@@ -117,6 +117,7 @@ Some code [examples](examples/) are in [/examples](examples/)  folder
 
 * Monitoring traffic and signal https://github.com/littlejo/huawei-lte-examples
 * Set band, show signal level and bandwidth for Huawei mobile broadband B525s-23a. https://github.com/octave21/huawei-lte
+* Application that monitors Internet connectivity and restarts router when internet is not reachable https://github.com/Salamek/netkeeper
 
 ### SMS
 
