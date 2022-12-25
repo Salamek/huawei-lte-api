@@ -28,6 +28,7 @@ class SaveModeEnum(enum.IntEnum):
     SIM_CARD = 1
     SIM_CARD_FIRST = 2
     LOCAL_FIRST = 3
+    UNKNOWN = 4  # SMS i send to my self have this save mode set, SMS from operator have savemode=1
 
 
 @enum.unique
@@ -42,3 +43,28 @@ class PriorityEnum(enum.IntEnum):
     INTERACTIVE = 1
     URGENT = 2
     EMERGENCY = 3
+    UNKNOWN = 4  # No idea what this is but all send SMS from UI has this priority
+
+
+@enum.unique
+class TypeEnum(enum.IntEnum):
+    SINGLE = 1
+    MULTIPART = 2
+    UNICODE = 5  # Not sure
+    DELIVERY_CONFIRMATION_SUCCESS = 7
+    DELIVERY_CONFIRMATION_FAILURE = 8
+
+
+@enum.unique
+class StatusEnum(enum.IntEnum):
+    NEW = 0
+    READ = 1
+    PENDING = 2  # Not sure
+    SEND = 3  # Not sure
+
+
+@enum.unique
+class SortTypeEnum(enum.IntEnum):
+    DATE = 0
+    PHONE = 1
+    INDEX = 2
