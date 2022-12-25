@@ -85,14 +85,14 @@ class Sms(ApiGroup):
             sort_type = SortTypeEnum(sort_type)
 
         # Note: at least the B525s-23a is order sensitive
-        return self._session.post_get('sms/sms-list', OrderedDict((
+        return Tools.enforce_list_response(self._session.post_get('sms/sms-list', OrderedDict((
             ('PageIndex', page),
             ('ReadCount', read_count),
             ('BoxType', box_type.value),
             ('SortType', sort_type.value),
             ('Ascending', 1 if ascending else 0),
             ('UnreadPreferred', 1 if unread_preferred else 0),
-        )))
+        ))), 'Message', 'Messages')
 
     def delete_sms(self, sms_id: int) -> SetResponseType:
         """
@@ -249,7 +249,7 @@ class Sms(ApiGroup):
 
         while True:
             now = datetime.datetime.now()
-            sms_list_tmp = Tools.enforce_list_response(self.get_sms_list(page, box_type, read_count, sort_type, ascending, unread_preferred), 'Message', 'Messages')
+            sms_list_tmp = self.get_sms_list(page, box_type, read_count, sort_type, ascending, unread_preferred)
             if int(sms_list_tmp.get('Count', 0)) == 0:
                 break
 
