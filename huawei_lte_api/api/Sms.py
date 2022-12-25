@@ -12,16 +12,16 @@ from huawei_lte_api.Tools import Tools
 
 @dataclasses.dataclass
 class Message:
-    index: int
-    status: StatusEnum
-    phone: str
-    content: str
-    date_time: datetime.datetime
-    sca: Optional[str]
-    save_type: SaveModeEnum
-    priority: PriorityEnum
-    type: TypeEnum
-    text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT
+    index: int  # Index in API
+    status: StatusEnum  # Status of SMS
+    phone: str  # Phone number of sender
+    content: str  # Text content of SMS
+    date_time: datetime.datetime  # Datetime of SMS send/receive
+    sca: Optional[str]  # Message center number in INTL format eg. +420603052000
+    save_type: SaveModeEnum  # How to save received SMS in device
+    priority: PriorityEnum  # What priority this SMS have
+    type: TypeEnum  # Type of SMS
+    text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT  # Type of encoding of SMS
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Message':
@@ -117,10 +117,20 @@ class Sms(ApiGroup):
                  phone_numbers: List[str],
                  message: str,
                  sms_index: int = -1,
-                 sca: str = '',
+                 sca: Optional[str] = None,
                  text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT,
                  from_date: Optional[datetime.datetime] = None,
                  ) -> SetResponseType:
+        """
+
+        :param phone_numbers:
+        :param message:
+        :param sms_index:
+        :param sca: (Optional) Message center number in INTL format eg. +420603052000
+        :param text_mode:
+        :param from_date:
+        :return:
+        """
 
         if from_date is None:
             from_date = datetime.datetime.utcnow()
@@ -139,11 +149,20 @@ class Sms(ApiGroup):
                  phone_numbers: List[str],
                  message: str,
                  sms_index: int = -1,
-                 sca: str = '',
+                 sca: Optional[str] = None,
                  text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT,
                  from_date: Optional[datetime.datetime] = None,
                  ) -> SetResponseType:
+        """
 
+        :param phone_numbers:
+        :param message:
+        :param sms_index:
+        :param sca: (Optional) Message center number in INTL format eg. +420603052000
+        :param text_mode:
+        :param from_date:
+        :return:
+        """
         if from_date is None:
             from_date = datetime.datetime.utcnow()
         return self._session.post_set('sms/send-sms', OrderedDict((
@@ -170,6 +189,16 @@ class Sms(ApiGroup):
                    send_type: SendTypeEnum = SendTypeEnum.SEND,
                    priority: PriorityEnum = PriorityEnum.NORMAL
                    ) -> SetResponseType:
+        """
+        Sets default SMS send config
+        :param sca: Message center number in INTL format eg. +420603052000
+        :param save_mode:
+        :param validity: validity in seconds?
+        :param use_s_report:
+        :param send_type:
+        :param priority:
+        :return:
+        """
         return self._session.post_set('sms/config', OrderedDict((
             ('SaveMode', save_mode.value),
             ('Validity', validity),
@@ -191,12 +220,23 @@ class Sms(ApiGroup):
             'readcount': readcount,
         })
 
-    def get_sms_list_pdu(self) -> GetResponseType:
+    def get_sms_list_pdu(self,
+                         page: int = 1,
+                         box_type: BoxTypeEnum = BoxTypeEnum.LOCAL_INBOX,
+                         read_count: int = 20,
+                         ) -> GetResponseType:
         """
-        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        Return SMS in PDU format
+        :param page: page number
+        :param box_type: box type
+        :param read_count: items per page
         :return:
         """
-        return self._session.post_get('sms/sms-list-pdu')
+        return self._session.post_get('sms/sms-list-pdu', {
+            'PageIndex': page,
+            'ReadCount': read_count,
+            'BoxType': box_type.value,
+        })
 
     def split_sms(self) -> GetResponseType:
         """
@@ -205,12 +245,39 @@ class Sms(ApiGroup):
         """
         return self._session.get('sms/split-sms')
 
-    def send_sms_pdu(self) -> GetResponseType:
+    def send_sms_pdu(self,
+                     pdu: str,
+                     length: int,
+                     sms_index: int = -1,
+                     sca: Optional[str] = None,
+                     validity: int = 10752,
+                     status_report: bool = False,
+                     save_mode: SaveModeEnum = SaveModeEnum.LOCAL,
+                     send_type: SendTypeEnum = SendTypeEnum.SEND
+                     ) -> SetResponseType:
         """
-        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        Sends PDU SMS, this is not implemented on my router so not tested
+        :param pdu: PDU to send e.g. 001100098121436587F900000B05E8329BFD06
+        :param length: !TODO Length of PDU not an actual len() but some magic calculation I will not research right now
+        :param sms_index: Index of sms in router default -1
+        :param sca: # Message center number in INTL format e.g. +420603052000
+        :param validity: validity in seconds?
+        :param status_report: Require status report for sms (received or not)
+        :param save_mode: SaveModeEnum
+        :param send_type: SendTypeEnum
         :return:
         """
-        return self._session.get('sms/send-sms-pdu')
+
+        return self._session.post_set('sms/send-sms-pdu', {
+            'Index': sms_index,
+            'PDU': pdu,
+            'Length': length,
+            'SaveMode': save_mode.value,
+            'Validity': validity,  # validity in seconds?
+            'Sca': sca,  # Message center number in INTL format eg. +420603052000
+            'UseSReport': 1 if status_report else 0,  # Report SMS received
+            'SendType': send_type.value
+        })
 
     def recover_sms(self) -> GetResponseType:
         """
@@ -258,7 +325,7 @@ class Sms(ApiGroup):
                 message = Message.from_dict(message_raw)
 
                 # Check if message is possibly multipart,
-                # if it is ignore it if is younger then 60 seconds
+                # if it is ignore it if is younger than 60 seconds
                 # This way we provide the router with enough time to receive all possible parts and do correct rebuild
                 if message.type == TypeEnum.MULTIPART and message.date_time + datetime.timedelta(seconds=10) > now:
                     continue
