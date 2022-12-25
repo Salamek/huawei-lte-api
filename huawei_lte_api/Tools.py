@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional, Tuple, Iterator, TypeVar, Iterable
 
 from binascii import hexlify
@@ -9,7 +10,9 @@ from Cryptodome.PublicKey.RSA import construct
 
 T = TypeVar('T')
 
+
 class Tools:
+    datetime_format = '%Y-%m-%d %H:%M:%S'
 
     @staticmethod
     def enforce_list_response(data: dict, singular_key_name: str, plural_key_name: Optional[str] = None) -> dict:
@@ -82,3 +85,16 @@ class Tools:
                         break
             else:
                 yield data_item
+
+    @staticmethod
+    def string_to_datetime(datetime_string: str) -> datetime.datetime:
+        """
+        Parses datetime in format 2022-12-22 18:01:09
+        :param datetime_string: string to parse
+        :return: datetime.datetime
+        """
+        return datetime.datetime.strptime(datetime_string, Tools.datetime_format)
+
+    @staticmethod
+    def datetime_to_string(date_time: datetime.datetime) -> str:
+        return date_time.strftime(Tools.datetime_format)
