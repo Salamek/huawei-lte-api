@@ -1,6 +1,6 @@
 import dataclasses
 from collections import OrderedDict
-from typing import List, Optional
+from typing import List, Optional, Iterable
 
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
@@ -218,7 +218,7 @@ class WLan(ApiGroup):
         ssids = map(WLanSettings.from_dict, multi_basic_settings['Ssids']['Ssid'])
         return list(Tools.filter_iter(ssids, criteria))
 
-    def save_wlan_settings(self, settings: List[WLanSettings]) -> SetResponseType:
+    def save_wlan_settings(self, settings: Iterable[WLanSettings]) -> SetResponseType:
         """
         Saves modified list of WLanSettings
         :param settings:
