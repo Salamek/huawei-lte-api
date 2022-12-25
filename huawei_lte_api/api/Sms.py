@@ -25,17 +25,17 @@ class Message:
 
     @classmethod
     def from_dict(cls, data: dict) -> 'Message':
-        print(data)
+        date_time = data.get('Date')
         return Message(
             index=int(data.get('Index', 0)),
-            status=StatusEnum(int(data.get('Smstat'))),
-            phone=data.get('Phone'),
-            content=data.get('Content'),
-            date_time=Tools.string_to_datetime(data.get('Date')),
+            status=StatusEnum(int(data.get('Smstat', 0))),
+            phone=data.get('Phone', ''),
+            content=data.get('Content', ''),
+            date_time=Tools.string_to_datetime(date_time) if date_time else datetime.datetime.now(),
             sca=data.get('Sca'),
-            save_type=SaveModeEnum(int(data.get('SaveType'))),
-            priority=PriorityEnum(int(data.get('Priority'))),
-            type=TypeEnum(int(data.get('SmsType'))),
+            save_type=SaveModeEnum(int(data.get('SaveType', 0))),
+            priority=PriorityEnum(int(data.get('Priority', 0))),
+            type=TypeEnum(int(data.get('SmsType', 0))),
         )
 
     def to_dict(self) -> dict:
@@ -250,7 +250,7 @@ class Sms(ApiGroup):
         while True:
             now = datetime.datetime.now()
             sms_list_tmp = Tools.enforce_list_response(self.get_sms_list(page, box_type, read_count, sort_type, ascending, unread_preferred), 'Message', 'Messages')
-            if int(sms_list_tmp.get('Count')) == 0:
+            if int(sms_list_tmp.get('Count', 0)) == 0:
                 break
 
             # get messages
