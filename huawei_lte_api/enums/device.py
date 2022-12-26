@@ -14,3 +14,10 @@ class ControlModeEnum(enum.IntEnum):
     REBOOT = 1
     RESET = 2  # Resets device into factory settings
     POWER_OFF = 4
+
+
+@enum.unique
+class ModeEnum(enum.IntEnum):
+    NORMAL = 0
+    DEBUG = 1
+    ENABLE_TELNET = 2

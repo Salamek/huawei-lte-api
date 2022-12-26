@@ -1,7 +1,7 @@
 import warnings
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
-from huawei_lte_api.enums.device import AntennaTypeEnum, ControlModeEnum
+from huawei_lte_api.enums.device import AntennaTypeEnum, ControlModeEnum, ModeEnum
 
 
 class Device(ApiGroup):
@@ -84,4 +84,14 @@ class Device(ApiGroup):
         """
         return self._session.post_get('device/vendorname', {
             'language': lang
+        })
+
+    def mode(self, mode: ModeEnum) -> SetResponseType:
+        """
+        Sets mode of the device, it can enable telnet, set debug mode or production mode, see ModeEnum
+        :param mode: ModeEnum
+        :return: SetResponseType
+        """
+        return self._session.post_set('device/mode', {
+            'mode': mode.value
         })
