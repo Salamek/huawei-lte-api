@@ -93,5 +93,5 @@ class Device(ApiGroup):
         :return: SetResponseType
         """
         return self._session.post_set('device/mode', {
-            'mode': mode.value
+            'mode': mode
         })
