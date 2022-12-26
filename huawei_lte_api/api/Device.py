@@ -95,3 +95,10 @@ class Device(ApiGroup):
         return self._session.post_set('device/mode', {
             'mode': mode
         })
+
+    def compress_logfile(self) -> GetResponseType:
+        """
+        Returns link to archived log file
+        :return:
+        """
+        return self._session.get('device/compresslogfile')
