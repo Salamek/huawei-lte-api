@@ -1,4 +1,6 @@
+import datetime
 from collections import OrderedDict
+from typing import Optional
 
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
@@ -11,6 +13,13 @@ class SdCard(ApiGroup):
 
     def set_dlna_setting(self, enabled: bool, share_all: bool,
                          share_path: str = '/') -> SetResponseType:
+        """
+        Sets DLNA settings
+        :param enabled: is DLNA enabled
+        :param share_all: Share all
+        :param share_path: What path to share defaults to /
+        :return:
+        """
         return self._session.post_set('sdcard/dlna-setting', {
             'enabled': int(enabled),
             'sharepath': share_path,
@@ -18,6 +27,10 @@ class SdCard(ApiGroup):
         })
 
     def sdcard(self) -> GetResponseType:
+        """
+        Get information about sharing
+        :return:
+        """
         return self._session.get('sdcard/sdcard')
 
     def sdcardsamba(self) -> GetResponseType:
@@ -29,6 +42,17 @@ class SdCard(ApiGroup):
                         workgroup_name: str = 'WORKGROUP',
                         anonymous_access: bool = False,
                         printer_enabled: bool = True) -> SetResponseType:
+        """
+        Enable file sharing using SMB
+        :return:
+        :param enabled: is enabled
+        :param server_name: Name of the server on your W/LAN
+        :param server_description: Description of SMB server
+        :param workgroup_name: Workgroup name
+        :param anonymous_access: enable anonymous access
+        :param printer_enabled: enable printer
+        :return:
+        """
         return self._session.post_set('sdcard/sdcardsamba', OrderedDict((
             ('enabled', int(enabled)),
             ('servername', server_name),
@@ -42,6 +66,24 @@ class SdCard(ApiGroup):
         return self._session.get('sdcard/printerlist')
 
     def share_account(self) -> GetResponseType:
+        """???
+        <request>
+        <accounts>
+            <account>
+                <accountname></accountname>
+                <accountpwd></accountpwd>
+                <sharepath></sharepath>
+                <accesstype></accesstype>
+                <shareallpath></shareallpath>
+            </account>
+            <account>
+                ...
+            </account>
+            ...
+        </accounts>
+    </request>
+        :return:
+        """
         return self._session.get('sdcard/share-account')
 
     def sdfile(self) -> GetResponseType:
@@ -65,16 +107,46 @@ class SdCard(ApiGroup):
         """
         return self._session.get('sdcard/Check_file_exist')
 
-    def createdir(self) -> GetResponseType:
+    def create_dir(self, name: str, current_path: str = '/', created: Optional[datetime.datetime] = None) -> SetResponseType:
         """
-        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
-        :return:
+        Create directory on the SD card
+        :param name: Name of dir to create
+        :param current_path: In what path to create, default is /
+        :param created: datetime of creation
+        :return: ResponseEnum.OK on success
         """
-        return self._session.get('sdcard/createdir')
 
-    def deletefile(self) -> GetResponseType:
+        if not created:
+            created = datetime.datetime.now()
+
+        return self._session.post_set('sdcard/createdir', {
+            'CurrentPath': current_path,
+            'FileName': name,
+            'Time': {
+                'Year': created.year,
+                'Month': created.month,
+                'Day': created.day,
+                'Hour': created.hour,
+                'Min': created.minute,
+                'Sec': created.second,
+            }
+        })
+
+    def delete_file(self, name: str, current_path: str = '/') -> SetResponseType:
         """
-        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        Delete file or directory on SD card
+        :param name: name to delete
+        :param current_path: in what path to delete
+        :return: ResponseEnum.OK on success
+        """
+        return self._session.post_set('sdcard/deletefile', {
+            'CurrentPath': current_path,
+            'DeleteFileList': name
+        })
+
+    def sd_capacity(self) -> GetResponseType:
+        """
+        Gets information about SD-card capacity
         :return:
         """
-        return self._session.get('sdcard/deletefile')
+        return self._session.get('sdcard/sdcapacity')
