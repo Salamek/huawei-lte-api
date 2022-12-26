@@ -45,6 +45,13 @@ class NetworkBandEnum(enum.IntEnum):
 
 @enum.unique
 class LTEBandEnum(enum.IntEnum):
-    """For other values besides ALL, see set_net_mode docs."""
+    """For other values besides, see set_net_mode docs."""
+    B1 = 0x01
+    B3 = 0x04
+    B7 = 0x40
+    B8 = 0x80
+    B20 = 0x80000
+    B38 = 0x2000000000
+    B40 = 0x8000000000
     ALL = 0x7fffffffffffffff
     """Use alone, do not 'or' this with others."""
