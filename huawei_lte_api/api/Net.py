@@ -34,6 +34,16 @@ class Net(ApiGroup):
     def network(self) -> GetResponseType:
         return self._session.get('net/network')
 
+    def set_network(self, networkmode: str, networkband: str) -> SetResponseType:
+        """
+        :param networkmode: different value range than in net_mode/NetworkModeEnun
+        :param networkband: different value range than in net_mode
+        """
+        return self._session.post_set('net/network', OrderedDict((
+            ('NetworkMode', networkmode),
+            ('NetworkBand', networkband),
+        )))
+
     def register(self) -> GetResponseType:
         return self._session.get('net/register')
 
