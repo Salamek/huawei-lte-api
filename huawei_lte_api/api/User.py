@@ -16,6 +16,7 @@ from huawei_lte_api.exceptions import ResponseErrorException, \
     LoginErrorUsernamePasswordWrongException, \
     LoginErrorUsernameWrongException, \
     LoginErrorPasswordWrongException, \
+    ResponseErrorLoginRequiredException, \
     ResponseErrorNotSupportedException
 
 DEFAULT_USERNAME = 'admin'
@@ -27,7 +28,11 @@ class UserSession:
         self.user.login(username, password, True)
 
     def close(self) -> None:
-        self.user.logout()
+        try:
+            self.user.logout()
+        except (ResponseErrorLoginRequiredException, ResponseErrorNotSupportedException):
+            # Idempotency/nothing further to do, suppress
+            pass
 
     def __enter__(self) -> 'UserSession':
         return self
