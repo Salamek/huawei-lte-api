@@ -21,7 +21,7 @@ class Connection(Session):
                  requests_session: Optional[requests.Session] = None
                  ):
         """
-        :param requests_session: requests Session to use, closing it is the caller's responsibility
+        :param requests_session: requests Session to use; if not None, closing it is the caller's responsibility
         """
         parsed_url = urlparse(url)
 
