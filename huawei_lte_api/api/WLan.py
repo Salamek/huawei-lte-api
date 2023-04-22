@@ -170,11 +170,28 @@ class WLan(ApiGroup):
     def wps_appin(self) -> GetResponseType:
         return self._session.get('wlan/wps-appin')
 
+    def set_wps_appin(self, wpsappintype: int = 0, wpsappin: Optional[int] = None) -> SetResponseType:
+        return self._session.post_set('wlan/wps-appin', OrderedDict((
+            ('wpsappintype', wpsappintype),
+            ('wpsappin', str(wpsappin) if wpsappin is not None else ''),
+        )))
+
     def wps_pbc(self) -> GetResponseType:
         return self._session.get('wlan/wps-pbc')
 
+    def set_wps_pbc(self, wpsmode: int = 1, ssidindex: int = 0) -> SetResponseType:
+        return self._session.post_set('wlan/wps-pbc', OrderedDict((
+            ('WPSMode', wpsmode),
+            ('ssidindex', ssidindex),
+        )))
+
     def wps_switch(self) -> GetResponseType:
         return self._session.get('wlan/wps-switch')
+
+    def set_wps_switch(self, appinenable: int) -> SetResponseType:
+        return self._session.post_set('wlan/wps-switch', OrderedDict((
+            ('appinenable', appinenable),
+        )))
 
     def status_switch_settings(self) -> GetResponseType:
         return self._session.get('wlan/status-switch-settings')
