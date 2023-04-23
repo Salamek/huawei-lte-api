@@ -9,6 +9,10 @@ class Monitoring(ApiGroup):
         return self._session.get('monitoring/converged-status')
 
     def status(self) -> GetResponseType:
+        """
+        Returns status info of the router
+        Note: for signal some routers return correct value in SignalIcon some in SignalIconNr
+        """
         return self._session.get('monitoring/status')
 
     def check_notifications(self) -> GetResponseType:
