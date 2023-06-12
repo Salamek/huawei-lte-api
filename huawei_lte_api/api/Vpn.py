@@ -19,7 +19,7 @@ class Vpn(ApiGroup):
     def pptp_settings(self) -> GetResponseType:
         return self._session.get('vpn/pptp_settings')
 
-    def toggle_status(self, enable=True):
+    def toggle_status(self, enable=True) -> GetResponseType:
         data = {
             "enable": "1" if enable else "0",
         }
