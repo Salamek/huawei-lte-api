@@ -19,6 +19,16 @@ class Vpn(ApiGroup):
     def pptp_settings(self) -> GetResponseType:
         return self._session.get('vpn/pptp_settings')
 
+    def toggle_status(self, enable=True):
+        data = {
+            "enable": "1" if enable else "0",
+        }
+        return self._session._post(
+            "vpn/l2tp_settings",
+            data=data,
+            is_encrypted=True,
+        )
+
     def status(self) -> GetResponseType:
         """
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage
