@@ -23,7 +23,7 @@ class Vpn(ApiGroup):
         data = {
             "enable": "1" if enable else "0",
         }
-        return self._session._post(
+        return self._session.post_set(
             "vpn/l2tp_settings",
             data=data,
             is_encrypted=True,
