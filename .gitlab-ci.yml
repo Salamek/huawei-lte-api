@@ -9,7 +9,7 @@ test:debian:
   script:
     - apt-get update -qy
     - apt-get install -y python3-setuptools python3-pytest-runner python3-pytest python3-pylint-common python3-pytest-cov python3-xmltodict python3-requests tox python3-pycryptodome
-    - tox -e py39
+    - tox -e py310
   tags:
     - debian
 
@@ -17,7 +17,7 @@ test:archlinux:
   stage: test
   script:
     - pacman -Sy python-pytest-runner python-pytest python-pylint python-pytest-cov python-xmltodict python-requests python-tox python-pycryptodomex --noconfirm
-    - tox -e py310
+    - tox -e py311
   tags:
     - archlinux
 
