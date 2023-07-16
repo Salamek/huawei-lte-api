@@ -51,6 +51,7 @@ class LTEBandEnum(enum.IntEnum):
     B7 = 0x40
     B8 = 0x80
     B20 = 0x80000
+    B28 = 0x8000000
     B38 = 0x2000000000
     B40 = 0x8000000000
     ALL = 0x7fffffffffffffff
