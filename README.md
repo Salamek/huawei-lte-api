@@ -17,7 +17,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 * Huawei B528s
 * Huawei B535-232
 * Huawei B628-265
-* Huawei B612
+* Huawei B612-233
 * Huawei B818-263
 * Huawei E5186s-22a
 * Huawei E5576-320
