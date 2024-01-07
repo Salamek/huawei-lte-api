@@ -140,8 +140,7 @@ class WLan(ApiGroup):
 
     def set_multi_macfilter_settings(self, clients: list) -> SetResponseType:
         """
-
-        :param clients: list of dicts with format {'wifihostname': hostname,'WifiMacFilterMac': mac}
+        :param clients: list of dicts with format {'WifiMacFilterMac0': 'mac address','wifihostname0': 'name', 'Index': 'number', 'WifiMacFilterStatus': 'number(1 or 2)'}
         """
         return self._session.post_set('wlan/multi-macfilter-settings', {
             'Ssids': {
