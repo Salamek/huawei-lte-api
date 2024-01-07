@@ -76,8 +76,6 @@ packagetest:archlinux:
 
 repoupdate:
   stage: deploy
-  variables:
-    TWINE_USERNAME: __token__
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - apt-get update -y
