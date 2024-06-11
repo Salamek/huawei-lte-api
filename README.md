@@ -23,14 +23,17 @@ you can use this to simply send SMS, get information about your internet usage, 
 * Huawei E5576-320
 * Huawei E5577Cs-321
 * Huawei E8231
+* Huawei E5573s-320
 * SoyeaLink B535-333
   
  
 #### 3G/LTE USB sticks:
 (Device must support NETWork mode aka. "HiLink" version, it wont work with serial mode)
 * Huawei E3131
+* Huawei E8372h-608
 * Huawei E3372
 * Huawei E3531
+* Huawei E5530As-2
 
 
 #### 5G Routers:
