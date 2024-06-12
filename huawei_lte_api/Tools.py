@@ -48,7 +48,7 @@ class Tools:
         }.get(rsa_padding)
 
         if not cipher_module or not num:
-            raise Exception('Unknown rsa_padding value {}'.format(rsa_padding))
+            raise ValueError('Unknown rsa_padding value {}'.format(rsa_padding))
 
         cipher = cipher_module.new(pubkey)
 

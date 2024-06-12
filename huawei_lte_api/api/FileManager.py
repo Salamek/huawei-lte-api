@@ -17,10 +17,10 @@ class FileManager(ApiGroup):
         _, extension = os.path.splitext(uploadfile_basename)
 
         if extension.lower() not in ['.bin', '.zip']:
-            raise Exception('Only *.bin or *.zip is allowed')
+            raise ValueError('Only *.bin or *.zip is allowed')
 
         return self._session.post_file('filemanager/upload', {
             'uploadfile': uploadfile,
         }, {
-                                           'cur_path': 'OU:{}'.format(uploadfile_basename)
-                                       })
+            'cur_path': 'OU:{}'.format(uploadfile_basename)
+        })

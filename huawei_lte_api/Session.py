@@ -123,7 +123,7 @@ class Session:
             return xmltodict.parse(data, dict_constructor=dict) if data else {}
         except:  # noqa: E722
             if response.history:
-                return dict(error=dict(code=ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT, message=''))
+                return {'error': {'code': ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT, 'message': ''}}
             raise
 
     @staticmethod
@@ -186,7 +186,7 @@ class Session:
         rsa_e = pubkey_data.get('encpubkeye')
         rsa_n = pubkey_data.get('encpubkeyn')
         if not rsa_n or not rsa_e:
-            raise Exception('No pub key was found')
+            raise ValueError('No pub key was found')
         return Tools.rsa_encrypt(rsa_e, rsa_n, data, rsa_padding)
 
     def post_get(self,
