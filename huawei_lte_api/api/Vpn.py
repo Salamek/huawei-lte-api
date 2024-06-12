@@ -27,7 +27,7 @@ class Vpn(ApiGroup):
 
         return self._session.post_set(
             # pptp_settings | l2tp_settings
-            f"vpn/{vpn_type.value}_settings",
+            'vpn/{vpn_type}_settings'.format(vpn_type=vpn_type.value),
             data=data,
             is_encrypted=True,
         )
