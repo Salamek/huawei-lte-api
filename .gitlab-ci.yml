@@ -16,7 +16,7 @@ test:debian:
 test:archlinux:
   stage: test
   script:
-    - pacman -Sy python-pytest-runner python-pytest python-pylint python-pytest-cov python-xmltodict python-requests python-tox python-pycryptodomex --noconfirm
+    - pacman -Sy python-pytest python-pylint python-pytest-cov python-xmltodict python-requests python-tox python-pycryptodomex --noconfirm
     - tox -e py311
   tags:
     - archlinux
