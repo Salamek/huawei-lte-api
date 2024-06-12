@@ -1,5 +1,6 @@
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
+from huawei_lte_api.enums.vpn import VPNType
 
 
 class Vpn(ApiGroup):
@@ -19,12 +20,14 @@ class Vpn(ApiGroup):
     def pptp_settings(self) -> GetResponseType:
         return self._session.get('vpn/pptp_settings')
 
-    def toggle_status(self, enable: bool = True) -> SetResponseType:
+    def toggle_status(self, vpn_type: VPNType = VPNType.PPTP, enable: bool = True) -> SetResponseType:
         data = {
             "enable": "1" if enable else "0",
         }
+
         return self._session.post_set(
-            "vpn/l2tp_settings",
+            # pptp_settings | l2tp_settings
+            f"vpn/{vpn_type.value}_settings",
             data=data,
             is_encrypted=True,
         )
