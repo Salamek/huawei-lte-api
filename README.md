@@ -10,6 +10,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 ## Tested on:
 #### 3G/LTE Routers:
 * Huawei B310s-22
+* Huawei B311-221
 * Huawei B315s-22
 * Huawei B525s-23a
 * Huawei B525s-65a
@@ -19,6 +20,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 * Huawei B628-265
 * Huawei B612-233
 * Huawei B818-263
+* Huawei E5180s-22
 * Huawei E5186s-22a
 * Huawei E5576-320
 * Huawei E5577Cs-321
