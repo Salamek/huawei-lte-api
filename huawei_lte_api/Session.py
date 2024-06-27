@@ -149,7 +149,7 @@ class Session:
         }
 
         if 'error' in data:
-            error = data.get('error')
+            error = data.get('error', {})
             error_code = int(error['code'])
             message = error.get('message')
             if not message:
