@@ -147,12 +147,14 @@ class Session:
             ResponseCodeEnum.ERROR_WRONG_SESSION_TOKEN.value: ResponseErrorWrongSessionToken,
             ResponseCodeEnum.ERROR_FORMAT_ERROR.value: RequestFormatException,
         }
+
         if 'error' in data:
-            error_code = int(data['error']['code'])
-            if not data['error']['message']:
+            error = data.get('error')
+            error_code = int(error['code'])
+            message = error.get('message')
+            if not message:
                 message = error_code_to_message.get(error_code, 'Unknown')
-            else:
-                message = data['error']['message']
+
             raise error_code_to_exception.get(error_code, ResponseErrorException)(
                 '{}: {}'.format(error_code, message),
                 error_code
