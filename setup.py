@@ -8,7 +8,7 @@ def read_readme() -> str:
 
 setup(
     name='huawei-lte-api',
-    version='1.9.2',
+    version='1.9.3',
     packages=find_packages(exclude=['tests', 'tests.*']),
     package_data={'huawei_lte_api': ['py.typed']},
     install_requires=[
