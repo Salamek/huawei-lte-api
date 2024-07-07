@@ -9,7 +9,6 @@ To do so. you can send multiple consecutive codes seperated by spaces:
 
 python3 send_ussd.py http://admin:PASSWORD@192.168.8.1/ *4# 7 1
 """
-import sys
 import time
 import itertools
 import threading
@@ -30,8 +29,9 @@ parser.add_argument(
     'codes', metavar='code',
     type=str, nargs='+', help='USSD code to send'
 )
+parser.add_argument('--timeout', type=int, default=15)
 args = parser.parse_args()
-MAX_WAIT_TIME = 15
+MAX_WAIT_TIME = args.timeout
 DONE = False
 
 
@@ -63,21 +63,24 @@ with Connection(
                 t.start()
             else:
                 print('Error: Cannot send USSD code')
+                break
         except Exception as e:
             print(f'Error: {e}')
+            break
 
         # Wait for the response from the service provider.
         while int(client.ussd.status().get('result', '1')) >= 1:
             if wait_time >= MAX_WAIT_TIME:
-                print('Error: Timeout Limit Exceeded')
                 DONE = True
+                t.join()
+                print('Error: Timeout Limit Exceeded')
+                break
             wait_time += 1
             time.sleep(1)
         if DONE:
-            continue
-        else:
-            DONE = True
-            t.join()
+            break
+        DONE = True
+        t.join()
 
         # Print the response.
         response = client.ussd.get()
