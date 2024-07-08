@@ -35,7 +35,7 @@ MAX_WAIT_TIME = args.timeout
 DONE = False
 
 
-def animate():
+def animate() -> None:
     """Add a simple loading animation while waiting for the response."""
     for c in itertools.cycle(['|', '/', '-', '\\']):
         if DONE:
@@ -57,7 +57,8 @@ with Connection(
 
         # Send the ussd code.
         try:
-            if client.ussd.send(code) == ResponseEnum.OK.value:
+            res = client.ussd.send(code)
+            if str(res) == ResponseEnum.OK.value:
                 print(f'\033[95m> {code}\033[0m')
                 t = threading.Thread(target=animate)
                 t.start()
@@ -65,8 +66,7 @@ with Connection(
                 print('Error: Cannot send USSD code')
                 break
         except Exception as e:
-            print(f'Error: {e}')
-            break
+            raise e
 
         # Wait for the response from the service provider.
         while int(client.ussd.status().get('result', '1')) >= 1:
