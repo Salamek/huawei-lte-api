@@ -8,3 +8,6 @@ class App(ApiGroup):
 
     def privacypolicy(self, lang: str = 'en_us') -> GetResponseType:
         return self._session.get('app/privacypolicy', {'lang': lang})
+
+    def accept_privacypolicy(self) -> GetResponseType:
+        return self._session.post_get('app/privacypolicy', {"Approve": "2", "Liscence": "0"}, is_json=True)

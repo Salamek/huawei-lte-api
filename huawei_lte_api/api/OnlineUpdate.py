@@ -46,5 +46,9 @@ class OnlineUpdate(ApiGroup):
     def autoupdate_config(self) -> GetResponseType:
         return self._session.get('online-update/autoupdate-config')
 
+    def set_autoupdate_config(self, autoupdate: bool) -> SetResponseType:
+        return self._session.post_set('online-update/autoupdate-config',
+                                      {"auto_update": int(autoupdate is True), "ui_download": 0})
+
     def redirect_cancel(self) -> GetResponseType:
         return self._session.get('online-update/redirect_cancel')

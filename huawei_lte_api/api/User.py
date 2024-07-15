@@ -48,9 +48,26 @@ class User(ApiGroup):
     def state_login(self) -> GetResponseType:
         return self._session.get('user/state-login')
 
-    def _login(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
+    def state_login_with_retry(self) -> GetResponseType:
+        tries = 5
+        for i in range(tries):
+            try:
+                state_login = self.state_login()
+                return state_login
+            except requests.exceptions.ConnectionError:
+                # Some models reportedly close the connection if we attempt to access login state too soon after
+                # setting up the session etc. In that case, retry a few times. The error is reported to be
+                # ConnectionError: (
+                #     'Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+                if i == tries - 1:
+                    raise
+                time.sleep((i + 1) / 10)
+            except ResponseErrorNotSupportedException:
+                raise
+
+    def _encode_password(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64):
         if not password:
-            password_encoded = b''
+            return b''
         else:
             if password_type == PasswordTypeEnum.SHA256:
                 concentrated = b''.join([
@@ -58,10 +75,12 @@ class User(ApiGroup):
                     base64.b64encode(hashlib.sha256(password.encode('UTF-8')).hexdigest().encode('ascii')),
                     self._session.request_verification_tokens[0].encode('UTF-8')
                 ])
-                password_encoded = base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
+                return base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
             else:
-                password_encoded = base64.b64encode(password.encode('UTF-8'))
+                return base64.b64encode(password.encode('UTF-8'))
 
+    def _login(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
+        password_encoded = self._encode_password(username, password, password_type)
         try:
             result = self._session.post_set('user/login', {
                 'Username': username,
@@ -96,20 +115,11 @@ class User(ApiGroup):
     def login(self, username: str = DEFAULT_USERNAME, password: Optional[str] = None, force_new_login: bool = False) -> bool:
         if username == '':  # <= 1.6.4 backwards compatibility
             username = DEFAULT_USERNAME
-        tries = 5
-        for i in range(tries):
-            try:
-                state_login = self.state_login()
-            except requests.exceptions.ConnectionError:
-                # Some models reportedly close the connection if we attempt to access login state too soon after
-                # setting up the session etc. In that case, retry a few times. The error is reported to be
-                # ConnectionError: (
-                #     'Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-                if i == tries - 1:
-                    raise
-                time.sleep((i + 1) / 10)
-            except ResponseErrorNotSupportedException:
-                return True
+
+        try:
+            state_login = self.state_login_with_retry()
+        except ResponseErrorNotSupportedException:
+            return True
 
         if LoginStateEnum(int(state_login['State'])) == LoginStateEnum.LOGGED_IN and not force_new_login:
             return True
@@ -129,6 +139,12 @@ class User(ApiGroup):
 
     def pwd(self) -> GetResponseType:
         return self._session.get('user/pwd')
+
+    def set_pwd(self) -> SetResponseType:
+        return self._session.post_set('user/pwd', {
+            "module": "wlan",
+            "nonce": "aaaaaaa"
+        })
 
     def set_remind(self, remind_state: str) -> SetResponseType:
         return self._session.post_set('user/remind', {

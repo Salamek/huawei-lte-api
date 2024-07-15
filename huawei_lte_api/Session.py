@@ -6,6 +6,7 @@ import urllib.parse
 from types import TracebackType
 from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, Type, cast
 from urllib.parse import urlparse, urlunparse
+from time import sleep
 
 import requests
 import xmltodict
@@ -32,9 +33,16 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
     def wrapped(*args: Any, **kw: Any) -> T:
         try:
             return fn(*args, **kw)
-        except ResponseErrorLoginCsrfException:
+        except ResponseErrorLoginCsrfException as e:
+            print("Retry because " + str(e))
             args[0].reload()
             return fn(*args, **kw)
+        except ResponseErrorWrongSessionToken as e:
+            print("Retry because (sleep 50ms) " + str(e))
+            sleep(0.05)
+            args[0].reload()
+            return fn(*args, **kw)
+
 
     return wrapped
 
@@ -198,10 +206,11 @@ class Session:
                  prefix: str = 'api',
                  is_encrypted: bool = False,
                  is_json: bool = False,
+                 session_id: Optional[str] = None
                  ) -> GetResponseType:
         return cast(
             GetResponseType,
-            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json)
+            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json, session_id)
         )
 
     def post_set(self,
@@ -211,10 +220,11 @@ class Session:
                  prefix: str = 'api',
                  is_encrypted: bool = False,
                  is_json: bool = False,
+                 session_id: Optional[str] = None
                  ) -> SetResponseType:
         return cast(
             SetResponseType,
-            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json)
+            self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json, session_id)
         )
 
     @_try_or_reload_and_retry
@@ -225,6 +235,7 @@ class Session:
               prefix: str = 'api',
               is_encrypted: bool = False,
               is_json: bool = False,
+              session_id: Optional[str] = None
               ) -> Union[GetResponseType, SetResponseType]:
 
         headers = {}
@@ -235,11 +246,20 @@ class Session:
         else:
             headers['Content-Type'] = 'application/xml'
 
+        # if session_id is not None:
+        #     # headers["Cookie"] = f"SessionID={session_id}"
+        #     headers["__RequestVerificationToken"] = session_id
+        #     headers["_ResponseSource"] = "Broswer"
         if self.request_verification_tokens:
             if len(self.request_verification_tokens) > 1:
                 headers['__RequestVerificationToken'] = self.request_verification_tokens.pop(0)
             else:
                 headers['__RequestVerificationToken'] = self.request_verification_tokens[0]
+
+        if is_json is True:
+            headers["_ResponseFormat"] = "JSON"
+
+        print("REQ " + endpoint + ": " + str(headers['__RequestVerificationToken']))
 
         if data:
             data_encoded = json.dumps(data).encode() if is_json else self._create_request_xml(data)
@@ -251,9 +271,8 @@ class Session:
             headers=headers,
             timeout=self.timeout,
         )
+        print("RES " + endpoint + ": " + str(response.headers))
         response.raise_for_status()
-
-        response_data = cast(str, self._check_response_status(self._process_response_data(response)))
 
         if refresh_csrf:
             self.request_verification_tokens = []
@@ -266,6 +285,9 @@ class Session:
             self.request_verification_tokens.append(response.headers['__RequestVerificationToken'])
         else:
             _LOGGER.debug('Failed to get CSRF from POST response headers')
+
+        response_data = cast(str, self._check_response_status(self._process_response_data(response)))
+        print("RES data " + endpoint + ": " + str(self.request_verification_tokens))
 
         return response_data
 
