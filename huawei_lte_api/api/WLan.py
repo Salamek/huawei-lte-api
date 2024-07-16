@@ -260,7 +260,7 @@ class WLan(ApiGroup):
     def wlan_guide_settings(self) -> GetResponseType:
         return self._session.get('wlan/wlan-guide-settings')
 
-    def set_wlan_guide_settings(self, session_id: str, ssid: str, wpa_psk: str, current_password: str, new_password: str) -> SetResponseType:
+    def set_wlan_guide_settings(self, ssid: str, wpa_psk: str, current_password: str, new_password: str) -> SetResponseType:
         self._session.reload()
         return self._session.post_set('wlan/wlan-guide-settings',
                                       {"Ssids": {"Ssid": [{"Index": "0", "WifiWpapsk": wpa_psk,
@@ -270,9 +270,7 @@ class WLan(ApiGroup):
                                        "accountInfo": {"currentpassword": current_password, "newpassword": new_password,
                                                        "confirmpwd": new_password}},
                                       refresh_csrf=True,
-                                      is_json=False,
-                                      is_encrypted=True,
-                                      session_id=session_id)
+                                      is_encrypted=True)
 
     def wlanintelligent(self) -> GetResponseType:
         return self._session.get('wlan/wlanintelligent')
