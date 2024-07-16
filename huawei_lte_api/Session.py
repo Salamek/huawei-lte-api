@@ -200,7 +200,7 @@ class Session:
                  refresh_csrf: bool = False,
                  prefix: str = 'api',
                  is_encrypted: bool = False,
-                 is_json: bool = False
+                 is_json: bool = False,
                  ) -> GetResponseType:
         return cast(
             GetResponseType,
@@ -213,7 +213,7 @@ class Session:
                  refresh_csrf: bool = False,
                  prefix: str = 'api',
                  is_encrypted: bool = False,
-                 is_json: bool = False
+                 is_json: bool = False,
                  ) -> SetResponseType:
         return cast(
             SetResponseType,
@@ -227,7 +227,7 @@ class Session:
               refresh_csrf: bool = False,
               prefix: str = 'api',
               is_encrypted: bool = False,
-              is_json: bool = False
+              is_json: bool = False,
               ) -> Union[GetResponseType, SetResponseType]:
 
         headers = {}
