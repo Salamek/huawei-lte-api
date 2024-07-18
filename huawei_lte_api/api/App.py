@@ -1,8 +1,6 @@
-import json
-
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
-from huawei_lte_api.exceptions import RequestFormatException
+from huawei_lte_api.exceptions import ResponseErrorException
 
 
 class App(ApiGroup):
@@ -21,7 +19,11 @@ class App(ApiGroup):
                                           }
                                       },
                                       is_json=True)
-        if response["errcode"] == 0:
+        error_code = response["errcode"]
+        if error_code == 0:
             return "OK"
-        else:
-            raise RequestFormatException("Unexpected response: " + response)
+
+        raise ResponseErrorException(
+            message="Unexpected response: " + str(response),
+            code=int(error_code)
+        )

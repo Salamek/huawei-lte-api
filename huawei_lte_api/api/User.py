@@ -62,22 +62,22 @@ class User(ApiGroup):
                 if i == tries - 1:
                     raise
                 time.sleep((i + 1) / 10)
-            except ResponseErrorNotSupportedException:
-                raise
+
+        raise ResponseErrorException(message="Tries exhausted", code=0)
 
     def _encode_password(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64):
         if not password:
             return b''
-        else:
-            if password_type == PasswordTypeEnum.SHA256:
-                concentrated = b''.join([
-                    username.encode('UTF-8'),
-                    base64.b64encode(hashlib.sha256(password.encode('UTF-8')).hexdigest().encode('ascii')),
-                    self._session.request_verification_tokens[0].encode('UTF-8')
-                ])
-                return base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
-            else:
-                return base64.b64encode(password.encode('UTF-8'))
+
+        if password_type == PasswordTypeEnum.SHA256:
+            concentrated = b''.join([
+                username.encode('UTF-8'),
+                base64.b64encode(hashlib.sha256(password.encode('UTF-8')).hexdigest().encode('ascii')),
+                self._session.request_verification_tokens[0].encode('UTF-8')
+            ])
+            return base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
+
+        return base64.b64encode(password.encode('UTF-8'))
 
     def _login(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
         password_encoded = self._encode_password(username, password, password_type)

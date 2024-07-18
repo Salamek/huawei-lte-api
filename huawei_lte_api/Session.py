@@ -6,7 +6,6 @@ import urllib.parse
 from types import TracebackType
 from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, Type, cast
 from urllib.parse import urlparse, urlunparse
-from time import sleep
 
 import requests
 import xmltodict
@@ -243,9 +242,6 @@ class Session:
                 headers['__RequestVerificationToken'] = self.request_verification_tokens.pop(0)
             else:
                 headers['__RequestVerificationToken'] = self.request_verification_tokens[0]
-
-        if is_json is True:
-            headers["_ResponseFormat"] = "JSON"
 
         if data:
             data_encoded = json.dumps(data).encode() if is_json else self._create_request_xml(data)
