@@ -48,7 +48,7 @@ class User(ApiGroup):
     def state_login(self) -> GetResponseType:
         return self._session.get('user/state-login')
 
-    def state_login_with_retry(self) -> GetResponseType:
+    def _state_login_with_retry(self) -> GetResponseType:
         tries = 5
         for i in range(tries):
             try:
@@ -65,7 +65,7 @@ class User(ApiGroup):
 
         raise ResponseErrorException(message="Tries exhausted", code=0)
 
-    def _encode_password(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64):
+    def _encode_password(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bytes:
         if not password:
             return b''
 
@@ -117,7 +117,7 @@ class User(ApiGroup):
             username = DEFAULT_USERNAME
 
         try:
-            state_login = self.state_login_with_retry()
+            state_login = self._state_login_with_retry()
         except ResponseErrorNotSupportedException:
             return True
 

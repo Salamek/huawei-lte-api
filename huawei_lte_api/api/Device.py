@@ -17,7 +17,7 @@ class Device(ApiGroup):
     def basic_information(self) -> GetResponseType:
         return self._session.get('device/basic_information')
 
-    def set_basic_information(self, restore_default_status = False) -> SetResponseType:
+    def set_basic_information(self, restore_default_status: bool = False) -> SetResponseType:
         return self._session.post_set('device/basic_information',
                                       {
                                           "restore_default_status": 1 if restore_default_status else 0

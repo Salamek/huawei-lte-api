@@ -6,16 +6,16 @@ from time import sleep
 
 parser = ArgumentParser()
 parser.add_argument('--password', type=str)
-parser.add_argument('--new-password', type=str)
+parser.add_argument('--newpassword', type=str)
 parser.add_argument('--ssid', type=str)
-parser.add_argument('--wpa-password', type=str)
+parser.add_argument('--wpapassword', type=str)
 args = parser.parse_args()
 
-original_password = args["password"]
-new_password = args["new-password"]
+original_password = args.password
+new_password = args.newpassword
 
-wifi_ssid = args["ssid"]
-wifi_password = args["wpa-password"]
+wifi_ssid = args.ssid
+wifi_password = args.wpapassword
 
 url = 'http://192.168.8.1/'
 with Connection(url, password=original_password) as connection:

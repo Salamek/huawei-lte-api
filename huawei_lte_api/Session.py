@@ -32,8 +32,7 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
     def wrapped(*args: Any, **kw: Any) -> T:
         try:
             return fn(*args, **kw)
-        except ResponseErrorLoginCsrfException as e:
-            print("Retry because " + str(e))
+        except ResponseErrorLoginCsrfException:
             args[0].reload()
             return fn(*args, **kw)
 
