@@ -257,5 +257,33 @@ class WLan(ApiGroup):
     def wlandbho(self) -> GetResponseType:
         return self._session.get('wlan/wlandbho')
 
+    def wlan_guide_settings(self) -> GetResponseType:
+        return self._session.get('wlan/wlan-guide-settings')
+
+    def set_wlan_guide_settings(self, ssid: str, wpa_psk: str, current_password: str, new_password: str) -> SetResponseType:
+        ssids = self.wlan_guide_settings()["Ssids"]["Ssid"]
+        new_ssid = ssids[0] if len(ssids) > 0 else {"Index": "0"}
+        new_ssid["WifiSsid"] = ssid
+        new_ssid["WifiWpapsk"] = wpa_psk
+
+        self._session.reload()
+
+        data = {
+            "Ssids": {
+                "Ssid": [new_ssid]
+            },
+            "rebootInfo": {
+                "isReboot": 0
+            },
+            "accountInfo": {
+                "currentpassword": current_password,
+                "newpassword": new_password,
+                "confirmpwd": new_password}
+        }
+        return self._session.post_set('wlan/wlan-guide-settings',
+                                      data,
+                                      refresh_csrf=True,
+                                      is_encrypted=True)
+
     def wlanintelligent(self) -> GetResponseType:
         return self._session.get('wlan/wlanintelligent')

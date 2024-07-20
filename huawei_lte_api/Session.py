@@ -36,6 +36,7 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
             args[0].reload()
             return fn(*args, **kw)
 
+
     return wrapped
 
 
@@ -253,8 +254,6 @@ class Session:
         )
         response.raise_for_status()
 
-        response_data = cast(str, self._check_response_status(self._process_response_data(response)))
-
         if refresh_csrf:
             self.request_verification_tokens = []
 
@@ -266,6 +265,8 @@ class Session:
             self.request_verification_tokens.append(response.headers['__RequestVerificationToken'])
         else:
             _LOGGER.debug('Failed to get CSRF from POST response headers')
+
+        response_data = cast(str, self._check_response_status(self._process_response_data(response)))
 
         return response_data
 
