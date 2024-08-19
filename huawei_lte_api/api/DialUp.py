@@ -59,10 +59,11 @@ class DialUp(ApiGroup):
                        apn: Optional[str] = None,
                        dialup_number: Optional[str] = None,
                        auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
-                       ip_type: IpType = IpType.IPV4_IPV6
+                       ip_type: IpType = IpType.IPV4_IPV6,
+                       is_default: bool = False
                        ) -> SetResponseType:
         return self._session.post_set('dialup/profiles', {
-            'SetDefault': 0,
+            'SetDefault': 1 if is_default else 0, # For E5576, the new profile will always become the default (See #221)
             'Delete': 0,
             'Modify': 1,
             'Profile': {
