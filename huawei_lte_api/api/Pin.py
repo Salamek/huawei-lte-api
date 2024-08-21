@@ -14,8 +14,8 @@ class Pin(ApiGroup):
     def save_pin(self) -> GetResponseType:
         return self._session.get('pin/save-pin')
 
-    def operate(self, operate_type: int = 0, current_pin: Optional[int] = None,
-                new_pin: Optional[int] = None, puk_code: Optional[int] = None) \
+    def operate(self, operate_type: str = "0", current_pin: Optional[str] = None,
+                new_pin: Optional[str] = None, puk_code: Optional[str] = None) \
             -> SetResponseType:
         """
         Parameters
@@ -39,4 +39,4 @@ class Pin(ApiGroup):
             'CurrentPin': current_pin,
             'NewPin': new_pin,
             'PukCode': puk_code
-        })
+        }, is_encrypted=True)
