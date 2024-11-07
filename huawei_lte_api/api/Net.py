@@ -81,3 +81,8 @@ class Net(ApiGroup):
 
     def csps_state(self) -> GetResponseType:
         return self._session.get('net/csps_state')
+
+    def reconnect(self) -> SetResponseType:
+        return self._session.post_set('net/reconnect', OrderedDict((
+            ('ReconnectAction', 1),
+        )))
