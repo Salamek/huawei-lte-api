@@ -140,6 +140,7 @@ Some code [examples](examples/) are in [/examples](examples/)  folder
 
 ## Donations
 
-* 250 CZK (9,79 EUR) for B535-232 fund, thx @larsvinc !
-* 371,69 CZK (14,32 EUR) by Oleg Jusaew
+* 250 CZK (9.79 EUR) for B535-232 fund, thx @larsvinc !
+* 371,69 CZK (14.32 EUR) by Oleg Jusaew
+* 292 CZK (11.50 EUR) by Toth-Mate Akos
 
