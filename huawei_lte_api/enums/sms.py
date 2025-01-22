@@ -61,6 +61,7 @@ class StatusEnum(enum.IntEnum):
     READ = 1
     PENDING = 2  # Not sure
     SEND = 3  # Not sure
+    SEND_FAILED = 4
 
 
 @enum.unique
