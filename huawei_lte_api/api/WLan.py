@@ -287,3 +287,36 @@ class WLan(ApiGroup):
 
     def wlanintelligent(self) -> GetResponseType:
         return self._session.get('wlan/wlanintelligent')
+
+    def filter_mac_addresses(self, mac_list, hostname_list, ssid_index='0', filter_status='2'):
+        """
+        Add multiple MAC addresses to the filter list
+        
+        :param mac_list: List of MAC addresses to filter
+        :param hostname_list: List of hostnames corresponding to the MAC addresses
+        :param ssid_index: SSID index (default: '0')
+        :param filter_status: '1' for whitelist, '2' for blacklist (default: '2')
+        :return: API response
+        
+        Example:
+            wlan.filter_mac_addresses(
+                ['11:22:33:44:55:66', 'AA:BB:CC:DD:EE:FF'],
+                ['Device1', 'Device2'],
+                ssid_index='0',
+                filter_status='2'
+            )
+        """
+        if len(mac_list) != len(hostname_list):
+            raise ValueError("The number of MAC addresses and hostnames must be the same")
+        
+        clients = {
+            'Index': ssid_index,
+            'WifiMacFilterStatus': filter_status
+        }
+        
+        # Add each MAC address with the correct index
+        for i, (mac, hostname) in enumerate(zip(mac_list, hostname_list)):
+            clients[f'WifiMacFilterMac{i}'] = mac
+            clients[f'wifihostname{i}'] = hostname
+        
+        return self.set_multi_macfilter_settings([clients])
