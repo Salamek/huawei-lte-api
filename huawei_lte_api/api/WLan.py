@@ -320,3 +320,100 @@ class WLan(ApiGroup):
             clients[f'wifihostname{i}'] = hostname
         
         return self.set_multi_macfilter_settings([clients])
+    
+    def get_filtered_devices(self) -> List[dict]:
+        """
+        Get a structured list of MAC addresses in the filter lists (both blacklist and whitelist)
+        
+        :return: List of dictionaries containing filtered device information
+        
+        Example response:
+        [
+            {
+                'ssid_index': '0',
+                'filter_type': 'blacklist',
+                'devices': [
+                    {'mac': '18:87:40:DE:E0:E0', 'hostname': 'Device1'},
+                    {'mac': '8E:1E:4D:E1:89:60', 'hostname': 'Device2'}
+                ]
+            },
+            {
+                'ssid_index': '0',
+                'filter_type': 'whitelist',
+                'devices': []
+            },
+            ...
+        ]
+        """
+        response = self.multi_macfilter_settings_ex()
+        result = []
+        
+        if 'Ssids' not in response or 'Ssid' not in response['Ssids']:
+            return result
+            
+        for ssid in response['Ssids']['Ssid']:
+            ssid_index = ssid.get('Index', '')
+            
+            # Process blacklist
+            blacklist_devices = []
+            if 'wifimacblacklist' in ssid:
+                blacklist = ssid['wifimacblacklist']
+                # Extract mac/hostname pairs by their index
+                i = 0
+                while f'WifiMacFilterMac{i}' in blacklist:
+                    mac = blacklist.get(f'WifiMacFilterMac{i}', '')
+                    hostname = blacklist.get(f'wifihostname{i}', '')
+                    if mac:
+                        blacklist_devices.append({'mac': mac, 'hostname': hostname})
+                    i += 1
+                    
+            result.append({
+                'ssid_index': ssid_index,
+                'filter_type': 'blacklist',
+                'devices': blacklist_devices
+            })
+            
+            # Process whitelist
+            whitelist_devices = []
+            if 'wifimacwhitelist' in ssid:
+                whitelist = ssid['wifimacwhitelist']
+                # Extract mac/hostname pairs by their index
+                i = 0
+                while f'WifiMacFilterMac{i}' in whitelist:
+                    mac = whitelist.get(f'WifiMacFilterMac{i}', '')
+                    hostname = whitelist.get(f'wifihostname{i}', '')
+                    if mac:
+                        whitelist_devices.append({'mac': mac, 'hostname': hostname})
+                    i += 1
+                    
+            result.append({
+                'ssid_index': ssid_index,
+                'filter_type': 'whitelist',
+                'devices': whitelist_devices
+            })
+            
+        return result
+
+    def get_filter_status(self) -> dict:
+        """
+        Get the current MAC filter status (enabled/disabled and mode)
+        
+        :return: Dictionary with filter status information
+        
+        Example response:
+        {
+            'enabled': True,  # Whether MAC filtering is enabled
+            'mode': 'blacklist'  # 'blacklist' or 'whitelist'
+        }
+        """
+        response = self.multi_macfilter_settings_ex()
+        
+        enabled = response.get('enable', '0') == '1'
+        # Filter status: '1' for whitelist, '2' for blacklist
+        filter_status = response.get('wifimacfilterstatus', '2')
+        mode = 'whitelist' if filter_status == '1' else 'blacklist'
+        
+        return {
+            'enabled': enabled,
+            'mode': mode
+        }
