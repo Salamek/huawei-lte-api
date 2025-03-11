@@ -356,11 +356,11 @@ class WLan(ApiGroup):
             
             # Process blacklist
             blacklist_devices = []
-            if 'wifimacblacklist' in ssid:
+            if 'wifimacblacklist' in ssid and ssid['wifimacblacklist'] is not None:
                 blacklist = ssid['wifimacblacklist']
                 # Extract mac/hostname pairs by their index
                 i = 0
-                while f'WifiMacFilterMac{i}' in blacklist:
+                while isinstance(blacklist, dict) and f'WifiMacFilterMac{i}' in blacklist:
                     mac = blacklist.get(f'WifiMacFilterMac{i}', '')
                     hostname = blacklist.get(f'wifihostname{i}', '')
                     if mac:
@@ -375,11 +375,11 @@ class WLan(ApiGroup):
             
             # Process whitelist
             whitelist_devices = []
-            if 'wifimacwhitelist' in ssid:
+            if 'wifimacwhitelist' in ssid and ssid['wifimacwhitelist'] is not None:
                 whitelist = ssid['wifimacwhitelist']
                 # Extract mac/hostname pairs by their index
                 i = 0
-                while f'WifiMacFilterMac{i}' in whitelist:
+                while isinstance(whitelist, dict) and f'WifiMacFilterMac{i}' in whitelist:
                     mac = whitelist.get(f'WifiMacFilterMac{i}', '')
                     hostname = whitelist.get(f'wifihostname{i}', '')
                     if mac:
