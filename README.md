@@ -54,7 +54,7 @@ you can use this to simply send SMS, get information about your internet usage, 
 
 ### PIP (pip3 on some distros)
 ```bash
-$ pip install huawei-lte-api
+pip install huawei-lte-api
 ```
 ### Repository
 You can also use these repositories maintained by me
@@ -62,15 +62,15 @@ You can also use these repositories maintained by me
 
 Add repository by running these commands
 
-```
-$ wget -O- https://repository.salamek.cz/deb/salamek.gpg | sudo tee /usr/share/keyrings/salamek-archive-keyring.gpg
-$ echo "deb     [signed-by=/usr/share/keyrings/salamek-archive-keyring.gpg] https://repository.salamek.cz/deb/pub all main" | sudo tee /etc/apt/sources.list.d/salamek.cz.list
+```bash
+wget -O- https://repository.salamek.cz/deb/salamek.gpg | sudo tee /usr/share/keyrings/salamek-archive-keyring.gpg
+echo "deb     [signed-by=/usr/share/keyrings/salamek-archive-keyring.gpg] https://repository.salamek.cz/deb/pub all main" | sudo tee /etc/apt/sources.list.d/salamek.cz.list
 ```
 
 And then you can install a package python3-huawei-lte-api
 
-```
-$ apt update && apt install python3-huawei-lte-api
+```bash
+apt update && apt install python3-huawei-lte-api
 ```
 
 #### Archlinux
@@ -85,14 +85,14 @@ SigLevel = Optional
 
 and then install by running
 
-```
-$ pacman -Sy python-huawei-lte-api
+```bash
+pacman -Sy python-huawei-lte-api
 ```
 
 #### Gentoo
 
-```
-$ emerge dev-python/huawei-lte-api
+```bash
+emerge dev-python/huawei-lte-api
 ```
 
 
