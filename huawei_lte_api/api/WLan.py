@@ -7,6 +7,10 @@ from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.enums.wlan import AuthModeEnum, WepEncryptModeEnum, WpaEncryptModeEnum
 from huawei_lte_api.Tools import Tools
 
+# Constants for repeated string patterns
+WIFI_MAC_FILTER_MAC_TEMPLATE = 'WifiMacFilterMac{}'
+WIFI_HOSTNAME_TEMPLATE = 'wifihostname{}'
+
 
 @dataclasses.dataclass
 class WLanSettings:
@@ -316,34 +320,36 @@ class WLan(ApiGroup):
 
         # Add each MAC address with the correct index
         for i, (mac, hostname) in enumerate(zip(mac_list, hostname_list)):
-            clients['WifiMacFilterMac{}'.format(i)] = mac
-            clients['wifihostname{}'.format(i)] = hostname
+            clients[WIFI_MAC_FILTER_MAC_TEMPLATE.format(i)] = mac
+            clients[WIFI_HOSTNAME_TEMPLATE.format(i)] = hostname
 
         return self.set_multi_macfilter_settings([clients])
+
+    def _extract_mac_hostname_pairs(self, mac_list_dict):
+        """Helper method to extract MAC address and hostname pairs from response dictionary"""
+        devices = []
+        if not isinstance(mac_list_dict, dict):
+            return devices
+
+        i = 0
+        while WIFI_MAC_FILTER_MAC_TEMPLATE.format(i) in mac_list_dict:
+            mac_key = WIFI_MAC_FILTER_MAC_TEMPLATE.format(i)
+            hostname_key = WIFI_HOSTNAME_TEMPLATE.format(i)
+
+            mac = mac_list_dict.get(mac_key, '')
+            hostname = mac_list_dict.get(hostname_key, '')
+
+            if mac:
+                devices.append({'mac': mac, 'hostname': hostname})
+            i += 1
+
+        return devices
 
     def get_filtered_devices(self) -> List[dict]:
         """
         Get a structured list of MAC addresses in the filter lists (both blacklist and whitelist)
 
         :return: List of dictionaries containing filtered device information
-
-        Example response:
-        [
-            {
-                'ssid_index': '0',
-                'filter_type': 'blacklist',
-                'devices': [
-                    {'mac': '18:87:40:DE:E0:E0', 'hostname': 'Device1'},
-                    {'mac': '8E:1E:4D:E1:89:60', 'hostname': 'Device2'}
-                ]
-            },
-            {
-                'ssid_index': '0',
-                'filter_type': 'whitelist',
-                'devices': []
-            },
-            ...
-        ]
         """
         response = self.multi_macfilter_settings_ex()
         result = []
@@ -355,18 +361,8 @@ class WLan(ApiGroup):
             ssid_index = ssid.get('Index', '')
 
             # Process blacklist
-            blacklist_devices = []
-            if 'wifimacblacklist' in ssid and ssid['wifimacblacklist'] is not None:
-                blacklist = ssid['wifimacblacklist']
-                # Extract mac/hostname pairs by their index
-                i = 0
-                while isinstance(blacklist, dict) and 'WifiMacFilterMac{}'.format(i) in blacklist:
-                    mac = blacklist.get('WifiMacFilterMac{}'.format(i), '')
-                    hostname = blacklist.get('wifihostname{}'.format(i), '')
-                    if mac:
-                        blacklist_devices.append({'mac': mac, 'hostname': hostname})
-                    i += 1
-
+            blacklist = ssid.get('wifimacblacklist')
+            blacklist_devices = self._extract_mac_hostname_pairs(blacklist) if blacklist else []
             result.append({
                 'ssid_index': ssid_index,
                 'filter_type': 'blacklist',
@@ -374,18 +370,8 @@ class WLan(ApiGroup):
             })
 
             # Process whitelist
-            whitelist_devices = []
-            if 'wifimacwhitelist' in ssid and ssid['wifimacwhitelist'] is not None:
-                whitelist = ssid['wifimacwhitelist']
-                # Extract mac/hostname pairs by their index
-                i = 0
-                while isinstance(whitelist, dict) and 'WifiMacFilterMac{}'.format(i) in whitelist:
-                    mac = whitelist.get('WifiMacFilterMac{}'.format(i), '')
-                    hostname = whitelist.get('wifihostname{}'.format(i), '')
-                    if mac:
-                        whitelist_devices.append({'mac': mac, 'hostname': hostname})
-                    i += 1
-
+            whitelist = ssid.get('wifimacwhitelist')
+            whitelist_devices = self._extract_mac_hostname_pairs(whitelist) if whitelist else []
             result.append({
                 'ssid_index': ssid_index,
                 'filter_type': 'whitelist',
