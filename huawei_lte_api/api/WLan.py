@@ -1,6 +1,6 @@
 import dataclasses
 from collections import OrderedDict
-from typing import List, Optional, Iterable
+from typing import List, Optional, Iterable, Dict, Any, Union
 
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
@@ -292,7 +292,8 @@ class WLan(ApiGroup):
     def wlanintelligent(self) -> GetResponseType:
         return self._session.get('wlan/wlanintelligent')
 
-    def filter_mac_addresses(self, mac_list, hostname_list, ssid_index='0', filter_status='2'):
+    def filter_mac_addresses(self, mac_list: List[str], hostname_list: List[str],
+                             ssid_index: str = '0', filter_status: str = '2') -> SetResponseType:
         """
         Add multiple MAC addresses to the filter list
 
@@ -325,9 +326,9 @@ class WLan(ApiGroup):
 
         return self.set_multi_macfilter_settings([clients])
 
-    def _extract_mac_hostname_pairs(self, mac_list_dict):
+    def _extract_mac_hostname_pairs(self, mac_list_dict: Optional[Dict[str, str]]) -> List[Dict[str, str]]:
         """Helper method to extract MAC address and hostname pairs from response dictionary"""
-        devices = []
+        devices: List[Dict[str, str]] = []
         if not isinstance(mac_list_dict, dict):
             return devices
 
@@ -345,14 +346,14 @@ class WLan(ApiGroup):
 
         return devices
 
-    def get_filtered_devices(self) -> List[dict]:
+    def get_filtered_devices(self) -> List[Dict[str, Any]]:
         """
         Get a structured list of MAC addresses in the filter lists (both blacklist and whitelist)
 
         :return: List of dictionaries containing filtered device information
         """
         response = self.multi_macfilter_settings_ex()
-        result = []
+        result: List[Dict[str, Any]] = []
 
         if 'Ssids' not in response or 'Ssid' not in response['Ssids']:
             return result
@@ -380,7 +381,7 @@ class WLan(ApiGroup):
 
         return result
 
-    def get_filter_status(self) -> dict:
+    def get_filter_status(self) -> Dict[str, Union[bool, str]]:
         """
         Get the current MAC filter status (enabled/disabled and mode)
 
