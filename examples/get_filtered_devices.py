@@ -20,11 +20,11 @@ args = parser.parse_args()
 
 with Connection(args.url, username=args.username, password=args.password) as connection:
     wlan = WLan(connection)
-    
+
     # Get the filter status
     filter_status = wlan.get_filter_status()
-    print(f"Filter Status: {filter_status}")
-    
+    print("Filter Status: {}".format(filter_status))
+
     # Get the list of filtered devices
     filtered_devices = wlan.get_filtered_devices()
     print("Filtered Devices:")

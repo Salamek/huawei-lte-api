@@ -32,7 +32,7 @@ if len(args.mac) != len(args.hostname):
 
 with Connection(args.url, username=args.username, password=args.password) as connection:
     wlan = WLan(connection)
-    
+
     # Use the new helper function instead of manually creating the dictionary
     response = wlan.filter_mac_addresses(
         mac_list=args.mac,
@@ -40,4 +40,4 @@ with Connection(args.url, username=args.username, password=args.password) as con
         ssid_index=args.index,
         filter_status=args.status
     )
-    print(f"Response: {response}")
+    print("Response: {}".format(response))
