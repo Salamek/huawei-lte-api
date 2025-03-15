@@ -17,7 +17,7 @@ test:archlinux:
   stage: test
   script:
     - pacman -Sy python-pytest python-pylint python-pytest-cov python-xmltodict python-requests python-tox python-pycryptodomex --noconfirm
-    - tox -e py312
+    - tox -e py313
   tags:
     - archlinux
 
