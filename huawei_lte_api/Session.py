@@ -200,10 +200,13 @@ class Session:
                  is_encrypted: bool = False,
                  is_json: bool = False,
                  ) -> GetResponseType:
-        return cast(
+        _LOGGER.debug("Sending XML request to endpoint %s: %s", endpoint, data)
+        response = cast(
             GetResponseType,
             self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json)
         )
+        _LOGGER.debug("Received XML response from endpoint %s: %s", endpoint, response)
+        return response
 
     def post_set(self,
                  endpoint: str,
@@ -213,10 +216,13 @@ class Session:
                  is_encrypted: bool = False,
                  is_json: bool = False,
                  ) -> SetResponseType:
-        return cast(
+        _LOGGER.debug("Sending XML request to endpoint %s: %s", endpoint, data)
+        response = cast(
             SetResponseType,
             self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json)
         )
+        _LOGGER.debug("Received XML response from endpoint %s: %s", endpoint, response)
+        return response
 
     @_try_or_reload_and_retry
     def _post(self,
