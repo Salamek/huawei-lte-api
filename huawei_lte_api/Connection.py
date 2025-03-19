@@ -3,10 +3,13 @@ from types import TracebackType
 from typing import Optional, Tuple, Union, Type
 from urllib.parse import urlparse
 
+import logging
 import requests
 
 from huawei_lte_api.Session import Session
 from huawei_lte_api.api.User import UserSession, DEFAULT_USERNAME
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class Connection(Session):
@@ -28,6 +31,10 @@ class Connection(Session):
         # User login code
         username = username or parsed_url.username
         password = password if password else parsed_url.password
+
+        _LOGGER.debug("Initializing Connection with URL: %s", url)
+        _LOGGER.debug("Username: %s", username)
+        _LOGGER.debug("Password: %s", password)
 
         super().__init__(url, timeout=timeout, requests_session=requests_session)
         if username or password:
