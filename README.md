@@ -143,9 +143,3 @@ Some code [examples](examples/) are in [/examples](examples/)  folder
 * 250 CZK (9.79 EUR) for B535-232 fund, thx @larsvinc !
 * 371,69 CZK (14.32 EUR) by Oleg Jusaew
 * 292 CZK (11.50 EUR) by Toth-Mate Akos
-
-## Documentation
-
-The documentation for this project is generated using Sphinx and can be found in the `docs` directory. It includes detailed information about all endpoints and their usage examples.
-
-You can view the generated documentation [here](docs/index.html).
