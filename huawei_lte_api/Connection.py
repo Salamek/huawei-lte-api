@@ -3,13 +3,14 @@ from types import TracebackType
 from typing import Optional, Tuple, Union, Type
 from urllib.parse import urlparse
 
-import requests
 import logging
+import requests
 
 from huawei_lte_api.Session import Session
 from huawei_lte_api.api.User import UserSession, DEFAULT_USERNAME
 
 _LOGGER = logging.getLogger(__name__)
+
 
 class Connection(Session):
     user_session: Optional[UserSession] = None
