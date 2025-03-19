@@ -5,22 +5,58 @@ from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 class Dhcp(ApiGroup):
     def settings(self) -> GetResponseType:
+        """
+        Get DHCP settings.
+
+        :return: DHCP settings.
+
+        Usage example:
+        >>> dhcp = Dhcp(session)
+        >>> settings = dhcp.settings()
+        >>> print(settings)
+        """
         return self._session.get('dhcp/settings')
 
     def feature_switch(self) -> GetResponseType:
+        """
+        Get DHCP feature switch status.
+
+        :return: DHCP feature switch status.
+
+        Usage example:
+        >>> dhcp = Dhcp(session)
+        >>> feature_switch = dhcp.feature_switch()
+        >>> print(feature_switch)
+        """
         return self._session.get('dhcp/feature-switch')
 
     def dhcp_host_info(self) -> GetResponseType:
         """
-        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
-        :return:
+        Get DHCP host information.
+
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage.
+
+        :return: DHCP host information.
+
+        Usage example:
+        >>> dhcp = Dhcp(session)
+        >>> host_info = dhcp.dhcp_host_info()
+        >>> print(host_info)
         """
         return self._session.get('dhcp/dhcp-host-info')
 
     def static_addr_info(self) -> GetResponseType:
         """
-        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
-        :return:
+        Get static address information.
+
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage.
+
+        :return: Static address information.
+
+        Usage example:
+        >>> dhcp = Dhcp(session)
+        >>> static_info = dhcp.static_addr_info()
+        >>> print(static_info)
         """
         return self._session.get('dhcp/static-addr-info')
 
@@ -38,18 +74,24 @@ class Dhcp(ApiGroup):
         show_dns_setting: bool = True,
     ) -> SetResponseType:
         """
-        Endoint found in a custom firmware to configure DHCP server settings.
-        :param dhcp_ip_address: IP address of dhcp server.
-        :param dhcp_lan_netmask: Netmask for dhcp server.
-        :param dhcp_status: Turn dhcp server on/off.
-        :param dhcp_start_ip_range: Lease ip range from.
-        :param dhcp_end_ip_range: Lease ip range till.
+        Configure DHCP server settings.
+
+        :param dhcp_ip_address: IP address of DHCP server.
+        :param dhcp_lan_netmask: Netmask for DHCP server.
+        :param dhcp_status: Turn DHCP server on/off.
+        :param dhcp_start_ip_range: Lease IP range from.
+        :param dhcp_end_ip_range: Lease IP range till.
         :param dhcp_lease_time: IP lease duration.
-        :param dns_status: Unknown usage.
+        :param dns_status: DNS status.
         :param primary_dns: Primary DNS server IP.
         :param secondary_dns: Secondary DNS server IP.
-        :param show_dns_setting: Unknown usage.
-        :return SetResponseType: Set response type.
+        :param show_dns_setting: Show DNS setting.
+        :return: Set response type.
+
+        Usage example:
+        >>> dhcp = Dhcp(session)
+        >>> response = dhcp.set_settings(dhcp_ip_address="192.168.1.1", dhcp_lan_netmask="255.255.255.0", dhcp_status=True, dhcp_start_ip_range=50, dhcp_end_ip_range=150, dhcp_lease_time=3600, dns_status=True, primary_dns="8.8.8.8", secondary_dns="8.8.4.4", show_dns_setting=True)
+        >>> print(response)
         """
 
         ip_address_parts = dhcp_ip_address.split(".")
