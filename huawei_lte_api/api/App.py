@@ -5,12 +5,45 @@ from huawei_lte_api.exceptions import ResponseErrorException
 
 class App(ApiGroup):
     def operatorinfo(self, lang: str = 'en_us') -> GetResponseType:
+        """
+        Get operator information.
+        
+        :param lang: Language code (default is 'en_us').
+        :return: Operator information.
+        
+        Usage example:
+        >>> app = App(session)
+        >>> operator_info = app.operatorinfo()
+        >>> print(operator_info)
+        """
         return self._session.get('app/operatorinfo', {'lang': lang})
 
     def privacypolicy(self, lang: str = 'en_us') -> GetResponseType:
+        """
+        Get privacy policy.
+        
+        :param lang: Language code (default is 'en_us').
+        :return: Privacy policy.
+        
+        Usage example:
+        >>> app = App(session)
+        >>> privacy_policy = app.privacypolicy()
+        >>> print(privacy_policy)
+        """
         return self._session.get('app/privacypolicy', {'lang': lang})
 
     def accept_privacypolicy(self, approve: bool = False) -> SetResponseType:
+        """
+        Accept or decline the privacy policy.
+        
+        :param approve: Boolean indicating whether to approve the privacy policy (default is False).
+        :return: "OK" if the operation is successful, raises ResponseErrorException otherwise.
+        
+        Usage example:
+        >>> app = App(session)
+        >>> response = app.accept_privacypolicy(approve=True)
+        >>> print(response)
+        """
         response = self._session.post_get('app/privacypolicy',
                                       {
                                           "data": {
