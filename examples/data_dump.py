@@ -302,6 +302,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.voice.voiceadvance)
     dump(client.voice.codec)
     dump(client.voice.voiperstatus)
+    dump(client.voice.volte)
 
     dump(client.cwmp.basic_info)
 
