@@ -5,4 +5,4 @@ from huawei_lte_api.Session import GetResponseType
 class TimeRule(ApiGroup):
 
     def timerule(self) -> GetResponseType:
-        return self._session.get('time/timerule')
+        return self._session.get('timerule/timerule')
