@@ -75,6 +75,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.monitoring.wifi_month_setting)
     dump(client.monitoring.daily_data_limit)
     dump(client.monitoring.statistic_feature_switch)
+    dump(client.monitoring.onekey_diag)
 
     dump(client.security.bridgemode)
     dump(client.security.get_firewall_switch)
