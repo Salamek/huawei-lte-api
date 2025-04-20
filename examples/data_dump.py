@@ -62,6 +62,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.user.web_feature_switch)
     dump(client.user.screen_state)
     dump(client.user.session)
+    dump(client.user.rule)
 
     dump(client.monitoring.converged_status)
     dump(client.monitoring.status)
