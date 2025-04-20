@@ -301,6 +301,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.voice.speeddial)
     dump(client.voice.functioncode)
     dump(client.voice.voiceadvance)
+    dump(client.voice.voicebusy)
     dump(client.voice.codec)
     dump(client.voice.voiperstatus)
     dump(client.voice.volte)
@@ -320,8 +321,6 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.bluetooth.scan)
 
     dump(client.mlog.mobile_logger)
-
-    dump(client.voice.voicebusy)
 
     dump(client.staticroute.wanpath)
 
