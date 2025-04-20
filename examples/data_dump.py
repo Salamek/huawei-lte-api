@@ -241,6 +241,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.diagnosis.diagnose_ping)
     dump(client.diagnosis.diagnose_traceroute)
     dump(client.diagnosis.time_reboot)
+    dump(client.diagnosis.wan_service_name)
 
     dump(client.s_ntp.get_settings)
     dump(client.s_ntp.sntpswitch)
