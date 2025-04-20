@@ -94,3 +94,16 @@ class Diagnosis(ApiGroup):
         >>> print(time_reboot_status)
         """
         return self._session.get('diagnosis/time_reboot')
+
+    def wan_service_name(self) -> GetResponseType:
+        """
+        Get the WAN service name.
+
+        :return: WAN service name.
+
+        Usage example:
+        >>> diagnosis = Diagnosis(session)
+        >>> wan_service_name = diagnosis.wan_service_name()
+        >>> print(wan_service_name)
+        """
+        return self._session.get('diagnosis/get-wan-service-name')

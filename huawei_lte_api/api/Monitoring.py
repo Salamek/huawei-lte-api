@@ -205,3 +205,16 @@ class Monitoring(ApiGroup):
         >>> print(statistic_feature_switch)
         """
         return self._session.get('monitoring/statistic-feature-switch')
+
+    def onekey_diag(self) -> GetResponseType:
+        """
+        Get the one-click check state.
+
+        :return: one-click check state.
+
+        Usage example:
+        >>> monitoring = Monitoring(session)
+        >>> onekey_diag = monitoring.onekey_diag()
+        >>> print(onekey_diag)
+        """
+        return self._session.get('monitoring/onekey_diag')

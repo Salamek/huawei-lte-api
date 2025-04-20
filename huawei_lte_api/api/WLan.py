@@ -292,6 +292,9 @@ class WLan(ApiGroup):
     def wlanintelligent(self) -> GetResponseType:
         return self._session.get('wlan/wlanintelligent')
 
+    def guesttime_setting(self) -> GetResponseType:
+        return self._session.get('wlan/guesttime-setting')
+
     def filter_mac_addresses(self, mac_list: List[str], hostname_list: List[str],
                              ssid_index: str = '0', filter_status: str = '2') -> SetResponseType:
         """

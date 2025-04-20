@@ -62,6 +62,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.user.web_feature_switch)
     dump(client.user.screen_state)
     dump(client.user.session)
+    dump(client.user.rule)
 
     dump(client.monitoring.converged_status)
     dump(client.monitoring.status)
@@ -74,6 +75,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.monitoring.wifi_month_setting)
     dump(client.monitoring.daily_data_limit)
     dump(client.monitoring.statistic_feature_switch)
+    dump(client.monitoring.onekey_diag)
 
     dump(client.security.bridgemode)
     dump(client.security.get_firewall_switch)
@@ -90,6 +92,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.security.white_lan_ip_filter)
     dump(client.security.white_url_filter)
     dump(client.security.acls)
+    dump(client.security.acl)
 
     dump(client.webserver.publickey)
     dump(client.webserver.token)
@@ -122,6 +125,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.wlan.wifiscanresult)
     dump(client.wlan.wlandbho)
     dump(client.wlan.wlanintelligent)
+    dump(client.wlan.guesttime_setting)
 
     dump(client.cradle.status_info)
     dump(client.cradle.feature_switch)
@@ -241,6 +245,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.diagnosis.diagnose_ping)
     dump(client.diagnosis.diagnose_traceroute)
     dump(client.diagnosis.time_reboot)
+    dump(client.diagnosis.wan_service_name)
 
     dump(client.s_ntp.get_settings)
     dump(client.s_ntp.sntpswitch)
@@ -297,8 +302,10 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.voice.speeddial)
     dump(client.voice.functioncode)
     dump(client.voice.voiceadvance)
+    dump(client.voice.voicebusy)
     dump(client.voice.codec)
     dump(client.voice.voiperstatus)
+    dump(client.voice.volte)
 
     dump(client.cwmp.basic_info)
 
@@ -315,8 +322,6 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.bluetooth.scan)
 
     dump(client.mlog.mobile_logger)
-
-    dump(client.voice.voicebusy)
 
     dump(client.staticroute.wanpath)
 

@@ -195,3 +195,6 @@ class User(ApiGroup):
 
     def remember_pwd(self) -> GetResponseType:
         return self._session.get('user/remember-pwd')
+
+    def rule(self) -> GetResponseType:
+        return self._session.get('user/rule')

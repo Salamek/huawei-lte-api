@@ -36,3 +36,6 @@ class Voice(ApiGroup):
 
     def voiperstatus(self) -> GetResponseType:
         return self._session.get('voice/voiperstatus')
+
+    def volte(self) -> GetResponseType:
+        return self._session.get('voice/volte')
