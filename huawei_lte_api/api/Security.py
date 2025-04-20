@@ -98,3 +98,6 @@ class Security(ApiGroup):
         :return:
         """
         return self._session.get('security/acls')
+
+    def acl(self) -> GetResponseType:
+        return self._session.get('security/acl')

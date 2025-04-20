@@ -90,6 +90,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.security.white_lan_ip_filter)
     dump(client.security.white_url_filter)
     dump(client.security.acls)
+    dump(client.security.acl)
 
     dump(client.webserver.publickey)
     dump(client.webserver.token)
