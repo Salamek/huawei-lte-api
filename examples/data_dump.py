@@ -124,6 +124,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.wlan.wifiscanresult)
     dump(client.wlan.wlandbho)
     dump(client.wlan.wlanintelligent)
+    dump(client.wlan.guesttime_setting)
 
     dump(client.cradle.status_info)
     dump(client.cradle.feature_switch)
