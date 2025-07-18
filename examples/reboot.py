@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Example code on how to reboot the modem:
+Exemple de code pour redémarrer le modem :
 python3 reboot.py http://admin:PASSWORD@192.168.8.1/
 """
 from argparse import ArgumentParser

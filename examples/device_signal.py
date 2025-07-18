@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Display 4G/5G modem signal strength using vertical bars and show operator + access mode.
-Example usage:
+Affiche la puissance du signal du modem 4G/5G sous forme de barres verticales et indique l'opérateur ainsi que le mode d'accès.
+Exemple d'utilisation :
 python3 signal_bars.py http://admin:PASSWORD@192.168.8.1/
 """
 
@@ -68,7 +68,7 @@ def main():
     with Connection(args.url, username=args.username, password=args.password) as connection:
         client = Client(connection)
 
-        # Get signal and network info
+        # Récupérer les informations de signal et de réseau
         signal_info = client.device.signal()
         status_info = client.monitoring.status()
         network_type_raw = str(status_info.get('CurrentNetworkType', '0'))
@@ -86,7 +86,7 @@ def main():
         }
         plmn_info = client.net.current_plmn()
 
-        # Parse and determine values
+        # Analyser et déterminer les valeurs
         rsrp = parse_dbm(signal_info.get('rsrp'))
         rsrq = signal_info.get('rsrq')
         sinr = signal_info.get('sinr')
@@ -97,7 +97,7 @@ def main():
 
         operator_name = plmn_info.get('FullName') or plmn_info.get('ShortName') or "Unknown"
 
-        # Map internal mode codes (if any) to readable labels
+        # Mapper les codes de mode internes (le cas échéant) vers des libellés lisibles
         mode_map = {
            "LTE": "4G",
            "WCDMA": "3G",
@@ -107,11 +107,11 @@ def main():
         }
         readable_mode = network_type_map.get(network_type_raw, f"Unknown ({network_type_raw})")
 
-        # Get IP address
+        # Récupérer l'adresse IP
         config = client.config_lan.config()
         modem_ip = config['config']['dhcps']['ipaddress']
 
-        # Display
+        # Affichage
         print(f"{operator_name} {readable_mode} {bars}")
 #        print(bars)
         print(f"  RSRP: {signal_info.get('rsrp')}")

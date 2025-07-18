@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Reads received SMS
-Example usage:
+Lit les SMS reçus
+Exemple d'utilisation :
 python3 read_sms.py http://admin:PASSWORD@192.168.8.1/
 """
 

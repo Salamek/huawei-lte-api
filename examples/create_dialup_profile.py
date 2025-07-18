@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Example code on how to create dialup profile, you can try it by running:
-python3 connect_with_proxy.py http://admin:PASSWORD@192.168.8.1/ name
+Exemple de code montrant comment créer un profil de connexion. Vous pouvez tester avec :
+python3 connect_with_proxy.py http://admin:PASSWORD@192.168.8.1/ nom
 """
 from argparse import ArgumentParser
 
