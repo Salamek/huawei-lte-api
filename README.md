@@ -132,6 +132,21 @@ Some code [examples](examples/) are in [/examples](examples/)  folder
 ### SMS
 
 * Relay received SMS into your email https://github.com/chenwei791129/Huawei-LTE-Router-SMS-to-E-mail-Sender
+* Basic SMS HTTP API [examples/sms_http_api.py](examples/sms_http_api.py)
+* Docker container for SMS API [Dockerfile](Dockerfile)
+
+### Docker
+
+To run the SMS HTTP API in a container:
+
+```bash
+docker build -t sms-api .
+docker run \
+  -e MODEM_URL="http://192.168.8.1/" \
+  -e USERNAME=admin \
+  -e PASSWORD=PASSWORD \
+  -p 8000:8000 sms-api
+```
 
 ## Ports to other languages
 
