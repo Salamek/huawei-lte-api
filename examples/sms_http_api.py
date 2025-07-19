@@ -287,10 +287,10 @@ class SMSHandler(BaseHTTPRequestHandler):
             if not isinstance(number, str) or not re.fullmatch(r"\+?\d+", number):
                 self.send_error(400, "invalid phone number in 'to'")
                 return
-        if not isinstance(sender, str) or not sender:
+        if not isinstance(sender, str) or not sender.strip():
             self.send_error(400, "'from' must be a non-empty string")
             return
-        if not isinstance(text, str) or not text:
+        if not isinstance(text, str) or not text.strip():
             self.send_error(400, "'text' must be a non-empty string")
             return
 
