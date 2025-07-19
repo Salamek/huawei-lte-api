@@ -1,18 +1,18 @@
-# How to dump a request in firefox 
-Sometimes dump of request that your device webUI does is required to debug a bug/implement a new feature for device that is not in our posession.
-Here is HOWTO do it, in text and a youtube video.
+# Comment récupérer une requête dans Firefox
+Il est parfois nécessaire de récupérer les requêtes effectuées par l'interface web de votre appareil afin de déboguer un problème ou d'implémenter une nouvelle fonctionnalité sur un appareil que nous ne possédons pas.
+Voici comment procéder, en texte et en vidéo YouTube.
 
-## HOWTO
+## Procédure
 
-1. Open firefox
-2. Navigate to required page in your modem webUI
-3. Go to Settings (3 horizontal lines in right top corner) -> More tools -> Web Developer Tools
-4. In web developer tools go to "Network" tab.
-5. (Optional) Set URL filter if you know request URL you want to dump
-6. Do required action in webUI
-7. Find request in list of request (check its headers and body to confirm that it is required request)
-8. Dump it by right clicking on the request and select "Save All As HAR", set the dump name to something sane.
-9. Post the dump in issue thread or send it to dev email for analysis.
+1. Ouvrez Firefox
+2. Rendez-vous sur la page souhaitée dans l'interface web de votre modem
+3. Allez dans Paramètres (les trois lignes horizontales en haut à droite) -> Plus d'outils -> Outils de développement Web
+4. Dans les outils de développement, ouvrez l'onglet « Réseau »
+5. (Optionnel) Définissez un filtre d'URL si vous connaissez celle que vous voulez enregistrer
+6. Effectuez l'action nécessaire dans l'interface web
+7. Trouvez la requête dans la liste (vérifiez ses en-têtes et son corps pour confirmer qu'il s'agit de la bonne)
+8. Faites un clic droit sur la requête et sélectionnez « Enregistrer tout au format HAR », choisissez un nom explicite
+9. Publiez ce fichier dans le fil de l'issue ou envoyez-le par e-mail au développeur pour analyse
 
-## Video HOWTO
+## Vidéo explicative
 https://youtu.be/DKKian-014E

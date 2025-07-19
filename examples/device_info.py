@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Example code on how to receive basic info about your router, you can try it by running:
+Exemple de code pour récupérer les informations de base de votre routeur. Vous pouvez essayer en exécutant :
 python3 device_info.py http://admin:PASSWORD@192.168.8.1/
 """
 

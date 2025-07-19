@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Example code on how to connect to your router using proxy, you can try it by running:
+Exemple de code montrant comment se connecter à votre routeur via un proxy. Vous pouvez essayer en exécutant :
 python3 connect_with_proxy.py http://admin:PASSWORD@192.168.8.1/
 """
 from argparse import ArgumentParser
@@ -19,8 +19,8 @@ args = parser.parse_args()
 
 my_custom_session = requests.Session()
 my_custom_session.proxies = {
-  "http": "http://10.10.1.10:3128",  # Http proxy
-  "https": "https://10.10.1.10:1080",  # Https proxy
+  "http": "http://10.10.1.10:3128",  # Proxy HTTP
+  "https": "https://10.10.1.10:1080",  # Proxy HTTPS
 }
 
 with my_custom_session, Connection(

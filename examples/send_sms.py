@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Example code on how to send a SMS, you can try it by running:
+Exemple de code montrant comment envoyer un SMS. Vous pouvez essayer en exécutant :
 python3 send_sms.py http://admin:PASSWORD@192.168.8.1/ +420123456789 "Hello world"
 """
 from argparse import ArgumentParser

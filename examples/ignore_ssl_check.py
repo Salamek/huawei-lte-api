@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Example code on how to ignore SSL checks to accept expired or self signed SSL certs, you can try it by running:
+Exemple de code montrant comment ignorer les vérifications SSL pour accepter des certificats expirés ou auto-signés. Vous pouvez essayer avec :
 python3 ignore_ssl_check.py http://admin:PASSWORD@192.168.8.1/
 """
 from argparse import ArgumentParser
@@ -18,9 +18,9 @@ parser.add_argument('--password', type=str)
 args = parser.parse_args()
 
 
-# Create custom requests.Session
+# Créer une session requests personnalisée
 my_custom_session = requests.Session()
-# Disable SSL verify
+# Désactiver la vérification SSL
 my_custom_session.verify = False
 
 with my_custom_session, Connection(

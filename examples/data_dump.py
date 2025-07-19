@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Example code on how to print ~all info about your router, you can try it by running:
+Exemple de code pour afficher presque toutes les informations de votre routeur. Vous pouvez tester avec :
 python3 data_dump.py http://admin:PASSWORD@192.168.8.1/
 """
 from argparse import ArgumentParser
@@ -46,7 +46,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.device.logsetting)
     dump(client.device.logport)
     dump(client.device.datalock)
-    # Breaks session with some devices: dump(client.device.vendorname)
+    # Interrompt la session avec certains appareils : dump(client.device.vendorname)
 
     dump(client.user.state_login)
     dump(client.user.remind)
@@ -208,7 +208,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.net.network)
     dump(client.net.register)
     dump(client.net.net_mode_list)
-    # DoS? dump(client.net.plmn_list)
+    # Risque de DoS ? dump(client.net.plmn_list)
     dump(client.net.net_feature_switch)
     dump(client.net.cell_info)
     dump(client.net.csps_state)
@@ -256,7 +256,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     dump(client.online_update.status)
     dump(client.online_update.url_list)
     dump(client.online_update.ack_newversion)
-    # May cause device reboot: dump(client.online_update.cancel_downloading)
+    # Peut provoquer un redémarrage de l'appareil : dump(client.online_update.cancel_downloading)
     dump(client.online_update.upgrade_messagebox)
     dump(client.online_update.configuration)
     dump(client.online_update.autoupdate_config)

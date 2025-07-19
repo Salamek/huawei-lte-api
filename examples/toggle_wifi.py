@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Example code on how to toggle Wi-Fi on and off:
+Exemple de code pour activer ou désactiver le Wi-Fi :
 python3 toggle_wifi.py http://admin:PASSWORD@192.168.8.1/ 1
 python3 toggle_wifi.py http://admin:PASSWORD@192.168.8.1/ 0
 """

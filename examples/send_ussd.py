@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Example code on how to send a ussd code, you can try it by running:.
+Exemple de code montrant comment envoyer un code USSD. Vous pouvez essayer avec :
 
 python3 send_ussd.py http://admin:PASSWORD@192.168.8.1/ *4*0#
 
-Some USSD codes require sending more than one code in a row
-To do so. you can send multiple consecutive codes seperated by spaces:
+Certains codes USSD nécessitent d'en envoyer plusieurs à la suite.
+Pour cela, vous pouvez les séparer par des espaces :
 
 python3 send_ussd.py http://admin:PASSWORD@192.168.8.1/ *4# 7 1
 """
@@ -36,7 +36,7 @@ DONE = False
 
 
 def animate() -> None:
-    """Add a simple loading animation while waiting for the response."""
+    """Ajoute une animation de chargement simple pendant l'attente de la réponse."""
     for c in itertools.cycle(['|', '/', '-', '\\']):
         if DONE:
             time.sleep(0.1)
@@ -55,7 +55,7 @@ with Connection(
     for code in args.codes:
         DONE, wait_time = [False, 0]
 
-        # Send the ussd code.
+        # Envoyer le code USSD.
         try:
             res = client.ussd.send(code)
             if str(res) == ResponseEnum.OK.value:
@@ -68,7 +68,7 @@ with Connection(
         except Exception as e:
             raise e
 
-        # Wait for the response from the service provider.
+        # Attendre la réponse du fournisseur de service.
         while int(client.ussd.status().get('result', '1')) >= 1:
             if wait_time >= MAX_WAIT_TIME:
                 DONE = True
@@ -82,7 +82,7 @@ with Connection(
         DONE = True
         t.join()
 
-        # Print the response.
+        # Afficher la réponse.
         response = client.ussd.get()
         if response:
             print(response.get('content', ''))

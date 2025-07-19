@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Example code on how to reconnect dialup:
+Exemple de code pour reconnecter la connexion :
 python3 reconnect_dialup.py http://admin:PASSWORD@192.168.8.1/
 """
 from argparse import ArgumentParser

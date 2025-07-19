@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Example code on how to enable/disable telnet (tested on B310-22):
+Exemple de code pour activer/désactiver le telnet (testé sur B310-22) :
 python3 toggle_telnet.py http://admin:PASSWORD@192.168.8.1/ 1
 python3 toggle_telnet.py http://admin:PASSWORD@192.168.8.1/ 0
-Telnet is usually open on port 23
+Telnet est généralement ouvert sur le port 23
 """
 from argparse import ArgumentParser
 from huawei_lte_api.Connection import Connection

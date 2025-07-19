@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Example code to get the list of filtered devices and the filter status.
+Exemple de code pour obtenir la liste des appareils filtrés ainsi que l'état du filtre.
 
-Examples:
-  # Get the list of filtered devices and the filter status
+Exemples :
+  # Récupérer la liste des appareils filtrés et l'état du filtre
   python3 get_filtered_devices.py http://192.168.8.1/ --username admin --password PASSWORD
 """
 
@@ -21,11 +21,11 @@ args = parser.parse_args()
 with Connection(args.url, username=args.username, password=args.password) as connection:
     wlan = WLan(connection)
 
-    # Get the filter status
+    # Obtenir l'état du filtre
     filter_status = wlan.get_filter_status()
     print("Filter Status: {}".format(filter_status))
 
-    # Get the list of filtered devices
+    # Obtenir la liste des appareils filtrés
     filtered_devices = wlan.get_filtered_devices()
     print("Filtered Devices:")
     for device in filtered_devices:

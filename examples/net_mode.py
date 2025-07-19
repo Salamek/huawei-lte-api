@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 """
-Example code for how to set the network mode and the LTE bands:
+Exemple de code pour définir le mode réseau et les bandes LTE :
 
 python3 net_mode.py http://admin:PASSWORD@192.168.8.1/ --mode 4g --lteband 3 --lteband 7 --primary-lteband 7
 python3 net_mode.py http://admin:PASSWORD@192.168.8.1/ --mode auto --lteband all
 
-This script tries to avoid changing any settings if the router config already matches.
+Ce script tente d'éviter de modifier les réglages si la configuration du routeur correspond déjà.
 """
 
 import sys
@@ -54,18 +54,18 @@ with Connection(args.url, username=args.username, password=args.password) as con
     print("Querying current network configuration...")
     orig_net_mode = client.net.net_mode()
 
-    # Do we need to change the network mode?
+    # Faut-il changer le mode réseau ?
     needs_mode = False
     if args.mode is not None and orig_net_mode['NetworkMode'] != MODES[args.mode].value:
         needs_mode = True
 
-    # Do we need to change the primary LTE band?
+    # Faut-il changer la bande LTE primaire ?
     needs_primary_lteband = False
     if args.primary_lteband is not None:
         signal = client.device.signal()
         needs_primary_lteband = signal['band'] != args.primary_lteband and args.primary_lteband != 'all'
 
-    # Do we need to change the LTE bands in general?
+    # Faut-il modifier les bandes LTE en général ?
     needs_lteband = False
     bands = set()
     if args.lteband is not None:
@@ -77,9 +77,9 @@ with Connection(args.url, username=args.username, password=args.password) as con
         needed_band |= BANDS[band]
     if len(bands) and orig_net_mode['LTEBand'] != hex(needed_band)[2:]:
         needs_lteband = True
-        # XXX: if we set the bands to "all" we get back a different LTEBand value covering
-        # all supported bands and not the "All Bands" one, so if the value is in the band
-        # list assume we are already in "all" mode and don't need to do anything
+        # XXX : si on définit les bandes sur "all", on obtient une valeur LTEBand différente couvrant
+        # toutes les bandes prises en charge et non celle "All Bands". Si la valeur est dans la liste,
+        # on considère que l'on est déjà en mode "all" et qu'aucune action n'est nécessaire
         if needed_band == LTEBandEnum.ALL:
             net_mode_list = client.net.net_mode_list()
             band_list_values = set(e["Value"].lower() for e in net_mode_list['LTEBandList']['LTEBand'])
@@ -95,10 +95,10 @@ with Connection(args.url, username=args.username, password=args.password) as con
     new_network_mode = MODES[args.mode].value if needs_mode else orig_net_mode['NetworkMode']
 
     if needs_primary_lteband:
-        # The only way I found to change the primary LTE band with CA is to set it alone,
-        # wait, and then add the second band. Note that the primary band isn't fixed
-        # and the router can jump to another one on its own and you need to run
-        # this again to revert it.
+        # La seule manière que j'ai trouvée pour changer la bande LTE primaire avec l'agrégation
+        # est de la définir seule, d'attendre, puis d'ajouter la seconde bande. Notez que la bande
+        # primaire n'est pas figée et que le routeur peut en changer tout seul ; il faut donc relancer
+        # cette procédure pour la rétablir.
         primary_lteband = BANDS[args.primary_lteband]
         print("Setting primary LTE band to %s..." % args.primary_lteband)
         client.net.set_net_mode(primary_lteband, new_network_band, new_network_mode)

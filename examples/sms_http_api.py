@@ -1,23 +1,54 @@
 #!/usr/bin/env python3
 """
-Expose a simple HTTP API for sending SMS messages.
 
-Example usage:
+Expose une API HTTP simple pour envoyer des SMS.
+
+Exemple d'utilisation :
 python3 sms_http_api.py http://192.168.8.1/ \
     --username admin --password PASSWORD \
     --host 0.0.0.0 --port 8000
-# Then send SMS with curl:
+# Puis envoyez un SMS avec curl :
 # curl -X POST -H "Content-Type: application/json" \
 #      -d '{"to": ["+420123456789"], "text": "Hello"}' http://0.0.0.0:8000/sms
+Chaque requête est également enregistrée dans une base SQLite. Le chemin de cette base peut
+être défini avec l'option ``--db`` ou la variable d'environnement ``SMS_API_DB``.
+Par défaut, ``sms_api.db`` est utilisé.
+
 """
 
 from argparse import ArgumentParser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
+import os
+import sqlite3
+from datetime import datetime
+
+
+
 from huawei_lte_api.Connection import Connection
 from huawei_lte_api.Client import Client
 from huawei_lte_api.enums.client import ResponseEnum
+
+
+
+def log_request(db_path, recipients, text, response):
+    conn = sqlite3.connect(db_path)
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS logs ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "timestamp TEXT,"
+        "phone TEXT,"
+        "message TEXT,"
+        "response TEXT)"
+    )
+    conn.execute(
+        "INSERT INTO logs(timestamp, phone, message, response) VALUES (?,?,?,?)",
+        (datetime.utcnow().isoformat(), ",".join(recipients), text, response),
+    )
+    conn.commit()
+    conn.close()
+
 
 
 class SMSHandler(BaseHTTPRequestHandler):
@@ -39,10 +70,16 @@ class SMSHandler(BaseHTTPRequestHandler):
             return
 
         try:
-            with Connection(self.server.modem_url, username=self.server.username,
-                            password=self.server.password) as connection:
+
+            with Connection(
+                self.server.modem_url,
+                username=self.server.username,
+                password=self.server.password,
+            ) as connection:
                 client = Client(connection)
                 resp = client.sms.send_sms(recipients, text)
+            log_request(self.server.db_path, recipients, text, str(resp))
+
             if resp == ResponseEnum.OK.value:
                 self.send_response(200)
                 self.end_headers()
@@ -50,15 +87,20 @@ class SMSHandler(BaseHTTPRequestHandler):
             else:
                 self.send_error(500, 'Failed to send SMS')
         except Exception as exc:
+
+            log_request(self.server.db_path, recipients, text, str(exc))
+
             self.send_error(500, str(exc))
 
 
 class SMSHTTPServer(HTTPServer):
-    def __init__(self, server_address, handler_class, modem_url, username, password):
+    def __init__(self, server_address, handler_class, modem_url, username, password, db_path):
+
         super().__init__(server_address, handler_class)
         self.modem_url = modem_url
         self.username = username
         self.password = password
+        self.db_path = db_path
 
 
 def main():
@@ -68,10 +110,14 @@ def main():
     parser.add_argument('--password', type=str)
     parser.add_argument('--host', type=str, default='127.0.0.1')
     parser.add_argument('--port', type=int, default=8000)
+    parser.add_argument('--db', type=str, default=os.getenv('SMS_API_DB', 'sms_api.db'))
     args = parser.parse_args()
 
-    server = SMSHTTPServer((args.host, args.port), SMSHandler, args.url,
-                           args.username, args.password)
+    server = SMSHTTPServer(
+        (args.host, args.port), SMSHandler, args.url,
+        args.username, args.password, args.db
+    )
+
     print(f'Serving on {args.host}:{args.port}')
     server.serve_forever()
 
