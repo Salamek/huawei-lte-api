@@ -23,7 +23,7 @@ docker run -d --network host \
   sms-api
 ```
 
-`MODEM_URL` est obligatoire et doit pointer vers votre modem Huawei. `USERNAME` et `PASSWORD` fournissent les identifiants de connexion. L'option `--network host` permet au conteneur d'accéder au modem à `192.168.8.1`. Vous pouvez éventuellement définir `HOST` et `PORT` pour changer l'adresse d'écoute (par défaut `0.0.0.0:8000`).
+`MODEM_URL` est obligatoire et doit pointer vers votre modem Huawei. `USERNAME` et `PASSWORD` fournissent les identifiants de connexion. L'option `--network host` permet au conteneur d'accéder au modem à `192.168.8.1`. Vous pouvez éventuellement définir `HOST` et `PORT` pour changer l'adresse d'écoute (par défaut `0.0.0.0:80`).
 `SMS_API_DB` définit le chemin de la base SQLite utilisée pour stocker les journaux des requêtes.
 
 Le serveur API est alors accessible sur l'hôte au port choisi.
@@ -33,7 +33,7 @@ afficher plusieurs informations issues des exemples `device_info.py` et
 `device_signal.py` :
 
 ```bash
-curl http://localhost:8000/health
+curl http://localhost:80/health
 ```
 
 
@@ -42,7 +42,7 @@ curl http://localhost:8000/health
 Préparez la charge JSON et utilisez `curl` pour appeler l'API :
 
 ```bash
-curl -X POST http://localhost:8000/sms \
+curl -X POST http://localhost:80/sms \
   -H "Content-Type: application/json" \
   -d '{"to": ["+420123456789"], "text": "Hello from the API!"}'
 ```
