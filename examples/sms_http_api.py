@@ -120,6 +120,17 @@ def log_request(db_path, recipients, sender, text, response):
 
 
 class SMSHandler(BaseHTTPRequestHandler):
+    def _send_json(self, status, payload):
+        body = json.dumps(payload).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _json_error(self, status, message):
+        self._send_json(status, {"error": message})
+
     def do_GET(self):
 
         if self.path == "/":
@@ -173,7 +184,95 @@ class SMSHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
         except Exception as exc:
-            self.send_error(500, str(exc))
+            self._json_error(500, str(exc))
+
+    def _serve_index(self):
+        html = """
+        <html>
+        <head>
+            <meta charset='utf-8'>
+            <title>Modem Health</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                pre { background-color: #f0f0f0; padding: 10px; }
+            </style>
+            <script>
+                async function loadHealth() {
+                    const r = await fetch('/health');
+                    const data = await r.json();
+                    document.getElementById('health').textContent = JSON.stringify(data, null, 2);
+                }
+                window.onload = loadHealth;
+            </script>
+        </head>
+        <body>
+            <h1>Informations du modem</h1>
+            <pre id='health'>Chargement...</pre>
+            <p><a href="/logs">Voir les messages envoyés</a></p>
+        </body>
+        </html>
+        """
+        body = html.encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _serve_logs(self):
+        conn = sqlite3.connect(self.server.db_path)
+        conn.row_factory = sqlite3.Row
+        ensure_logs_table(conn)
+        rows = conn.execute(
+            "SELECT id, timestamp, sender, phone, message, response FROM logs ORDER BY id DESC"
+        ).fetchall()
+        conn.close()
+
+        html = [
+            "<html><head><meta charset='utf-8'><title>Historique SMS</title>",
+            "<style>body{font-family:Arial,sans-serif;margin:20px;}table{border-collapse:collapse;}th,td{border:1px solid #ccc;padding:4px;}th{background:#eee;}</style>",
+            "<script>function selectAll(){document.querySelectorAll('.rowchk').forEach(c=>c.checked=true);}</script>",
+            "</head><body>",
+            "<h1>Historique des SMS</h1>",
+            "<form method='post' action='/logs/delete'>",
+            "<table>",
+            "<tr><th></th><th>Date/Heure</th><th>Expéditeur</th><th>Destinataire(s)</th><th>Message</th><th>Réponse</th></tr>",
+        ]
+        for row in rows:
+            html.append(
+                f"<tr><td><input type='checkbox' class='rowchk' name='ids' value='{row['id']}'></td><td>{row['timestamp']}</td><td>{row['sender'] or ''}</td><td>{row['phone']}</td><td>{row['message']}</td><td>{row['response']}</td></tr>"
+            )
+        html.extend(
+            [
+                "</table>",
+                "<p><button type='button' onclick='selectAll()'>Sélectionner tout</button> <button type='submit'>Supprimer</button></p>",
+                "</form>",
+                "<p><a href='/'>Retour</a></p></body></html>",
+            ]
+        )
+        body = "".join(html).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _delete_logs(self):
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length).decode("utf-8")
+        params = urllib.parse.parse_qs(body)
+        ids = params.get("ids", [])
+        conn = sqlite3.connect(self.server.db_path)
+        conn.row_factory = sqlite3.Row
+        ensure_logs_table(conn)
+        if ids:
+            placeholders = ",".join("?" for _ in ids)
+            conn.execute(f"DELETE FROM logs WHERE id IN ({placeholders})", ids)
+            conn.commit()
+        conn.close()
+        self.send_response(303)
+        self.send_header("Location", "/logs")
+        self.end_headers()
 
     def _serve_index(self):
         html = """
@@ -268,7 +367,9 @@ class SMSHandler(BaseHTTPRequestHandler):
             self._delete_logs()
             return
         if self.path != "/sms":
-            self.send_error(404, "Not found")
+
+            self._json_error(404, "Not found")
+
             return
 
         content_length = int(self.headers.get("Content-Length", 0))
@@ -277,7 +378,8 @@ class SMSHandler(BaseHTTPRequestHandler):
             data = json.loads(body.decode("utf-8"))
 
         except json.JSONDecodeError:
-            self.send_error(400, "Invalid JSON body")
+            self._json_error(400, "Invalid JSON body")
+
             return
 
         recipients = data.get("to")
@@ -288,17 +390,18 @@ class SMSHandler(BaseHTTPRequestHandler):
             sender = sender.strip()
 
         if not isinstance(recipients, list) or not recipients:
-            self.send_error(400, "'to' must be a non-empty list")
+
+            self._json_error(400, "'to' must be a non-empty list")
             return
         for number in recipients:
             if not isinstance(number, str) or not re.fullmatch(r"\+?\d+", number):
-                self.send_error(400, "invalid phone number in 'to'")
+                self._json_error(400, "invalid phone number in 'to'")
                 return
         if not isinstance(sender, str) or not sender:
-            self.send_error(400, "'from' must be a non-empty string")
+            self._json_error(400, "'from' must be a non-empty string")
             return
         if not isinstance(text, str) or not text.strip():
-            self.send_error(400, "'text' must be a non-empty string")
+            self._json_error(400, "'text' must be a non-empty string")
 
             return
 
@@ -318,12 +421,14 @@ class SMSHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"OK")
             else:
-                self.send_error(500, "Failed to send SMS")
+
+                self._json_error(500, "Failed to send SMS")
+
         except Exception as exc:
 
             log_request(self.server.db_path, recipients, sender, text, str(exc))
 
-            self.send_error(500, str(exc))
+            self._json_error(500, str(exc))
 
 
 class SMSHTTPServer(HTTPServer):
