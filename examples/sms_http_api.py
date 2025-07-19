@@ -280,6 +280,9 @@ class SMSHandler(BaseHTTPRequestHandler):
         sender = data.get("from")
         text = data.get("text")
 
+        if isinstance(sender, str):
+            sender = sender.strip()
+
         if not isinstance(recipients, list) or not recipients:
             self.send_error(400, "'to' must be a non-empty list")
             return
@@ -287,7 +290,7 @@ class SMSHandler(BaseHTTPRequestHandler):
             if not isinstance(number, str) or not re.fullmatch(r"\+?\d+", number):
                 self.send_error(400, "invalid phone number in 'to'")
                 return
-        if not isinstance(sender, str) or not sender.strip():
+        if not isinstance(sender, str) or not sender:
             self.send_error(400, "'from' must be a non-empty string")
             return
         if not isinstance(text, str) or not text.strip():
