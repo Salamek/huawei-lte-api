@@ -10,6 +10,7 @@ python3 sms_http_api.py http://192.168.8.1/ \
 # Puis envoyez un SMS avec curl :
 # curl -X POST -H "Content-Type: application/json" \
 #      -d '{"to": ["+420123456789"], "from": "+420987654321", "text": "Hello"}' http://0.0.0.0:80/sms
+
 Chaque requête est également enregistrée dans une base SQLite. Le chemin de cette base peut
 être défini avec l'option ``--db`` ou la variable d'environnement ``SMS_API_DB``.
 Par défaut, ``sms_api.db`` est utilisé.
@@ -120,6 +121,7 @@ def log_request(db_path, recipients, sender, text, response):
 
 class SMSHandler(BaseHTTPRequestHandler):
     def do_GET(self):
+
         if self.path == "/":
             self._serve_index()
             return
@@ -128,6 +130,8 @@ class SMSHandler(BaseHTTPRequestHandler):
             return
         if self.path != "/health":
             self.send_error(404, "Not found")
+
+
             return
 
         try:
@@ -198,24 +202,29 @@ class SMSHandler(BaseHTTPRequestHandler):
         </body>
         </html>
         """
+
         body = html.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
+
         self.end_headers()
         self.wfile.write(body)
 
     def _serve_logs(self):
         conn = sqlite3.connect(self.server.db_path)
         conn.row_factory = sqlite3.Row
+
         ensure_logs_table(conn)
         rows = conn.execute(
             "SELECT id, timestamp, sender, phone, message, response FROM logs ORDER BY id DESC"
+
         ).fetchall()
         conn.close()
 
         html = [
             "<html><head><meta charset='utf-8'><title>Historique SMS</title>",
+
             "<style>body{font-family:Arial,sans-serif;margin:20px;}table{border-collapse:collapse;}th,td{border:1px solid #ccc;padding:4px;}th{background:#eee;}</style>",
             "<script>function selectAll(){document.querySelectorAll('.rowchk').forEach(c=>c.checked=true);}</script>",
             "</head><body>",
@@ -259,6 +268,7 @@ class SMSHandler(BaseHTTPRequestHandler):
         self.send_response(303)
         self.send_header("Location", "/logs")
         self.end_headers()
+
 
     def do_POST(self):
         if self.path == "/logs/delete":
@@ -323,12 +333,14 @@ class SMSHTTPServer(HTTPServer):
 
 def main():
     parser = ArgumentParser()
+
     parser.add_argument("url", type=str)
     parser.add_argument("--username", type=str)
     parser.add_argument("--password", type=str)
     parser.add_argument("--host", type=str, default="127.0.0.1")
     parser.add_argument("--port", type=int, default=80)
     parser.add_argument("--db", type=str, default=os.getenv("SMS_API_DB", "sms_api.db"))
+
     args = parser.parse_args()
 
     server = SMSHTTPServer(
