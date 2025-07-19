@@ -6,10 +6,10 @@ Expose une API HTTP simple pour envoyer des SMS.
 Exemple d'utilisation :
 python3 sms_http_api.py http://192.168.8.1/ \
     --username admin --password PASSWORD \
-    --host 0.0.0.0 --port 8000
+    --host 0.0.0.0 --port 80
 # Puis envoyez un SMS avec curl :
 # curl -X POST -H "Content-Type: application/json" \
-#      -d '{"to": ["+420123456789"], "text": "Hello"}' http://0.0.0.0:8000/sms
+#      -d '{"to": ["+420123456789"], "from": "+420987654321", "text": "Hello"}' http://0.0.0.0:80/sms
 Chaque requête est également enregistrée dans une base SQLite. Le chemin de cette base peut
 être défini avec l'option ``--db`` ou la variable d'environnement ``SMS_API_DB``.
 Par défaut, ``sms_api.db`` est utilisé.
@@ -24,7 +24,7 @@ import os
 import re
 import sqlite3
 from datetime import datetime
-
+import urllib.parse
 
 
 from huawei_lte_api.Connection import Connection
@@ -92,29 +92,42 @@ def get_signal_level(rsrp: int) -> int:
         return 0
 
 
-def log_request(db_path, recipients, text, response):
-    conn = sqlite3.connect(db_path)
+def ensure_logs_table(conn):
     conn.execute(
         "CREATE TABLE IF NOT EXISTS logs ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "timestamp TEXT,"
         "phone TEXT,"
+        "sender TEXT,"
         "message TEXT,"
         "response TEXT)"
     )
+    cols = [row[1] for row in conn.execute("PRAGMA table_info(logs)")]
+    if "sender" not in cols:
+        conn.execute("ALTER TABLE logs ADD COLUMN sender TEXT")
+
+
+def log_request(db_path, recipients, sender, text, response):
+    conn = sqlite3.connect(db_path)
+    ensure_logs_table(conn)
     conn.execute(
-        "INSERT INTO logs(timestamp, phone, message, response) VALUES (?,?,?,?)",
-        (datetime.utcnow().isoformat(), ",".join(recipients), text, response),
+        "INSERT INTO logs(timestamp, phone, sender, message, response) VALUES (?,?,?,?,?)",
+        (datetime.utcnow().isoformat(), ",".join(recipients), sender, text, response),
     )
     conn.commit()
     conn.close()
 
 
-
 class SMSHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path != '/health':
-            self.send_error(404, 'Not found')
+        if self.path == "/":
+            self._serve_index()
+            return
+        if self.path == "/logs":
+            self._serve_logs()
+            return
+        if self.path != "/health":
+            self.send_error(404, "Not found")
             return
 
         try:
@@ -127,47 +140,149 @@ class SMSHandler(BaseHTTPRequestHandler):
                 device_info = client.device.information()
                 signal_info = client.device.signal()
                 status_info = client.monitoring.status()
-                network_type_raw = str(status_info.get('CurrentNetworkType', '0'))
+                network_type_raw = str(status_info.get("CurrentNetworkType", "0"))
                 plmn_info = client.net.current_plmn()
                 config = client.config_lan.config()
 
-            rsrp = parse_dbm(signal_info.get('rsrp'))
+            rsrp = parse_dbm(signal_info.get("rsrp"))
             level = get_signal_level(rsrp)
 
             health = {
-                'device_info': device_info,
-                'signal': signal_info,
-                'operator_name': plmn_info.get('FullName') or plmn_info.get('ShortName') or 'Unknown',
-                'network_type': NETWORK_TYPE_MAP.get(network_type_raw, f'Unknown ({network_type_raw})'),
-                'ip_address': config.get('config', {}).get('dhcps', {}).get('ipaddress'),
-                'signal_level': level,
-                'signal_bars': SIGNAL_LEVELS.get(level),
+                "device_info": device_info,
+                "signal": signal_info,
+                "operator_name": plmn_info.get("FullName")
+                or plmn_info.get("ShortName")
+                or "Unknown",
+                "network_type": NETWORK_TYPE_MAP.get(
+                    network_type_raw, f"Unknown ({network_type_raw})"
+                ),
+                "ip_address": config.get("config", {})
+                .get("dhcps", {})
+                .get("ipaddress"),
+                "signal_level": level,
+                "signal_bars": SIGNAL_LEVELS.get(level),
             }
 
-            body = json.dumps(health).encode('utf-8')
+            body = json.dumps(health).encode("utf-8")
             self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.send_header('Content-Length', str(len(body)))
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)
         except Exception as exc:
             self.send_error(500, str(exc))
 
+    def _serve_index(self):
+        html = """
+        <html>
+        <head>
+            <meta charset='utf-8'>
+            <title>Modem Health</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                pre { background-color: #f0f0f0; padding: 10px; }
+            </style>
+            <script>
+                async function loadHealth() {
+                    const r = await fetch('/health');
+                    const data = await r.json();
+                    document.getElementById('health').textContent = JSON.stringify(data, null, 2);
+                }
+                window.onload = loadHealth;
+            </script>
+        </head>
+        <body>
+            <h1>Informations du modem</h1>
+            <pre id='health'>Chargement...</pre>
+            <p><a href="/logs">Voir les messages envoyés</a></p>
+        </body>
+        </html>
+        """
+        body = html.encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _serve_logs(self):
+        conn = sqlite3.connect(self.server.db_path)
+        conn.row_factory = sqlite3.Row
+        ensure_logs_table(conn)
+        rows = conn.execute(
+            "SELECT id, timestamp, sender, phone, message, response FROM logs ORDER BY id DESC"
+        ).fetchall()
+        conn.close()
+
+        html = [
+            "<html><head><meta charset='utf-8'><title>Historique SMS</title>",
+            "<style>body{font-family:Arial,sans-serif;margin:20px;}table{border-collapse:collapse;}th,td{border:1px solid #ccc;padding:4px;}th{background:#eee;}</style>",
+            "<script>function selectAll(){document.querySelectorAll('.rowchk').forEach(c=>c.checked=true);}</script>",
+            "</head><body>",
+            "<h1>Historique des SMS</h1>",
+            "<form method='post' action='/logs/delete'>",
+            "<table>",
+            "<tr><th></th><th>Date/Heure</th><th>Expéditeur</th><th>Destinataire(s)</th><th>Message</th><th>Réponse</th></tr>",
+        ]
+        for row in rows:
+            html.append(
+                f"<tr><td><input type='checkbox' class='rowchk' name='ids' value='{row['id']}'></td><td>{row['timestamp']}</td><td>{row['sender'] or ''}</td><td>{row['phone']}</td><td>{row['message']}</td><td>{row['response']}</td></tr>"
+            )
+        html.extend(
+            [
+                "</table>",
+                "<p><button type='button' onclick='selectAll()'>Sélectionner tout</button> <button type='submit'>Supprimer</button></p>",
+                "</form>",
+                "<p><a href='/'>Retour</a></p></body></html>",
+            ]
+        )
+        body = "".join(html).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _delete_logs(self):
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = self.rfile.read(content_length).decode("utf-8")
+        params = urllib.parse.parse_qs(body)
+        ids = params.get("ids", [])
+        conn = sqlite3.connect(self.server.db_path)
+        conn.row_factory = sqlite3.Row
+        ensure_logs_table(conn)
+        if ids:
+            placeholders = ",".join("?" for _ in ids)
+            conn.execute(f"DELETE FROM logs WHERE id IN ({placeholders})", ids)
+            conn.commit()
+        conn.close()
+        self.send_response(303)
+        self.send_header("Location", "/logs")
+        self.end_headers()
+
     def do_POST(self):
-        if self.path != '/sms':
-            self.send_error(404, 'Not found')
+        if self.path == "/logs/delete":
+            self._delete_logs()
+            return
+        if self.path != "/sms":
+            self.send_error(404, "Not found")
             return
 
-        content_length = int(self.headers.get('Content-Length', 0))
+        content_length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(content_length)
         try:
-            data = json.loads(body.decode('utf-8'))
-            recipients = data['to']
-            text = data['text']
-            if not isinstance(recipients, list) or not isinstance(text, str):
+            data = json.loads(body.decode("utf-8"))
+            recipients = data["to"]
+            sender = data["from"]
+            text = data["text"]
+            if (
+                not isinstance(recipients, list)
+                or not isinstance(text, str)
+                or not isinstance(sender, str)
+            ):
                 raise ValueError
         except (ValueError, KeyError, json.JSONDecodeError):
-            self.send_error(400, 'Invalid JSON body')
+            self.send_error(400, "Invalid JSON body")
             return
 
         try:
@@ -179,23 +294,25 @@ class SMSHandler(BaseHTTPRequestHandler):
             ) as connection:
                 client = Client(connection)
                 resp = client.sms.send_sms(recipients, text)
-            log_request(self.server.db_path, recipients, text, str(resp))
+            log_request(self.server.db_path, recipients, sender, text, str(resp))
 
             if resp == ResponseEnum.OK.value:
                 self.send_response(200)
                 self.end_headers()
-                self.wfile.write(b'OK')
+                self.wfile.write(b"OK")
             else:
-                self.send_error(500, 'Failed to send SMS')
+                self.send_error(500, "Failed to send SMS")
         except Exception as exc:
 
-            log_request(self.server.db_path, recipients, text, str(exc))
+            log_request(self.server.db_path, recipients, sender, text, str(exc))
 
             self.send_error(500, str(exc))
 
 
 class SMSHTTPServer(HTTPServer):
-    def __init__(self, server_address, handler_class, modem_url, username, password, db_path):
+    def __init__(
+        self, server_address, handler_class, modem_url, username, password, db_path
+    ):
 
         super().__init__(server_address, handler_class)
         self.modem_url = modem_url
@@ -206,22 +323,26 @@ class SMSHTTPServer(HTTPServer):
 
 def main():
     parser = ArgumentParser()
-    parser.add_argument('url', type=str)
-    parser.add_argument('--username', type=str)
-    parser.add_argument('--password', type=str)
-    parser.add_argument('--host', type=str, default='127.0.0.1')
-    parser.add_argument('--port', type=int, default=8000)
-    parser.add_argument('--db', type=str, default=os.getenv('SMS_API_DB', 'sms_api.db'))
+    parser.add_argument("url", type=str)
+    parser.add_argument("--username", type=str)
+    parser.add_argument("--password", type=str)
+    parser.add_argument("--host", type=str, default="127.0.0.1")
+    parser.add_argument("--port", type=int, default=80)
+    parser.add_argument("--db", type=str, default=os.getenv("SMS_API_DB", "sms_api.db"))
     args = parser.parse_args()
 
     server = SMSHTTPServer(
-        (args.host, args.port), SMSHandler, args.url,
-        args.username, args.password, args.db
+        (args.host, args.port),
+        SMSHandler,
+        args.url,
+        args.username,
+        args.password,
+        args.db,
     )
 
-    print(f'Serving on {args.host}:{args.port}')
+    print(f"Serving on {args.host}:{args.port}")
     server.serve_forever()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
