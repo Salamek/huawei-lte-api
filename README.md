@@ -135,26 +135,6 @@ Quelques [exemples](examples/) se trouvent dans le dossier [/examples](examples/
 * Relayer les SMS reçus vers votre e-mail https://github.com/chenwei791129/Huawei-LTE-Router-SMS-to-E-mail-Sender
 * API HTTP SMS basique [examples/sms_http_api.py](examples/sms_http_api.py) (journalise les requêtes dans SQLite)
   * inclut maintenant un endpoint `/health` renvoyant les informations du modem (dérivées de `device_info.py` et `device_signal.py`)
-* Conteneur Docker pour l'API SMS [Dockerfile](Dockerfile)
-* Guide Docker pas à pas [docs/sms-http-api-docker.md](docs/sms-http-api-docker.md)
-
-
-### Docker
-
-Pour exécuter l'API HTTP SMS dans un conteneur :
-
-```bash
-docker build -t sms-api .
-docker run --network host \
-  -e MODEM_URL="http://192.168.8.1/" \
-  -e USERNAME=admin \
-  -e PASSWORD=PASSWORD \
-  -e SMS_API_DB=/data/sms_api.db \
-  sms-api
-```
-``SMS_API_DB`` contrôle l'emplacement où sont stockés les journaux des requêtes.
-
-Consultez [docs/sms-http-api-docker.md](docs/sms-http-api-docker.md) pour un guide détaillé sur l'exécution du conteneur et l'envoi de votre premier SMS.
 
 ## Ports vers d'autres langages
 
