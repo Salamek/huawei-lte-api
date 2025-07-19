@@ -131,7 +131,6 @@ class SMSHandler(BaseHTTPRequestHandler):
         if self.path != "/health":
             self.send_error(404, "Not found")
 
-
             return
 
         try:
@@ -202,12 +201,10 @@ class SMSHandler(BaseHTTPRequestHandler):
         </body>
         </html>
         """
-
         body = html.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
-
         self.end_headers()
         self.wfile.write(body)
 
@@ -218,13 +215,11 @@ class SMSHandler(BaseHTTPRequestHandler):
         ensure_logs_table(conn)
         rows = conn.execute(
             "SELECT id, timestamp, sender, phone, message, response FROM logs ORDER BY id DESC"
-
         ).fetchall()
         conn.close()
 
         html = [
             "<html><head><meta charset='utf-8'><title>Historique SMS</title>",
-
             "<style>body{font-family:Arial,sans-serif;margin:20px;}table{border-collapse:collapse;}th,td{border:1px solid #ccc;padding:4px;}th{background:#eee;}</style>",
             "<script>function selectAll(){document.querySelectorAll('.rowchk').forEach(c=>c.checked=true);}</script>",
             "</head><body>",
@@ -268,8 +263,6 @@ class SMSHandler(BaseHTTPRequestHandler):
         self.send_response(303)
         self.send_header("Location", "/logs")
         self.end_headers()
-
-
     def do_POST(self):
         if self.path == "/logs/delete":
             self._delete_logs()
@@ -282,17 +275,31 @@ class SMSHandler(BaseHTTPRequestHandler):
         body = self.rfile.read(content_length)
         try:
             data = json.loads(body.decode("utf-8"))
-            recipients = data["to"]
-            sender = data["from"]
-            text = data["text"]
-            if (
-                not isinstance(recipients, list)
-                or not isinstance(text, str)
-                or not isinstance(sender, str)
-            ):
-                raise ValueError
-        except (ValueError, KeyError, json.JSONDecodeError):
+
+        except json.JSONDecodeError:
             self.send_error(400, "Invalid JSON body")
+            return
+
+        recipients = data.get("to")
+        sender = data.get("from")
+        text = data.get("text")
+
+        if isinstance(sender, str):
+            sender = sender.strip()
+
+        if not isinstance(recipients, list) or not recipients:
+            self.send_error(400, "'to' must be a non-empty list")
+            return
+        for number in recipients:
+            if not isinstance(number, str) or not re.fullmatch(r"\+?\d+", number):
+                self.send_error(400, "invalid phone number in 'to'")
+                return
+        if not isinstance(sender, str) or not sender:
+            self.send_error(400, "'from' must be a non-empty string")
+            return
+        if not isinstance(text, str) or not text.strip():
+            self.send_error(400, "'text' must be a non-empty string")
+
             return
 
         try:
@@ -333,7 +340,6 @@ class SMSHTTPServer(HTTPServer):
 
 def main():
     parser = ArgumentParser()
-
     parser.add_argument("url", type=str)
     parser.add_argument("--username", type=str)
     parser.add_argument("--password", type=str)
