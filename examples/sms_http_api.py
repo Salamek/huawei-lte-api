@@ -118,6 +118,7 @@ def log_request(db_path, recipients, sender, text, response):
     conn.close()
 
 
+
 def validate_request(data):
     """Validate JSON payload and return sanitized fields."""
     recipients = data.get("to")
@@ -139,6 +140,7 @@ def validate_request(data):
     return recipients, sender, text.strip()
 
 
+
 class SMSHandler(BaseHTTPRequestHandler):
     def _send_json(self, status, payload):
         body = json.dumps(payload).encode("utf-8")
@@ -152,6 +154,7 @@ class SMSHandler(BaseHTTPRequestHandler):
         self._send_json(status, {"error": message})
 
     def do_GET(self):
+
         if self.path == "/":
             self._serve_index()
             return
@@ -160,6 +163,7 @@ class SMSHandler(BaseHTTPRequestHandler):
             return
         if self.path != "/health":
             self.send_error(404, "Not found")
+
             return
 
         try:
@@ -292,18 +296,22 @@ class SMSHandler(BaseHTTPRequestHandler):
         self.send_header("Location", "/logs")
         self.end_headers()
 
+
     def do_POST(self):
         if self.path == "/logs/delete":
             self._delete_logs()
             return
         if self.path != "/sms":
+
             self._json_error(404, "Not found")
+
             return
 
         content_length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(content_length)
         try:
             data = json.loads(body.decode("utf-8"))
+
         except json.JSONDecodeError:
             self._json_error(400, "Invalid JSON body")
             return
@@ -312,6 +320,7 @@ class SMSHandler(BaseHTTPRequestHandler):
             recipients, sender, text = validate_request(data)
         except ValueError as exc:
             self._json_error(400, str(exc))
+
             return
 
         try:
@@ -330,7 +339,9 @@ class SMSHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"OK")
             else:
+
                 self._json_error(500, "Failed to send SMS")
+
         except Exception as exc:
 
             log_request(self.server.db_path, recipients, sender, text, str(exc))
@@ -358,6 +369,7 @@ def main():
     parser.add_argument("--host", type=str, default="127.0.0.1")
     parser.add_argument("--port", type=int, default=80)
     parser.add_argument("--db", type=str, default=os.getenv("SMS_API_DB", "sms_api.db"))
+
     args = parser.parse_args()
 
     server = SMSHTTPServer(
