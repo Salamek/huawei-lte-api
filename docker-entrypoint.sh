@@ -16,7 +16,9 @@ fi
 if [ -n "$PASSWORD" ]; then
     CMD="$CMD --password $PASSWORD"
 fi
+
 if [ -n "$SMS_API_DB" ]; then
     CMD="$CMD --db $SMS_API_DB"
 fi
+
 exec $CMD

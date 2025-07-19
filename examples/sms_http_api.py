@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+
 Expose une API HTTP simple pour envoyer des SMS.
 
 Exemple d'utilisation :
@@ -12,18 +13,23 @@ python3 sms_http_api.py http://192.168.8.1/ \
 Chaque requête est également enregistrée dans une base SQLite. Le chemin de cette base peut
 être défini avec l'option ``--db`` ou la variable d'environnement ``SMS_API_DB``.
 Par défaut, ``sms_api.db`` est utilisé.
+
 """
 
 from argparse import ArgumentParser
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
+
 import os
 import sqlite3
 from datetime import datetime
 
+
+
 from huawei_lte_api.Connection import Connection
 from huawei_lte_api.Client import Client
 from huawei_lte_api.enums.client import ResponseEnum
+
 
 
 def log_request(db_path, recipients, text, response):
@@ -42,6 +48,7 @@ def log_request(db_path, recipients, text, response):
     )
     conn.commit()
     conn.close()
+
 
 
 class SMSHandler(BaseHTTPRequestHandler):
@@ -63,6 +70,7 @@ class SMSHandler(BaseHTTPRequestHandler):
             return
 
         try:
+
             with Connection(
                 self.server.modem_url,
                 username=self.server.username,
@@ -71,6 +79,7 @@ class SMSHandler(BaseHTTPRequestHandler):
                 client = Client(connection)
                 resp = client.sms.send_sms(recipients, text)
             log_request(self.server.db_path, recipients, text, str(resp))
+
             if resp == ResponseEnum.OK.value:
                 self.send_response(200)
                 self.end_headers()
@@ -78,12 +87,15 @@ class SMSHandler(BaseHTTPRequestHandler):
             else:
                 self.send_error(500, 'Failed to send SMS')
         except Exception as exc:
+
             log_request(self.server.db_path, recipients, text, str(exc))
+
             self.send_error(500, str(exc))
 
 
 class SMSHTTPServer(HTTPServer):
     def __init__(self, server_address, handler_class, modem_url, username, password, db_path):
+
         super().__init__(server_address, handler_class)
         self.modem_url = modem_url
         self.username = username
@@ -105,6 +117,7 @@ def main():
         (args.host, args.port), SMSHandler, args.url,
         args.username, args.password, args.db
     )
+
     print(f'Serving on {args.host}:{args.port}')
     server.serve_forever()
 
