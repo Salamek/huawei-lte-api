@@ -39,12 +39,12 @@ curl http://localhost:80/health
 
 ## Envoyer votre premier SMS
 
-Préparez la charge JSON et utilisez `curl` pour appeler l'API :
+Préparez la charge JSON (destinataire, expéditeur et message) puis utilisez `curl` pour appeler l'API :
 
 ```bash
 curl -X POST http://localhost:80/sms \
   -H "Content-Type: application/json" \
-  -d '{"to": ["+420123456789"], "text": "Hello from the API!"}'
+  -d '{"to": ["+420123456789"], "from": "+420987654321", "text": "Hello from the API!"}'
 ```
 
 Si la requête réussit, le serveur répond `OK`.
