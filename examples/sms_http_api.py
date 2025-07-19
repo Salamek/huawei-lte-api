@@ -21,6 +21,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 
 import os
+import re
 import sqlite3
 from datetime import datetime
 
@@ -30,6 +31,65 @@ from huawei_lte_api.Connection import Connection
 from huawei_lte_api.Client import Client
 from huawei_lte_api.enums.client import ResponseEnum
 
+
+SIGNAL_LEVELS = {
+    0: "     ",
+    1: "▂    ",
+    2: "▂▃   ",
+    3: "▂▃▄  ",
+    4: "▂▃▄▅ ",
+    5: "▂▃▄▅▇",
+}
+
+NETWORK_TYPE_MAP = {
+    "0": "No Service",
+    "1": "GSM",
+    "2": "GPRS",
+    "3": "EDGE",
+    "4": "WCDMA",
+    "5": "HSDPA",
+    "6": "HSUPA",
+    "7": "HSPA",
+    "8": "TDSCDMA",
+    "9": "HSPA+",
+    "10": "EVDO Rev.0",
+    "11": "EVDO Rev.A",
+    "12": "EVDO Rev.B",
+    "13": "1xRTT",
+    "14": "UMB",
+    "15": "1xEVDV",
+    "16": "3xRTT",
+    "17": "HSPA+ 64QAM",
+    "18": "HSPA+ MIMO",
+    "19": "LTE",
+    "41": "LTE CA",
+    "101": "NR5G NSA",
+    "102": "NR5G SA",
+}
+
+
+def parse_dbm(value):
+    if value is None:
+        return None
+    match = re.search(r"-?\d+", str(value))
+    return int(match.group()) if match else None
+
+
+def get_signal_level(rsrp: int) -> int:
+    if rsrp is None:
+        return 0
+    if rsrp >= -80:
+        return 5
+    elif rsrp >= -90:
+        return 4
+    elif rsrp >= -100:
+        return 3
+    elif rsrp >= -110:
+        return 2
+    elif rsrp >= -120:
+        return 1
+    else:
+        return 0
 
 
 def log_request(db_path, recipients, text, response):
@@ -52,6 +112,47 @@ def log_request(db_path, recipients, text, response):
 
 
 class SMSHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path != '/health':
+            self.send_error(404, 'Not found')
+            return
+
+        try:
+            with Connection(
+                self.server.modem_url,
+                username=self.server.username,
+                password=self.server.password,
+            ) as connection:
+                client = Client(connection)
+                device_info = client.device.information()
+                signal_info = client.device.signal()
+                status_info = client.monitoring.status()
+                network_type_raw = str(status_info.get('CurrentNetworkType', '0'))
+                plmn_info = client.net.current_plmn()
+                config = client.config_lan.config()
+
+            rsrp = parse_dbm(signal_info.get('rsrp'))
+            level = get_signal_level(rsrp)
+
+            health = {
+                'device_info': device_info,
+                'signal': signal_info,
+                'operator_name': plmn_info.get('FullName') or plmn_info.get('ShortName') or 'Unknown',
+                'network_type': NETWORK_TYPE_MAP.get(network_type_raw, f'Unknown ({network_type_raw})'),
+                'ip_address': config.get('config', {}).get('dhcps', {}).get('ipaddress'),
+                'signal_level': level,
+                'signal_bars': SIGNAL_LEVELS.get(level),
+            }
+
+            body = json.dumps(health).encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except Exception as exc:
+            self.send_error(500, str(exc))
+
     def do_POST(self):
         if self.path != '/sms':
             self.send_error(404, 'Not found')

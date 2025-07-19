@@ -28,6 +28,15 @@ docker run -d --network host \
 
 Le serveur API est alors accessible sur l'hôte au port choisi.
 
+L'API propose également un endpoint `/health` pour vérifier l'état du modem et
+afficher plusieurs informations issues des exemples `device_info.py` et
+`device_signal.py` :
+
+```bash
+curl http://localhost:8000/health
+```
+
+
 ## Envoyer votre premier SMS
 
 Préparez la charge JSON et utilisez `curl` pour appeler l'API :
