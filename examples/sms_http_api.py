@@ -161,6 +161,9 @@ class SMSHandler(BaseHTTPRequestHandler):
         if self.path == "/logs":
             self._serve_logs()
             return
+        if self.path == "/testsms":
+            self._serve_testsms()
+            return
         if self.path != "/health":
             self.send_error(404, "Not found")
 
@@ -231,6 +234,7 @@ class SMSHandler(BaseHTTPRequestHandler):
             <h1>Informations du modem</h1>
             <pre id='health'>Chargement...</pre>
             <p><a href="/logs">Voir les messages envoyés</a></p>
+            <p><a href="/testsms">Tester l'envoi de SMS</a></p>
         </body>
         </html>
         """
@@ -276,6 +280,62 @@ class SMSHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _serve_testsms(self):
+        html = """
+        <html>
+        <head>
+            <meta charset='utf-8'>
+            <title>Envoyer un SMS</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                label { display: block; margin-top: 10px; }
+                textarea { width: 300px; height: 100px; }
+            </style>
+            <script>
+                async function sendSms(event) {
+                    event.preventDefault();
+                    const to = document.getElementById('to').value
+                        .split(',')
+                        .map(t => t.trim())
+                        .filter(t => t);
+                    const text = document.getElementById('text').value;
+                    const payload = {to: to, from: 'test api web', text: text};
+                    const resp = await fetch('/sms', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(payload)
+                    });
+                    if (resp.ok) {
+                        alert('SMS envoyé');
+                    } else {
+                        const msg = await resp.text();
+                        alert('Erreur: ' + msg);
+                    }
+                }
+            </script>
+        </head>
+        <body>
+            <h1>Tester l\'envoi de SMS</h1>
+            <form id='smsForm' onsubmit='sendSms(event)'>
+                <label>Destinataire(s) (séparés par des virgules)<br>
+                    <input type='text' id='to' required>
+                </label>
+                <label>Message<br>
+                    <textarea id='text' required></textarea>
+                </label>
+                <p><button type='submit'>Envoyer</button></p>
+            </form>
+            <p><a href='/'>Retour</a></p>
+        </body>
+        </html>
+        """
+        body = html.encode('utf-8')
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/html; charset=utf-8')
+        self.send_header('Content-Length', str(len(body)))
         self.end_headers()
         self.wfile.write(body)
 
