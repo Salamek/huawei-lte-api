@@ -54,8 +54,8 @@ class Net(ApiGroup):
         """
         return self._session.post_set('net/net-mode', OrderedDict((
             ('NetworkMode', networkmode if isinstance(networkmode, str) else networkmode.value),
-            ('NetworkBand', networkband if isinstance(networkband, str) else hex(networkband)[2:]),
-            ('LTEBand', lteband if isinstance(lteband, str) else hex(lteband)[2:]),
+            ('NetworkBand', networkband if isinstance(networkband, str) else f'{networkband:x}'),
+            ('LTEBand', lteband if isinstance(lteband, str) else f'{lteband:x}'),
         )))
 
     def network(self) -> GetResponseType:

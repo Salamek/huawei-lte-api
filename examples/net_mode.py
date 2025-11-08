@@ -75,7 +75,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
     needed_band = 0
     for band in bands:
         needed_band |= BANDS[band]
-    if len(bands) and orig_net_mode['LTEBand'] != hex(needed_band)[2:]:
+    if len(bands) and orig_net_mode['LTEBand'] != f'{needed_band:x}':
         needs_lteband = True
         # XXX: if we set the bands to "all" we get back a different LTEBand value covering
         # all supported bands and not the "All Bands" one, so if the value is in the band
@@ -90,7 +90,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
         print("Configuration matches, nothing to do")
         sys.exit()
 
-    new_network_lteband = hex(needed_band)[2:] if needs_lteband else orig_net_mode['LTEBand']
+    new_network_lteband = f'{needed_band:x}' if needs_lteband else orig_net_mode['LTEBand']
     new_network_band = orig_net_mode['NetworkBand']
     new_network_mode = MODES[args.mode].value if needs_mode else orig_net_mode['NetworkMode']
 

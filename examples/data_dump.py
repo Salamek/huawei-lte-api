@@ -27,7 +27,7 @@ def dump(method: Callable[[], Any]) -> None:
         pprint.pprint(method())
     except Exception as e:
         print(repr(e))
-    print("")
+    print()
 
 
 with Connection(args.url, username=args.username, password=args.password) as connection:
