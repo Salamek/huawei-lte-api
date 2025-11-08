@@ -23,12 +23,12 @@ class System(ApiGroup):
 
     def onlinestate(self, devid: str = 'all') -> List[GetResponseType]:
         return cast(
-            List[GetResponseType],
+            'List[GetResponseType]',
             self._session.get('system/onlinestate', {'devid': devid})
         )
 
     def hostinfo(self) -> List[GetResponseType]:
         return cast(
-            List[GetResponseType],
+            'List[GetResponseType]',
             self._session.get('system/HostInfo')
         )
