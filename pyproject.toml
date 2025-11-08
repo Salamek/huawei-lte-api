@@ -1,0 +1,114 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = "huawei-lte-api"
+license = 'LGPL-3.0'
+dynamic = ["version"]
+requires-python = ">= 3.9"
+description = "API For huawei LAN/WAN LTE Modems."
+
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Environment :: Console',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
+    'Topic :: Software Development',
+]
+
+dependencies = [
+    "requests",
+    "xmltodict",
+    "pycryptodomex"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "types-requests",
+    "types-setuptools",
+]
+test = ["pytest", "requests-mock"]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[[project.authors]]
+name = "Adam Schubert"
+email = "adam.schubert@sg1-game.net"
+
+
+[project.urls]
+Homepage = "https://github.com/Salamek/huawei-lte-api"
+"Release notes" = "https://github.com/Salamek/huawei-lte-api/releases"
+
+
+[tool.setuptools.dynamic]
+version = {attr = "huawei_lte_api.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["."]
+exclude = ["tests*", "examples*"]
+
+
+[tool.ruff]
+line-length = 170
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D"]  #  comments
+
+[tool.ruff.lint.mccabe]
+max-complexity = 20
+
+[tool.ruff.lint.pylint]
+allow-magic-value-types = ["int", "str"]
+max-args = 8
+max-branches = 16
+max-returns = 10
+
+
+[tool.ruff.lint.per-file-ignores]
+"huawei_lte_api/*" = ["N999"]
+"tests/*" = ["S101", "PLR2004"]  # Use of assert detected
+
+
+[tool.mypy]
+target-version = "py39"
+files = ["huawei_lte_api", "tests"]
+python_version = 3.9
+strict = true
+# Make it bit lax
+show_error_codes = true
+ignore_missing_imports = true
+allow_any_generics = true
+warn_return_any = false
+warn_unreachable = false
+disallow_subclassing_any = false
+disallow_untyped_decorators = false
+exclude = "(.venv/.*|build/.*)"
+
+
+[tool.pytest.ini_options]
+# Tell pytest where to look for tests
+testpaths = [
+    "tests",
+]
+
+# Pattern to match test files
+python_files = [
+    "test_*.py",
+]
