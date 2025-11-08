@@ -106,6 +106,8 @@ def main():
            "NR": "5G"
         }
         readable_mode = network_type_map.get(network_type_raw, f"Unknown ({network_type_raw})")
+        if readable_mode in mode_map:
+            readable_mode = mode_map[readable_mode]
 
         # Get IP address
         config = client.config_lan.config()
