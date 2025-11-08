@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Example code on how to print ~all info about your router, you can try it by running:
-python3 data_dump.py http://admin:PASSWORD@192.168.8.1/
+python3 examples/data_dump.py --username=admin --password=PASSWORD http://192.168.8.1/
 """
 from argparse import ArgumentParser
 import os.path
@@ -26,7 +26,7 @@ def dump(method: Callable[[], Any]) -> None:
     try:
         pprint.pprint(method())
     except Exception as e:
-        print(str(e))
+        print(repr(e))
     print("")
 
 
