@@ -6,11 +6,11 @@ class Bluetooth(ApiGroup):
     def settings(self) -> GetResponseType:
         """
         Get Bluetooth settings.
-        
+
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage.
-        
+
         :return: Bluetooth settings.
-        
+
         Usage example:
         >>> bluetooth = Bluetooth(session)
         >>> settings = bluetooth.settings()
@@ -21,11 +21,11 @@ class Bluetooth(ApiGroup):
     def scan(self) -> GetResponseType:
         """
         Scan for Bluetooth devices.
-        
+
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage.
-        
+
         :return: Scan results.
-        
+
         Usage example:
         >>> bluetooth = Bluetooth(session)
         >>> scan_results = bluetooth.scan()

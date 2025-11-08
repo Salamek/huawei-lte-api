@@ -91,15 +91,15 @@ class Dhcp(ApiGroup):
         Usage example:
         >>> dhcp = Dhcp(session)
         >>> response = dhcp.set_settings(
-        >>>     dhcp_ip_address="192.168.1.1", 
-        >>>     dhcp_lan_netmask="255.255.255.0", 
-        >>>     dhcp_status=True, 
-        >>>     dhcp_start_ip_range=50, 
-        >>>     dhcp_end_ip_range=150, 
-        >>>     dhcp_lease_time=3600, 
-        >>>     dns_status=True, 
-        >>>     primary_dns="8.8.8.8", 
-        >>>     secondary_dns="8.8.4.4", 
+        >>>     dhcp_ip_address="192.168.1.1",
+        >>>     dhcp_lan_netmask="255.255.255.0",
+        >>>     dhcp_status=True,
+        >>>     dhcp_start_ip_range=50,
+        >>>     dhcp_end_ip_range=150,
+        >>>     dhcp_lease_time=3600,
+        >>>     dns_status=True,
+        >>>     primary_dns="8.8.8.8",
+        >>>     secondary_dns="8.8.4.4",
         >>>     show_dns_setting=True
         >>> )
         >>> print(response)
