@@ -26,7 +26,7 @@ def dump(method: Callable[[], Any]) -> None:
     try:
         pprint.pprint(method())
     except Exception as e:
-        print(str(e))
+        print(repr(e))
     print("")
 
 
