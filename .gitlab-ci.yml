@@ -8,16 +8,26 @@ test:debian:
   stage: test
   script:
     - apt-get update -qy
-    - apt-get install -y python3-setuptools python3-pytest-runner python3-pytest python3-pylint-common python3-pytest-cov python3-xmltodict python3-requests tox python3-pycryptodome
-    - tox -e py311
+    - apt-get install -y python3-setuptools python3-pytest-runner python3-pytest python3-pytest-cov python3-xmltodict python3-requests python3-pycryptodome
+    - python3 -m venv .venv
+    - ./.venv/bin/pip install .[dev,test]
+    - ./.venv/bin/ruff check .
+    - ./.venv/bin/mypy .
+    - ./.venv/bin/pytest .
+
   tags:
     - debian
 
 test:archlinux:
   stage: test
   script:
-    - pacman -Sy python-pytest python-pylint python-pytest-cov python-xmltodict python-requests python-tox python-pycryptodomex --noconfirm
-    - tox -e py313
+    - pacman -Sy python python-setuptools python-pytest python-pytest-cov python-xmltodict python-requests python-pycryptodomex --noconfirm
+    - python3 -m venv .venv
+    - ./.venv/bin/pip install .[dev,test]
+    - ./.venv/bin/ruff check .
+    - ./.venv/bin/mypy .
+    - ./.venv/bin/pytest .
+
   tags:
     - archlinux
 
@@ -25,7 +35,7 @@ package:debian:
   stage: package
   script:
     - apt-get update -qy
-    - apt-get install -y python3-pytest-runner python3-stdeb python3-pytest python3-pylint-common python3-pytest-cov python3-xmltodict python3-requests tox dh-python python3-pycryptodome
+    - apt-get install -y python3-pytest-runner python3-stdeb python3-pytest python3-pytest-cov python3-xmltodict python3-requests dh-python python3-pycryptodome
     - rm -rf "./deb_dist"
     - python3 setup.py --command-packages=stdeb.command bdist_deb
   tags:
