@@ -4,7 +4,7 @@ import logging
 import re
 import urllib.parse
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, Type, cast
+from typing import Any, Callable, Dict, Optional, Tuple, TypeVar, Union, Type, cast
 from urllib.parse import urlparse, urlunparse
 
 import requests
@@ -274,7 +274,7 @@ class Session:
 
         response_data = cast(str, self._check_response_status(self._process_response_data(response)))
 
-        return response_data
+        return response_data  # noqa: RET504 # complex enough
 
     def post_file(self,
                   endpoint: str,

@@ -52,8 +52,7 @@ class User(ApiGroup):
         tries = 5
         for i in range(tries):
             try:
-                state_login = self.state_login()
-                return state_login
+                return self.state_login()
             except requests.exceptions.ConnectionError:
                 # Some models reportedly close the connection if we attempt to access login state too soon after
                 # setting up the session etc. In that case, retry a few times. The error is reported to be

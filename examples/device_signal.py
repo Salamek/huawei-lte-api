@@ -31,16 +31,15 @@ def get_signal_level(rsrp: int) -> int:
         return 0
     if rsrp >= -80:
         return 5
-    elif rsrp >= -90:
+    if rsrp >= -90:
         return 4
-    elif rsrp >= -100:
+    if rsrp >= -100:
         return 3
-    elif rsrp >= -110:
+    if rsrp >= -110:
         return 2
-    elif rsrp >= -120:
+    if rsrp >= -120:
         return 1
-    else:
-        return 0
+    return 0
 
 def generate_signal_bars(level: int, total: int = 5) -> str:
     """
@@ -117,8 +116,10 @@ def main():
         print(f"{operator_name} {readable_mode} {bars}")
 #        print(bars)
         print(f"  RSRP: {signal_info.get('rsrp')}")
-        if rsrq: print(f"  RSRQ: {rsrq}")
-        if sinr: print(f"  SINR: {sinr}")
+        if rsrq:
+            print(f"  RSRQ: {rsrq}")
+        if sinr:
+            print(f"  SINR: {sinr}")
         print(f"  IP: {modem_ip}")
 
 if __name__ == "__main__":
