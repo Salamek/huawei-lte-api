@@ -13,7 +13,7 @@ test:debian:
     - ./.venv/bin/pip install .[dev,test]
     - ./.venv/bin/ruff check .
     - ./.venv/bin/ruff format --check .
-    - ./.venv/bin/mypy .
+    - ./.venv/bin/mypy . --python-version "$(python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")"
     - ./.venv/bin/pytest .
 
   tags:
