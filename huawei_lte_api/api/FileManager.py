@@ -20,8 +20,12 @@ class FileManager(ApiGroup):
             msg = "Only *.bin or *.zip is allowed"
             raise ValueError(msg)
 
-        return self._session.post_file("filemanager/upload", {
-            "uploadfile": uploadfile,
-        }, {
-            "cur_path": f"OU:{uploadfile_name_path.name}",
-        })
+        return self._session.post_file(
+            "filemanager/upload",
+            {
+                "uploadfile": uploadfile,
+            },
+            {
+                "cur_path": f"OU:{uploadfile_name_path.name}",
+            },
+        )

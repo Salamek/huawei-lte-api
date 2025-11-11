@@ -5,6 +5,7 @@ Display 4G/5G modem signal strength using vertical bars and show operator + acce
 Example usage:
 python3 signal_bars.py http://admin:PASSWORD@192.168.8.1/
 """
+
 from __future__ import annotations
 
 import re
@@ -22,11 +23,13 @@ SIGNAL_LEVELS = {
     5: "▂▃▄▅▇",
 }
 
+
 def parse_dbm(value: str | None) -> int | None:
     if value is None:
         return None
     match = re.search(r"-?\d+", value)
     return int(match.group()) if match else None
+
 
 def get_signal_level(rsrp: int | None) -> int:
     if rsrp is None:
@@ -42,6 +45,7 @@ def get_signal_level(rsrp: int | None) -> int:
     if rsrp >= -120:
         return 1
     return 0
+
 
 def generate_signal_bars(level: int, total: int = 5) -> str:
     """
@@ -59,6 +63,7 @@ def generate_signal_bars(level: int, total: int = 5) -> str:
         result.append(line.rstrip())
     return "\n".join(result)
 
+
 def main() -> None:
     parser = ArgumentParser()
     parser.add_argument("url", type=str)
@@ -75,15 +80,29 @@ def main() -> None:
         network_type_raw = str(status_info.get("CurrentNetworkType", "0"))
 
         network_type_map = {
-          "0": "No Service",
-          "1": "GSM", "2": "GPRS", "3": "EDGE",
-          "4": "WCDMA", "5": "HSDPA", "6": "HSUPA", "7": "HSPA",
-          "8": "TDSCDMA", "9": "HSPA+",
-          "10": "EVDO Rev.0", "11": "EVDO Rev.A", "12": "EVDO Rev.B",
-          "13": "1xRTT", "14": "UMB", "15": "1xEVDV", "16": "3xRTT",
-          "17": "HSPA+ 64QAM", "18": "HSPA+ MIMO",
-          "19": "LTE", "41": "LTE CA",
-          "101": "NR5G NSA", "102": "NR5G SA",
+            "0": "No Service",
+            "1": "GSM",
+            "2": "GPRS",
+            "3": "EDGE",
+            "4": "WCDMA",
+            "5": "HSDPA",
+            "6": "HSUPA",
+            "7": "HSPA",
+            "8": "TDSCDMA",
+            "9": "HSPA+",
+            "10": "EVDO Rev.0",
+            "11": "EVDO Rev.A",
+            "12": "EVDO Rev.B",
+            "13": "1xRTT",
+            "14": "UMB",
+            "15": "1xEVDV",
+            "16": "3xRTT",
+            "17": "HSPA+ 64QAM",
+            "18": "HSPA+ MIMO",
+            "19": "LTE",
+            "41": "LTE CA",
+            "101": "NR5G NSA",
+            "102": "NR5G SA",
         }
         plmn_info = client.net.current_plmn()
 
@@ -99,11 +118,11 @@ def main() -> None:
 
         # Map internal mode codes (if any) to readable labels
         mode_map = {
-           "LTE": "4G",
-           "WCDMA": "3G",
-           "GSM": "2G",
-           "NR5G": "5G",
-           "NR": "5G",
+            "LTE": "4G",
+            "WCDMA": "3G",
+            "GSM": "2G",
+            "NR5G": "5G",
+            "NR": "5G",
         }
         readable_mode = network_type_map.get(network_type_raw, f"Unknown ({network_type_raw})")
         if readable_mode in mode_map:
@@ -122,6 +141,7 @@ def main() -> None:
         if sinr:
             print(f"  SINR: {sinr}")
         print(f"  IP: {modem_ip}")
+
 
 if __name__ == "__main__":
     main()

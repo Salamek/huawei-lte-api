@@ -15,9 +15,12 @@ class Language(ApiGroup):
         >>> response = language.set_current_language(current_language='en_us')
         >>> print(response)
         """
-        return self._session.post_set("language/current-language", {
-            "CurrentLanguage": current_language,
-        })
+        return self._session.post_set(
+            "language/current-language",
+            {
+                "CurrentLanguage": current_language,
+            },
+        )
 
     def current_language(self) -> GetResponseType:
         """

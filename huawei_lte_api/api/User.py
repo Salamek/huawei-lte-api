@@ -40,18 +40,14 @@ class UserSession:
         with contextlib.suppress(ResponseErrorLoginRequiredException, ResponseErrorNotSupportedException):
             self.user.logout()
 
-
     def __enter__(self) -> UserSession:
         return self
 
-    def __exit__(self, exc_type: type[BaseException] | None,
-                 exc_value: BaseException | None,
-                 traceback: TracebackType | None) -> None:
+    def __exit__(self, exc_type: type[BaseException] | None, exc_value: BaseException | None, traceback: TracebackType | None) -> None:
         self.close()
 
 
 class User(ApiGroup):
-
     def state_login(self) -> GetResponseType:
         return self._session.get("user/state-login")
 
@@ -76,11 +72,13 @@ class User(ApiGroup):
             return b""
 
         if password_type == PasswordTypeEnum.SHA256:
-            concentrated = b"".join([
-                username.encode("UTF-8"),
-                base64.b64encode(hashlib.sha256(password.encode("UTF-8")).hexdigest().encode("ascii")),
-                self._session.request_verification_tokens[0].encode("UTF-8"),
-            ])
+            concentrated = b"".join(
+                [
+                    username.encode("UTF-8"),
+                    base64.b64encode(hashlib.sha256(password.encode("UTF-8")).hexdigest().encode("ascii")),
+                    self._session.request_verification_tokens[0].encode("UTF-8"),
+                ]
+            )
             return base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode("ascii"))
 
         return base64.b64encode(password.encode("UTF-8"))
@@ -88,11 +86,15 @@ class User(ApiGroup):
     def _login(self, username: str, password: str | None, password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
         password_encoded = self._encode_password(username, password, password_type)
         try:
-            result = self._session.post_set("user/login", {
-                "Username": username,
-                "Password": password_encoded.decode("UTF-8"),
-                "password_type": password_type.value,
-            }, refresh_csrf=True)
+            result = self._session.post_set(
+                "user/login",
+                {
+                    "Username": username,
+                    "Password": password_encoded.decode("UTF-8"),
+                    "password_type": password_type.value,
+                },
+                refresh_csrf=True,
+            )
         except ResponseErrorException as e:
             error_code_to_message = {
                 LoginErrorEnum.USERNAME_WRONG.value: "Username wrong",
@@ -133,9 +135,12 @@ class User(ApiGroup):
         return self._login(username, password, PasswordTypeEnum(int(state_login.get("password_type", 0))))
 
     def logout(self) -> SetResponseType:
-        return self._session.post_set("user/logout", {
-            "Logout": 1,
-        })
+        return self._session.post_set(
+            "user/logout",
+            {
+                "Logout": 1,
+            },
+        )
 
     def remind(self) -> GetResponseType:
         return self._session.get("user/remind")
@@ -147,15 +152,21 @@ class User(ApiGroup):
         return self._session.get("user/pwd")
 
     def set_pwd(self) -> SetResponseType:
-        return self._session.post_set("user/pwd", {
-            "module": "wlan",
-            "nonce": "aaaaaaa",
-        })
+        return self._session.post_set(
+            "user/pwd",
+            {
+                "module": "wlan",
+                "nonce": "aaaaaaa",
+            },
+        )
 
     def set_remind(self, remind_state: str) -> SetResponseType:
-        return self._session.post_set("user/remind", {
-            "remindstate": remind_state,
-        })
+        return self._session.post_set(
+            "user/remind",
+            {
+                "remindstate": remind_state,
+            },
+        )
 
     def authentication_login(self) -> GetResponseType:
         return self._session.get("user/authentication_login")
@@ -177,16 +188,16 @@ class User(ApiGroup):
 
     def input_event(self) -> GetResponseType:
         """
-       Endpoint found by reverse engineering B310s-22 firmware, unknown usage
-       :return:
-       """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
         return self._session.get("user/input_event")
 
     def screen_state(self) -> GetResponseType:
         """
-       Endpoint found by reverse engineering B310s-22 firmware, unknown usage
-       :return:
-       """
+        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
+        :return:
+        """
         return self._session.get("user/screen_state")
 
     def session(self) -> GetResponseType:

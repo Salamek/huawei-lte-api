@@ -19,14 +19,15 @@ _LOGGER = logging.getLogger(__name__)
 class Connection(Session):
     user_session: UserSession | None
 
-    def __init__(self,
-                 url: str,
-                 username: str|None = None,
-                 password: str|None = None,
-                 login_on_demand: bool = False,
-                 timeout: float|tuple[float, float]| None = None,
-                 requests_session: requests.Session|None = None,
-                 ) -> None:
+    def __init__(
+        self,
+        url: str,
+        username: str | None = None,
+        password: str | None = None,
+        login_on_demand: bool = False,
+        timeout: float | tuple[float, float] | None = None,
+        requests_session: requests.Session | None = None,
+    ) -> None:
         """
         :param requests_session: requests Session to use; if not None, closing it is the caller's responsibility
         """
@@ -69,7 +70,5 @@ class Connection(Session):
     def __enter__(self) -> Connection:
         return self
 
-    def __exit__(self, exc_type: type[BaseException]|None,
-                 exc_value: BaseException|None,
-                 traceback: TracebackType|None) -> None:
+    def __exit__(self, exc_type: type[BaseException] | None, exc_value: BaseException | None, traceback: TracebackType | None) -> None:
         self.close()

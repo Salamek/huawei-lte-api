@@ -25,7 +25,6 @@ def main() -> None:
         # Lire tous les SMS
         sms_messages = client.sms.get_sms_list()
 
-
         messages = sms_messages.get("Messages", {}).get("Message", [])
         for message in messages:
             print(f"Index: {message['Index']}")
@@ -34,6 +33,7 @@ def main() -> None:
             print(f"Date: {message['Date']}")
             print("-" * 20)
         print("No received SMS found.")
+
 
 if __name__ == "__main__":
     main()

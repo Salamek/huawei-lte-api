@@ -75,31 +75,42 @@ class WLan(ApiGroup):
         return self._session.get("wlan/basic-settings")
 
     def set_basic_settings(self, ssid: str, hide: bool = False, wifi_restart: bool = False) -> SetResponseType:
-        return self._session.post_set("wlan/basic-settings", OrderedDict((
-            ("WifiSsid", ssid),
-            ("WifiHide", hide),
-            ("WifiRestart", int(wifi_restart)),
-        )))
+        return self._session.post_set(
+            "wlan/basic-settings",
+            OrderedDict(
+                (
+                    ("WifiSsid", ssid),
+                    ("WifiHide", hide),
+                    ("WifiRestart", int(wifi_restart)),
+                )
+            ),
+        )
 
     def security_settings(self) -> GetResponseType:
         return self._session.get("wlan/security-settings")
 
-    def set_security_settings(self,
-                              wpa_psk: str,
-                              wep_key: str = "",
-                              wpa_encryption_mode: WpaEncryptModeEnum = WpaEncryptModeEnum.MIX,
-                              wep_encryption_mode: WepEncryptModeEnum = WepEncryptModeEnum.WEP128,
-                              auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
-                              wifi_restart: bool = True,
-                              ) -> SetResponseType:
-        return self._session.post_set("wlan/security-settings", OrderedDict((
-            ("WifiAuthmode", auth_mode.value),
-            ("WifiWepKey1", wep_key),
-            ("WifiWpaencryptionmodes", wpa_encryption_mode.value),
-            ("WifiBasicencryptionmodes", wep_encryption_mode.value),
-            ("WifiWpapsk", wpa_psk),
-            ("WifiRestart", int(wifi_restart)),
-        )))
+    def set_security_settings(
+        self,
+        wpa_psk: str,
+        wep_key: str = "",
+        wpa_encryption_mode: WpaEncryptModeEnum = WpaEncryptModeEnum.MIX,
+        wep_encryption_mode: WepEncryptModeEnum = WepEncryptModeEnum.WEP128,
+        auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
+        wifi_restart: bool = True,
+    ) -> SetResponseType:
+        return self._session.post_set(
+            "wlan/security-settings",
+            OrderedDict(
+                (
+                    ("WifiAuthmode", auth_mode.value),
+                    ("WifiWepKey1", wep_key),
+                    ("WifiWpaencryptionmodes", wpa_encryption_mode.value),
+                    ("WifiBasicencryptionmodes", wep_encryption_mode.value),
+                    ("WifiWpapsk", wpa_psk),
+                    ("WifiRestart", int(wifi_restart)),
+                )
+            ),
+        )
 
     def multi_security_settings(self) -> GetResponseType:
         return self._session.get("wlan/multi-security-settings")
@@ -115,12 +126,15 @@ class WLan(ApiGroup):
 
         :param clients: list of dicts with format {'wifihostname': hostname,'WifiMacFilterMac': mac}
         """
-        return self._session.post_set("wlan/multi-basic-settings", {
-            "Ssids": {
-                "Ssid": clients,
+        return self._session.post_set(
+            "wlan/multi-basic-settings",
+            {
+                "Ssids": {
+                    "Ssid": clients,
+                },
+                "WifiRestart": 1,
             },
-            "WifiRestart": 1,
-        })
+        )
 
     def host_list(self) -> GetResponseType:
         hosts = self._session.get("wlan/host-list")
@@ -138,9 +152,12 @@ class WLan(ApiGroup):
         WIFI_PREFER = 2
         :param handover:
         """
-        return self._session.post_set("wlan/handover-setting", {
-            "Handover": handover,
-        })
+        return self._session.post_set(
+            "wlan/handover-setting",
+            {
+                "Handover": handover,
+            },
+        )
 
     def multi_switch_settings(self) -> GetResponseType:
         return self._session.get("wlan/multi-switch-settings")
@@ -152,11 +169,14 @@ class WLan(ApiGroup):
         """
         :param clients: list of dicts with format {'WifiMacFilterMac0': 'mac address','wifihostname0': 'name', 'Index': 'number', 'WifiMacFilterStatus': 'number(1 or 2)'}
         """
-        return self._session.post_set("wlan/multi-macfilter-settings", {
-            "Ssids": {
-                "Ssid": clients,
+        return self._session.post_set(
+            "wlan/multi-macfilter-settings",
+            {
+                "Ssids": {
+                    "Ssid": clients,
+                },
             },
-        })
+        )
 
     def multi_macfilter_settings_ex(self) -> GetResponseType:
         return self._session.get("wlan/multi-macfilter-settings-ex")
@@ -165,10 +185,15 @@ class WLan(ApiGroup):
         return self._session.get("wlan/mac-filter")
 
     def set_mac_filter(self, hostname: str, mac: str) -> SetResponseType:
-        return self._session.post_set("wlan/mac-filter", OrderedDict((
-            ("wifihostname", hostname),
-            ("WifiMacFilterMac", mac),
-        )))
+        return self._session.post_set(
+            "wlan/mac-filter",
+            OrderedDict(
+                (
+                    ("wifihostname", hostname),
+                    ("WifiMacFilterMac", mac),
+                )
+            ),
+        )
 
     def oled_showpassword(self) -> GetResponseType:
         return self._session.get("wlan/oled-showpassword")
@@ -180,27 +205,35 @@ class WLan(ApiGroup):
         return self._session.get("wlan/wps-appin")
 
     def set_wps_appin(self, wpsappintype: int = 0, wpsappin: int | None = None) -> SetResponseType:
-        return self._session.post_set("wlan/wps-appin", OrderedDict((
-            ("wpsappintype", wpsappintype),
-            ("wpsappin", str(wpsappin) if wpsappin is not None else ""),
-        )))
+        return self._session.post_set(
+            "wlan/wps-appin",
+            OrderedDict(
+                (
+                    ("wpsappintype", wpsappintype),
+                    ("wpsappin", str(wpsappin) if wpsappin is not None else ""),
+                )
+            ),
+        )
 
     def wps_pbc(self) -> GetResponseType:
         return self._session.get("wlan/wps-pbc")
 
     def set_wps_pbc(self, wpsmode: int = 1, ssidindex: int = 0) -> SetResponseType:
-        return self._session.post_set("wlan/wps-pbc", OrderedDict((
-            ("WPSMode", wpsmode),
-            ("ssidindex", ssidindex),
-        )))
+        return self._session.post_set(
+            "wlan/wps-pbc",
+            OrderedDict(
+                (
+                    ("WPSMode", wpsmode),
+                    ("ssidindex", ssidindex),
+                )
+            ),
+        )
 
     def wps_switch(self) -> GetResponseType:
         return self._session.get("wlan/wps-switch")
 
     def set_wps_switch(self, appinenable: int) -> SetResponseType:
-        return self._session.post_set("wlan/wps-switch", OrderedDict((
-            ("appinenable", appinenable),
-        )))
+        return self._session.post_set("wlan/wps-switch", OrderedDict((("appinenable", appinenable),)))
 
     def status_switch_settings(self) -> GetResponseType:
         return self._session.get("wlan/status-switch-settings")
@@ -285,15 +318,9 @@ class WLan(ApiGroup):
             "rebootInfo": {
                 "isReboot": 0,
             },
-            "accountInfo": {
-                "currentpassword": current_password,
-                "newpassword": new_password,
-                "confirmpwd": new_password},
+            "accountInfo": {"currentpassword": current_password, "newpassword": new_password, "confirmpwd": new_password},
         }
-        return self._session.post_set("wlan/wlan-guide-settings",
-                                      data,
-                                      refresh_csrf=True,
-                                      is_encrypted=True)
+        return self._session.post_set("wlan/wlan-guide-settings", data, refresh_csrf=True, is_encrypted=True)
 
     def wlanintelligent(self) -> GetResponseType:
         return self._session.get("wlan/wlanintelligent")
@@ -301,8 +328,7 @@ class WLan(ApiGroup):
     def guesttime_setting(self) -> GetResponseType:
         return self._session.get("wlan/guesttime-setting")
 
-    def filter_mac_addresses(self, mac_list: list[str], hostname_list: list[str],
-                             ssid_index: str = "0", filter_status: str = "2") -> SetResponseType:
+    def filter_mac_addresses(self, mac_list: list[str], hostname_list: list[str], ssid_index: str = "0", filter_status: str = "2") -> SetResponseType:
         """
         Add multiple MAC addresses to the filter list
 
@@ -374,20 +400,24 @@ class WLan(ApiGroup):
             # Process blacklist
             blacklist = ssid.get("wifimacblacklist")
             blacklist_devices = self._extract_mac_hostname_pairs(blacklist) if blacklist else []
-            result.append({
-                "ssid_index": ssid_index,
-                "filter_type": "blacklist",
-                "devices": blacklist_devices,
-            })
+            result.append(
+                {
+                    "ssid_index": ssid_index,
+                    "filter_type": "blacklist",
+                    "devices": blacklist_devices,
+                }
+            )
 
             # Process whitelist
             whitelist = ssid.get("wifimacwhitelist")
             whitelist_devices = self._extract_mac_hostname_pairs(whitelist) if whitelist else []
-            result.append({
-                "ssid_index": ssid_index,
-                "filter_type": "whitelist",
-                "devices": whitelist_devices,
-            })
+            result.append(
+                {
+                    "ssid_index": ssid_index,
+                    "filter_type": "whitelist",
+                    "devices": whitelist_devices,
+                }
+            )
 
         return result
 

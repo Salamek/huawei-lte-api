@@ -9,6 +9,7 @@ To do so. you can send multiple consecutive codes seperated by spaces:
 
 python3 send_ussd.py http://admin:PASSWORD@192.168.8.1/ *4# 7 1
 """
+
 import itertools
 import threading
 import time
@@ -26,8 +27,11 @@ parser.add_argument("url", type=str)
 parser.add_argument("--username", type=str)
 parser.add_argument("--password", type=str)
 parser.add_argument(
-    "codes", metavar="code",
-    type=str, nargs="+", help="USSD code to send",
+    "codes",
+    metavar="code",
+    type=str,
+    nargs="+",
+    help="USSD code to send",
 )
 parser.add_argument("--timeout", type=int, default=15)
 args = parser.parse_args()
@@ -43,13 +47,17 @@ def animate() -> None:
             print("\r                   \r", end="", flush=True)
             return
         print(
-            "\r\033[1mUSSD Code Running " + c + "\033[0m", end="", flush=True,
+            "\r\033[1mUSSD Code Running " + c + "\033[0m",
+            end="",
+            flush=True,
         )
         time.sleep(0.1)
 
 
 with Connection(
-    args.url, username=args.username, password=args.password,
+    args.url,
+    username=args.username,
+    password=args.password,
 ) as connection:
     client = Client(connection)
     for code in args.codes:
@@ -65,7 +73,6 @@ with Connection(
         else:
             print("Error: Cannot send USSD code")
             break
-
 
         # Wait for the response from the service provider.
         while int(client.ussd.status().get("result", "1")) >= 1:

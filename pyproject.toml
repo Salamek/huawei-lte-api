@@ -68,7 +68,26 @@ target-version = "py39"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["D"]  #  comments
+ignore = [
+  "D", # Comments
+  # https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+  # (keep order of ignores here same as ^there for maintainability)
+  # https://github.com/astral-sh/ruff/issues/8175
+  "W191",
+  "E111",
+  "E114",
+  "E117",
+  "D206",
+  "D300",
+  "Q000",
+  "Q001",
+  "Q002",
+  "Q003",
+  "COM812",
+  "COM819",
+  "ISC001",
+  "ISC002",
+]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 20

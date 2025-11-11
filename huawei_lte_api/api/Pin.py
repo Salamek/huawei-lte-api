@@ -7,6 +7,7 @@ from huawei_lte_api.ApiGroup import ApiGroup
 if TYPE_CHECKING:
     from huawei_lte_api.Session import GetResponseType, SetResponseType
 
+
 class Pin(ApiGroup):
     def status(self) -> GetResponseType:
         """
@@ -47,9 +48,7 @@ class Pin(ApiGroup):
         """
         return self._session.get("pin/save-pin")
 
-    def operate(self, operate_type: str = "0", current_pin: str | None = None,
-                new_pin: str | None = None, puk_code: str | None = None) \
-            -> SetResponseType:
+    def operate(self, operate_type: str = "0", current_pin: str | None = None, new_pin: str | None = None, puk_code: str | None = None) -> SetResponseType:
         """
         Perform an operation on the PIN.
 
@@ -69,9 +68,13 @@ class Pin(ApiGroup):
         >>> response = pin.operate(operate_type="1", current_pin="1234")
         >>> print(response)
         """
-        return self._session.post_set("pin/operate", {
-            "OperateType": operate_type,
-            "CurrentPin": current_pin,
-            "NewPin": new_pin,
-            "PukCode": puk_code,
-        }, is_encrypted=True)
+        return self._session.post_set(
+            "pin/operate",
+            {
+                "OperateType": operate_type,
+                "CurrentPin": current_pin,
+                "NewPin": new_pin,
+                "PukCode": puk_code,
+            },
+            is_encrypted=True,
+        )

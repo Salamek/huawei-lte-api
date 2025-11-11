@@ -42,9 +42,11 @@ class Diagnosis(ApiGroup):
         >>> response = diagnosis.set_diagnose_ping(host="example.com", timeout=5000)
         >>> print(response)
         """
-        return self._session.post_set("diagnosis/diagnose_ping", {
-            "Host": host,
-            "Timeout": timeout,
+        return self._session.post_set(
+            "diagnosis/diagnose_ping",
+            {
+                "Host": host,
+                "Timeout": timeout,
             },
         )
 
@@ -75,10 +77,12 @@ class Diagnosis(ApiGroup):
         >>> response = diagnosis.set_diagnose_traceroute(host="example.com", timeout=5000, max_hop_count=20)
         >>> print(response)
         """
-        return self._session.post_set("diagnosis/diagnose_traceroute", {
-            "Host": host,
-            "MaxHopCount": max_hop_count,
-            "Timeout": timeout,
+        return self._session.post_set(
+            "diagnosis/diagnose_traceroute",
+            {
+                "Host": host,
+                "MaxHopCount": max_hop_count,
+                "Timeout": timeout,
             },
         )
 

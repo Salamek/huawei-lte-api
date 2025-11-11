@@ -5,27 +5,32 @@ from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class Security(ApiGroup):
-
     def bridgemode(self) -> GetResponseType:
         return self._session.get("security/bridgemode")
 
     def get_firewall_switch(self) -> GetResponseType:
         return self._session.get("security/firewall-switch")
 
-    def set_firewall_switch(self,
-                            firewall: bool = True,
-                            ip_filter: bool = False,
-                            wan_ping_filter: bool = True,
-                            url_filter: bool = False,
-                            mac_filter: bool = False,
-                            ) -> SetResponseType:
-        return self._session.post_set("security/firewall-switch", OrderedDict((
-            ("FirewallMainSwitch", int(firewall)),
-            ("FirewallIPFilterSwitch", int(ip_filter)),
-            ("FirewallWanPortPingSwitch", int(wan_ping_filter)),
-            ("firewallurlfilterswitch", int(url_filter)),
-            ("firewallmacfilterswitch", int(mac_filter)),
-        )))
+    def set_firewall_switch(
+        self,
+        firewall: bool = True,
+        ip_filter: bool = False,
+        wan_ping_filter: bool = True,
+        url_filter: bool = False,
+        mac_filter: bool = False,
+    ) -> SetResponseType:
+        return self._session.post_set(
+            "security/firewall-switch",
+            OrderedDict(
+                (
+                    ("FirewallMainSwitch", int(firewall)),
+                    ("FirewallIPFilterSwitch", int(ip_filter)),
+                    ("FirewallWanPortPingSwitch", int(wan_ping_filter)),
+                    ("firewallurlfilterswitch", int(url_filter)),
+                    ("firewallmacfilterswitch", int(mac_filter)),
+                )
+            ),
+        )
 
     def mac_filter(self) -> GetResponseType:
         return self._session.get("security/mac-filter")
@@ -49,27 +54,40 @@ class Security(ApiGroup):
         return self._session.get("security/upnp")
 
     def set_upnp(self, enabled: bool) -> SetResponseType:
-        return self._session.post_set("security/upnp", {
-            "UpnpStatus": int(enabled),
-        })
+        return self._session.post_set(
+            "security/upnp",
+            {
+                "UpnpStatus": int(enabled),
+            },
+        )
 
     def dmz(self) -> GetResponseType:
         return self._session.get("security/dmz")
 
     def set_dmz(self, enabled: bool, ip_address: str) -> SetResponseType:
-        return self._session.post_set("security/dmz", OrderedDict((
-            ("DmzStatus", int(enabled)),
-            ("DmzIPAddress", ip_address),
-        )))
+        return self._session.post_set(
+            "security/dmz",
+            OrderedDict(
+                (
+                    ("DmzStatus", int(enabled)),
+                    ("DmzIPAddress", ip_address),
+                )
+            ),
+        )
 
     def sip(self) -> GetResponseType:
         return self._session.get("security/sip")
 
     def set_sip(self, enabled: bool, port: int) -> SetResponseType:
-        return self._session.post_set("security/sip", OrderedDict((
-            ("SipStatus", int(enabled)),
-            ("SipPort", port),
-        )))
+        return self._session.post_set(
+            "security/sip",
+            OrderedDict(
+                (
+                    ("SipStatus", int(enabled)),
+                    ("SipPort", port),
+                )
+            ),
+        )
 
     def feature_switch(self) -> GetResponseType:
         return self._session.get("security/feature-switch")

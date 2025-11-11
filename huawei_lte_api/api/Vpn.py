@@ -4,7 +4,6 @@ from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class Vpn(ApiGroup):
-
     def feature_switch(self) -> GetResponseType:
         return self._session.get("vpn/feature-switch")
 

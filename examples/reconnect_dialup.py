@@ -3,6 +3,7 @@
 Example code on how to reconnect dialup:
 python3 reconnect_dialup.py http://admin:PASSWORD@192.168.8.1/
 """
+
 from argparse import ArgumentParser
 
 from huawei_lte_api.Client import Client
@@ -27,5 +28,3 @@ with Connection(args.url, username=args.username, password=args.password) as con
         print("OK")
     else:
         print("Error")
-
-

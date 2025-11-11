@@ -44,14 +44,16 @@ class App(ApiGroup):
         >>> response = app.accept_privacypolicy(approve=True)
         >>> print(response)
         """
-        response = self._session.post_get("app/privacypolicy",
-                                      {
-                                          "data": {
-                                              "Approve": "2" if approve else "0",
-                                              "Liscence": "0",  # deliberate typo
-                                          },
-                                      },
-                                      is_json=True)
+        response = self._session.post_get(
+            "app/privacypolicy",
+            {
+                "data": {
+                    "Approve": "2" if approve else "0",
+                    "Liscence": "0",  # deliberate typo
+                },
+            },
+            is_json=True,
+        )
         error_code = response["errcode"]
         if error_code == 0:
             return "OK"

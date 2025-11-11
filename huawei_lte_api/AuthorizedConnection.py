@@ -10,12 +10,15 @@ if TYPE_CHECKING:
 
 
 class AuthorizedConnection(Connection):
-    def __init__(self, url: str,
-                 username: str|None = None,
-                 password: str|None = None,
-                 login_on_demand: bool = False,
-                 timeout: float|tuple[float, float]| None = None,
-                 requests_session: requests.Session|None = None) -> None:
+    def __init__(
+        self,
+        url: str,
+        username: str | None = None,
+        password: str | None = None,
+        login_on_demand: bool = False,
+        timeout: float | tuple[float, float] | None = None,
+        requests_session: requests.Session | None = None,
+    ) -> None:
         warnings.warn("AuthorizedConnection is deprecated, use Connection instead", DeprecationWarning, stacklevel=2)
         super().__init__(
             url,

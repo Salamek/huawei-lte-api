@@ -60,7 +60,7 @@ class Tools:
         blocks = math.ceil(len(b64data) / float(num))
         result_chunks = []
         for i in range(blocks):
-            block = b64data[i * num:(i + 1) * num]
+            block = b64data[i * num : (i + 1) * num]
             result_chunks.append(cipher.encrypt(block))
         result = hexlify(b"".join(result_chunks))
         if (len(result) & 1) == 0:
