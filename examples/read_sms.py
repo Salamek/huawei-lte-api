@@ -22,9 +22,6 @@ def main():
     with Connection(args.url, username=args.username, password=args.password) as connection:
         client = Client(connection)
 
-        # Utiliser l'objet Sms pour lire les SMS
-        sms = client.sms
-
         # Lire tous les SMS
         sms_messages = client.sms.get_sms_list()
 

@@ -7,10 +7,10 @@ class App(ApiGroup):
     def operatorinfo(self, lang: str = 'en_us') -> GetResponseType:
         """
         Get operator information.
-        
+
         :param lang: Language code (default is 'en_us').
         :return: Operator information.
-        
+
         Usage example:
         >>> app = App(session)
         >>> operator_info = app.operatorinfo()
@@ -21,10 +21,10 @@ class App(ApiGroup):
     def privacypolicy(self, lang: str = 'en_us') -> GetResponseType:
         """
         Get privacy policy.
-        
+
         :param lang: Language code (default is 'en_us').
         :return: Privacy policy.
-        
+
         Usage example:
         >>> app = App(session)
         >>> privacy_policy = app.privacypolicy()
@@ -35,10 +35,10 @@ class App(ApiGroup):
     def accept_privacypolicy(self, approve: bool = False) -> SetResponseType:
         """
         Accept or decline the privacy policy.
-        
+
         :param approve: Boolean indicating whether to approve the privacy policy (default is False).
         :return: "OK" if the operation is successful, raises ResponseErrorException otherwise.
-        
+
         Usage example:
         >>> app = App(session)
         >>> response = app.accept_privacypolicy(approve=True)

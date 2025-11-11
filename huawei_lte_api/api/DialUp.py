@@ -163,13 +163,13 @@ class DialUp(ApiGroup):
         Usage example:
         >>> dialup = DialUp(session)
         >>> response = dialup.create_profile(
-        >>>     name="NewProfile", 
-        >>>     username="user", 
-        >>>     password="pass", 
-        >>>     apn="internet", 
-        >>>     dialup_number="*99#", 
-        >>>     auth_mode=AuthModeEnum.PAP, 
-        >>>     ip_type=IpType.IPV4, 
+        >>>     name="NewProfile",
+        >>>     username="user",
+        >>>     password="pass",
+        >>>     apn="internet",
+        >>>     dialup_number="*99#",
+        >>>     auth_mode=AuthModeEnum.PAP,
+        >>>     ip_type=IpType.IPV4,
         >>>     is_default=True
         >>> )
         >>> print(response)
@@ -226,14 +226,14 @@ class DialUp(ApiGroup):
         Usage example:
         >>> dialup = DialUp(session)
         >>> response = dialup.update_profile(
-        >>>     index=1, 
-        >>>     name="UpdatedProfile", 
-        >>>     username="user", 
-        >>>     password="pass", 
-        >>>     apn="internet", 
-        >>>     dialup_number="*99#", 
-        >>>     auth_mode=AuthModeEnum.PAP, 
-        >>>     ip_type=IpType.IPV4, 
+        >>>     index=1,
+        >>>     name="UpdatedProfile",
+        >>>     username="user",
+        >>>     password="pass",
+        >>>     apn="internet",
+        >>>     dialup_number="*99#",
+        >>>     auth_mode=AuthModeEnum.PAP,
+        >>>     ip_type=IpType.IPV4,
         >>>     is_default=True
         >>> )
         >>> print(response)

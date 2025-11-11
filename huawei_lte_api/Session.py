@@ -4,7 +4,7 @@ import logging
 import re
 import urllib.parse
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union, Type, cast
+from typing import Any, Callable, Dict, Optional, Tuple, TypeVar, Union, Type, cast
 from urllib.parse import urlparse, urlunparse
 
 import requests
@@ -202,7 +202,7 @@ class Session:
                  ) -> GetResponseType:
         _LOGGER.debug("Sending XML request to endpoint %s: %s", endpoint, data)
         response = cast(
-            GetResponseType,
+            "GetResponseType",
             self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json)
         )
         _LOGGER.debug("Received XML response from endpoint %s: %s", endpoint, response)
@@ -218,7 +218,7 @@ class Session:
                  ) -> SetResponseType:
         _LOGGER.debug("Sending XML request to endpoint %s: %s", endpoint, data)
         response = cast(
-            SetResponseType,
+            "SetResponseType",
             self._post(endpoint, data, refresh_csrf, prefix, is_encrypted, is_json)
         )
         _LOGGER.debug("Received XML response from endpoint %s: %s", endpoint, response)
@@ -272,9 +272,9 @@ class Session:
         else:
             _LOGGER.debug('Failed to get CSRF from POST response headers')
 
-        response_data = cast(str, self._check_response_status(self._process_response_data(response)))
+        response_data = cast("str", self._check_response_status(self._process_response_data(response)))
 
-        return response_data
+        return response_data  # noqa: RET504 # complex enough
 
     def post_file(self,
                   endpoint: str,
@@ -311,7 +311,7 @@ class Session:
             timeout=self.timeout,
         )
 
-        return cast(dict, self._check_response_status(self._process_response_data(response)))
+        return cast("dict", self._check_response_status(self._process_response_data(response)))
 
     def _get_token(self) -> Optional[str]:
         try:
