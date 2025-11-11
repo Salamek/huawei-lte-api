@@ -78,12 +78,12 @@ with Connection(args.url, username=args.username, password=args.password) as con
         needed_band |= BANDS[band]
     if bands and orig_net_mode["LTEBand"] != f"{needed_band:x}":
         needs_lteband = True
-        # XXX: if we set the bands to "all" we get back a different LTEBand value covering
+        # if we set the bands to "all" we get back a different LTEBand value covering
         # all supported bands and not the "All Bands" one, so if the value is in the band
         # list assume we are already in "all" mode and don't need to do anything
         if needed_band == LTEBandEnum.ALL:
             net_mode_list = client.net.net_mode_list()
-            band_list_values = set(e["Value"].lower() for e in net_mode_list["LTEBandList"]["LTEBand"])
+            band_list_values = {e["Value"].lower() for e in net_mode_list["LTEBandList"]["LTEBand"]}
             if orig_net_mode["LTEBand"].lower() in band_list_values:
                 needs_lteband = False
 
@@ -101,9 +101,9 @@ with Connection(args.url, username=args.username, password=args.password) as con
         # and the router can jump to another one on its own and you need to run
         # this again to revert it.
         primary_lteband = BANDS[args.primary_lteband]
-        print("Setting primary LTE band to %s..." % args.primary_lteband)
+        print(f"Setting primary LTE band to {args.primary_lteband}...")
         client.net.set_net_mode(primary_lteband, new_network_band, new_network_mode)
-        print("Waiting for primary LTE band to change to %s..." % args.primary_lteband)
+        print("fWaiting for primary LTE band to change to {args.primary_lteband}...")
         while True:
             signal = client.device.signal()
             if signal["band"] == args.primary_lteband:
@@ -112,12 +112,12 @@ with Connection(args.url, username=args.username, password=args.password) as con
         needs_lteband = len(bands) > 1
 
     if needs_lteband:
-        print("Setting LTE bands to %s..." % bands)
+        print(f"Setting LTE bands to {bands}...")
         client.net.set_net_mode(new_network_lteband, new_network_band, new_network_mode)
         needs_mode = False
 
     if needs_mode:
-        print("Setting network mode to %s..." % args.mode)
+        print(f"Setting network mode to {args.mode}...")
         client.net.set_net_mode(new_network_lteband, new_network_band, new_network_mode)
 
     print("Done")

@@ -1,8 +1,12 @@
-from typing import Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.enums.dialup import AuthModeEnum, IpType
-from huawei_lte_api.Session import GetResponseType, SetResponseType
+
+if TYPE_CHECKING:
+    from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class DialUp(ApiGroup):
@@ -140,10 +144,10 @@ class DialUp(ApiGroup):
 
     def create_profile(self,
                        name: str,
-                       username: Optional[str] = None,
-                       password: Optional[str] = None,
-                       apn: Optional[str] = None,
-                       dialup_number: Optional[str] = None,
+                       username: str | None = None,
+                       password: str | None = None,
+                       apn: str | None = None,
+                       dialup_number: str | None = None,
                        auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
                        ip_type: IpType = IpType.IPV4_IPV6,
                        is_default: bool = False,
@@ -202,10 +206,10 @@ class DialUp(ApiGroup):
     def update_profile(self,
                        index: int,
                        name: str,
-                       username: Optional[str] = None,
-                       password: Optional[str] = None,
-                       apn: Optional[str] = None,
-                       dialup_number: Optional[str] = None,
+                       username: str | None = None,
+                       password: str | None = None,
+                       apn: str | None = None,
+                       dialup_number: str | None = None,
                        auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
                        ip_type: IpType = IpType.IPV4_IPV6,
                        is_default: bool = False,

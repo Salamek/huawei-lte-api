@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 import datetime
 from collections import OrderedDict
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Session import GetResponseType, SetResponseType
+
+if TYPE_CHECKING:
+    from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class SdCard(ApiGroup):
@@ -107,7 +111,7 @@ class SdCard(ApiGroup):
         """
         return self._session.get("sdcard/Check_file_exist")
 
-    def create_dir(self, name: str, current_path: str = "/", created: Optional[datetime.datetime] = None) -> SetResponseType:
+    def create_dir(self, name: str, current_path: str = "/", created: datetime.datetime | None = None) -> SetResponseType:
         """
         Create directory on the SD card
         :param name: Name of dir to create

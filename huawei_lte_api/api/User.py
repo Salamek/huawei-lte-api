@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import base64
+import contextlib
 import hashlib
 import time
-from types import TracebackType
-from typing import Optional, Type
+from typing import TYPE_CHECKING
 
 import requests
 
@@ -20,29 +22,31 @@ from huawei_lte_api.exceptions import (
     ResponseErrorLoginRequiredException,
     ResponseErrorNotSupportedException,
 )
-from huawei_lte_api.Session import GetResponseType, Session, SetResponseType
+
+if TYPE_CHECKING:
+    from types import TracebackType
+
+    from huawei_lte_api.Session import GetResponseType, Session, SetResponseType
 
 DEFAULT_USERNAME = "admin"
 
 
 class UserSession:
-    def __init__(self, session: Session, username: str = DEFAULT_USERNAME, password: Optional[str] = None):
+    def __init__(self, session: Session, username: str = DEFAULT_USERNAME, password: str | None = None) -> None:
         self.user = User(session)
-        self.user.login(username, password, True)
+        self.user.login(username, password, force_new_login=True)
 
     def close(self) -> None:
-        try:
+        with contextlib.suppress(ResponseErrorLoginRequiredException, ResponseErrorNotSupportedException):
             self.user.logout()
-        except (ResponseErrorLoginRequiredException, ResponseErrorNotSupportedException):
-            # Idempotency/nothing further to do, suppress
-            pass
 
-    def __enter__(self) -> "UserSession":
+
+    def __enter__(self) -> UserSession:
         return self
 
-    def __exit__(self, exc_type: Optional[Type[BaseException]],
-                 exc_value: Optional[BaseException],
-                 traceback: Optional[TracebackType]) -> None:
+    def __exit__(self, exc_type: type[BaseException] | None,
+                 exc_value: BaseException | None,
+                 traceback: TracebackType | None) -> None:
         self.close()
 
 
@@ -56,7 +60,7 @@ class User(ApiGroup):
         for i in range(tries):
             try:
                 return self.state_login()
-            except requests.exceptions.ConnectionError:
+            except requests.exceptions.ConnectionError:  # noqa: PERF203
                 # Some models reportedly close the connection if we attempt to access login state too soon after
                 # setting up the session etc. In that case, retry a few times. The error is reported to be
                 # ConnectionError: (
@@ -67,7 +71,7 @@ class User(ApiGroup):
 
         raise ResponseErrorException(message="Tries exhausted", code=0)
 
-    def _encode_password(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bytes:
+    def _encode_password(self, username: str, password: str | None, password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bytes:
         if not password:
             return b""
 
@@ -81,7 +85,7 @@ class User(ApiGroup):
 
         return base64.b64encode(password.encode("UTF-8"))
 
-    def _login(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
+    def _login(self, username: str, password: str | None, password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
         password_encoded = self._encode_password(username, password, password_type)
         try:
             result = self._session.post_set("user/login", {
@@ -109,12 +113,12 @@ class User(ApiGroup):
             }
 
             message = error_code_to_message.get(e.code, "Unknown")
-            raise error_code_to_exception.get(e.code, ResponseErrorException)(
-                f"{e.code}: {message}", e.code)
+            exc_msg = f"{e.code}: {message}"
+            raise error_code_to_exception.get(e.code, ResponseErrorException)(exc_msg, e.code) from e
 
         return result == ResponseEnum.OK.value
 
-    def login(self, username: str = DEFAULT_USERNAME, password: Optional[str] = None, force_new_login: bool = False) -> bool:
+    def login(self, username: str = DEFAULT_USERNAME, password: str | None = None, force_new_login: bool = False) -> bool:
         if username == "":  # <= 1.6.4 backwards compatibility
             username = DEFAULT_USERNAME
 

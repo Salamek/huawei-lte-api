@@ -1,28 +1,32 @@
+from __future__ import annotations
+
 import logging
 import warnings
-from types import TracebackType
-from typing import Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING
 from urllib.parse import urlparse
-
-import requests
 
 from huawei_lte_api.api.User import DEFAULT_USERNAME, UserSession
 from huawei_lte_api.Session import Session
+
+if TYPE_CHECKING:
+    from types import TracebackType
+
+    import requests
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class Connection(Session):
-    user_session: Optional[UserSession] = None
+    user_session: UserSession | None
 
     def __init__(self,
                  url: str,
-                 username: Optional[str] = None,
-                 password: Optional[str] = None,
+                 username: str|None = None,
+                 password: str|None = None,
                  login_on_demand: bool = False,
-                 timeout: Union[float, Tuple[float, float], None] = None,
-                 requests_session: Optional[requests.Session] = None,
-                 ):
+                 timeout: float|tuple[float, float]| None = None,
+                 requests_session: requests.Session|None = None,
+                 ) -> None:
         """
         :param requests_session: requests Session to use; if not None, closing it is the caller's responsibility
         """
@@ -43,11 +47,14 @@ class Connection(Session):
                 username or DEFAULT_USERNAME,
                 password,
             )
+        else:
+            self.user_session = None
 
         if login_on_demand:
             warnings.warn(
                 "login_on_demand is deprecated, and has no effect, please remove this parameter from your code! if  will get removed in next minor release.",
                 DeprecationWarning,
+                stacklevel=2,
             )
 
     def close(self) -> None:
@@ -59,10 +66,10 @@ class Connection(Session):
                 raise
         super().close()
 
-    def __enter__(self) -> "Connection":
+    def __enter__(self) -> Connection:
         return self
 
-    def __exit__(self, exc_type: Optional[Type[BaseException]],
-                 exc_value: Optional[BaseException],
-                 traceback: Optional[TracebackType]) -> None:
+    def __exit__(self, exc_type: type[BaseException]|None,
+                 exc_value: BaseException|None,
+                 traceback: TracebackType|None) -> None:
         self.close()

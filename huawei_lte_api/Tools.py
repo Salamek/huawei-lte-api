@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import base64
 import datetime
 import math
 from binascii import hexlify
-from collections.abc import Iterable, Iterator
-from typing import Optional, Tuple, TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 from Cryptodome.Cipher import PKCS1_OAEP, PKCS1_v1_5
 from Cryptodome.PublicKey.RSA import construct
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 T = TypeVar("T")
 
@@ -15,7 +19,7 @@ class Tools:
     datetime_format = "%Y-%m-%d %H:%M:%S"
 
     @staticmethod
-    def enforce_list_response(data: dict, singular_key_name: str, plural_key_name: Optional[str] = None) -> dict:
+    def enforce_list_response(data: dict, singular_key_name: str, plural_key_name: str | None = None) -> dict:
         """
         Make sure Hosts->Host is a list
         It may be returned as a single dict if only one is associated,
@@ -48,11 +52,12 @@ class Tools:
         }.get(rsa_padding)
 
         if not cipher_module or not num:
-            raise ValueError(f"Unknown rsa_padding value {rsa_padding}")
+            msg = f"Unknown rsa_padding value {rsa_padding}"
+            raise ValueError(msg)
 
         cipher = cipher_module.new(pubkey)
 
-        blocks = int(math.ceil(len(b64data) / float(num)))
+        blocks = math.ceil(len(b64data) / float(num))
         result_chunks = []
         for i in range(blocks):
             block = b64data[i * num:(i + 1) * num]
@@ -64,7 +69,7 @@ class Tools:
         return b"0" + result
 
     @staticmethod
-    def strip_dict(filtered_dict: dict, wanted_keys: Tuple[str, ...]) -> dict:
+    def strip_dict(filtered_dict: dict, wanted_keys: tuple[str, ...]) -> dict:
         """
         Strips unwanted items from dict and keeps only wanted_keys
         :param filtered_dict: Dict to filter

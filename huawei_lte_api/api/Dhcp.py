@@ -1,7 +1,11 @@
-from typing import Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Session import GetResponseType, SetResponseType
+
+if TYPE_CHECKING:
+    from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class Dhcp(ApiGroup):
@@ -70,8 +74,8 @@ class Dhcp(ApiGroup):
         dhcp_end_ip_range: int = 200,
         dhcp_lease_time: int = 86400,
         dns_status: bool = True,
-        primary_dns: Optional[str] = None,
-        secondary_dns: Optional[str] = None,
+        primary_dns: str | None = None,
+        secondary_dns: str | None = None,
         show_dns_setting: bool = True,
     ) -> SetResponseType:
         """

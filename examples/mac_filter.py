@@ -28,7 +28,8 @@ args = parser.parse_args()
 
 # Validate that we have the same number of MACs and hostnames
 if len(args.mac) != len(args.hostname):
-    raise ValueError("The number of MAC addresses and hostnames must be the same")
+    msg = "The number of MAC addresses and hostnames must be the same"
+    raise ValueError(msg)
 
 with Connection(args.url, username=args.username, password=args.password) as connection:
     wlan = WLan(connection)

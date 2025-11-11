@@ -1,14 +1,19 @@
+from __future__ import annotations
+
 import dataclasses
 import datetime
 import warnings
 from collections import OrderedDict
-from collections.abc import Iterator
-from typing import List, Optional
+from typing import TYPE_CHECKING
 
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.enums.sms import BoxTypeEnum, PriorityEnum, SaveModeEnum, SendTypeEnum, SortTypeEnum, StatusEnum, TextModeEnum, TypeEnum
-from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.Tools import Tools
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 @dataclasses.dataclass
@@ -18,14 +23,14 @@ class Message:
     phone: str  # Phone number of sender
     content: str  # Text content of SMS
     date_time: datetime.datetime  # Datetime of SMS send/receive
-    sca: Optional[str]  # Message center number in INTL format eg. +420603052000
+    sca: str | None  # Message center number in INTL format eg. +420603052000
     save_type: SaveModeEnum  # How to save received SMS in device
     priority: PriorityEnum  # What priority this SMS have
     type: TypeEnum  # Type of SMS
     text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT  # Type of encoding of SMS
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Message":
+    def from_dict(cls, data: dict) -> Message:
         date_time = data.get("Date")
         return Message(
             index=int(data.get("Index", 0)),
@@ -82,6 +87,7 @@ class Sms(ApiGroup):
             warnings.warn(
                 "get_sms_list: Passing int into sort_type is deprecated and will be removed in next minor version! Please use enums.sms.SortTypeEnum instead!.",
                 DeprecationWarning,
+                stacklevel=2,
             )
             sort_type = SortTypeEnum(sort_type)
 
@@ -115,12 +121,12 @@ class Sms(ApiGroup):
         })
 
     def save_sms(self,
-                 phone_numbers: List[str],
+                 phone_numbers: list[str],
                  message: str,
                  sms_index: int = -1,
-                 sca: Optional[str] = None,
+                 sca: str | None = None,
                  text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT,
-                 from_date: Optional[datetime.datetime] = None,
+                 from_date: datetime.datetime | None = None,
                  ) -> SetResponseType:
         """
 
@@ -134,7 +140,7 @@ class Sms(ApiGroup):
         """
 
         if from_date is None:
-            from_date = datetime.datetime.utcnow()
+            from_date = datetime.datetime.now(tz=datetime.timezone.utc)
 
         return self._session.post_set("sms/save-sms", OrderedDict((
             ("Index", sms_index),
@@ -147,12 +153,12 @@ class Sms(ApiGroup):
         )))
 
     def send_sms(self,
-                 phone_numbers: List[str],
+                 phone_numbers: list[str],
                  message: str,
                  sms_index: int = -1,
-                 sca: Optional[str] = None,
+                 sca: str | None = None,
                  text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT,
-                 from_date: Optional[datetime.datetime] = None,
+                 from_date: datetime.datetime | None = None,
                  ) -> SetResponseType:
         """
 
@@ -165,7 +171,7 @@ class Sms(ApiGroup):
         :return:
         """
         if from_date is None:
-            from_date = datetime.datetime.utcnow()
+            from_date = datetime.datetime.now(tz=datetime.timezone.utc)
         return self._session.post_set("sms/send-sms", OrderedDict((
             ("Index", sms_index),
             ("Phones", {"Phone": phone_numbers}),
@@ -250,7 +256,7 @@ class Sms(ApiGroup):
                      pdu: str,
                      length: int,
                      sms_index: int = -1,
-                     sca: Optional[str] = None,
+                     sca: str | None = None,
                      validity: int = 10752,
                      status_report: bool = False,
                      save_mode: SaveModeEnum = SaveModeEnum.LOCAL,
@@ -304,7 +310,7 @@ class Sms(ApiGroup):
     def get_messages(self,
                      page: int = 1,
                      box_type: BoxTypeEnum = BoxTypeEnum.LOCAL_INBOX,
-                     read_count: Optional[int] = None,
+                     read_count: int | None = None,
                      sort_type: SortTypeEnum = SortTypeEnum.DATE,
                      ascending: bool = False,
                      unread_preferred: bool = False,

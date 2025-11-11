@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 import json
 import logging
 import re
 import urllib.parse
 from email.message import EmailMessage
-from types import TracebackType
-from typing import Any, Callable, Dict, Optional, Tuple, Type, TypeVar, Union, cast
+from typing import TYPE_CHECKING, Any, Callable, TypeVar, cast
 from urllib.parse import urlparse, urlunparse
 
 import requests
@@ -22,19 +23,23 @@ from huawei_lte_api.exceptions import (
 )
 from huawei_lte_api.Tools import Tools
 
+if TYPE_CHECKING:
+    from types import TracebackType
+
 _LOGGER = logging.getLogger(__name__)
 
 T = TypeVar("T")
-GetResponseType = Dict[str, Any]
+GetResponseType = dict[str, Any]
 SetResponseType = str
 
 
 def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
-    def wrapped(*args: Any, **kw: Any) -> T:
+    def wrapped(*args: str | dict | list | int | None | bool | Session, **kw: str | dict | list | int | None | bool) -> T:
         try:
             return fn(*args, **kw)
         except ResponseErrorLoginCsrfException:
-            args[0].reload()
+            if isinstance(args[0], Session):
+                args[0].reload()
             return fn(*args, **kw)
 
 
@@ -44,14 +49,14 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
 class Session:
     encryption_key = None
     csrf_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
-    request_verification_tokens = []  # type: List[str]
+    request_verification_tokens: list[str]
 
     def __init__(self,
                  url: str,
-                 timeout: Union[float, Tuple[float, float], None] = None,
-                 requests_session: Optional[requests.Session] = None,
-                 ):
-
+                 timeout: float | tuple[float, float] | None = None,
+                 requests_session: requests.Session | None = None,
+                 ) -> None:
+        self.request_verification_tokens = []
         # Auth info embedded in the URL may reportedly cause problems, strip it
         parsed_url = urlparse(url)
         clear_url = urlunparse((
@@ -84,7 +89,7 @@ class Session:
         self._initialize_csrf_tokens_and_session()
 
     @staticmethod
-    def _create_request_xml(data: Union[dict, list, int]) -> bytes:
+    def _create_request_xml(data: dict | list | int) -> bytes:
         wrapped_in_request = {
             "request": data,
         }
@@ -103,9 +108,9 @@ class Session:
             msg = EmailMessage()
             msg["Content-Type"] = content_type
             content_type = msg.get_content_type()
-            if content_type.endswith("/json") or content_type.endswith("+json"):
+            if content_type.endswith(("/json", "+json")):
                 is_json = True
-            elif content_type.endswith("/xml") or content_type.endswith("+xml"):
+            elif content_type.endswith(("/xml", "+xml")):
                 is_json = False
             # Others are not conclusive, e.g. text/html may have JSON or XML
 
@@ -129,7 +134,7 @@ class Session:
             raise
 
     @staticmethod
-    def _check_response_status(data: dict) -> Union[dict, str]:
+    def _check_response_status(data: dict) -> dict | str:
         error_code_to_message = {
             ResponseCodeEnum.ERROR_SYSTEM_BUSY.value: "System busy",
             ResponseCodeEnum.ERROR_SYSTEM_NO_RIGHTS.value: "No rights (needs login)",
@@ -157,12 +162,13 @@ class Session:
             if not message:
                 message = error_code_to_message.get(error_code, "Unknown")
 
+            exc_msg = f"{error_code}: {message}"
             raise error_code_to_exception.get(error_code, ResponseErrorException)(
-                f"{error_code}: {message}",
+                exc_msg,
                 error_code,
             )
 
-        response = data["response"] if "response" in data else data
+        response = data.get("response", data)
         return response if response is not None else {}
 
     def _initialize_csrf_tokens_and_session(self) -> None:
@@ -190,12 +196,13 @@ class Session:
         rsa_e = pubkey_data.get("encpubkeye")
         rsa_n = pubkey_data.get("encpubkeyn")
         if not rsa_n or not rsa_e:
-            raise ValueError("No pub key was found")
+            msg = "No pub key was found"
+            raise ValueError(msg)
         return Tools.rsa_encrypt(rsa_e, rsa_n, data, rsa_padding)
 
     def post_get(self,
                  endpoint: str,
-                 data: Union[dict, list, int, None] = None,
+                 data: dict | list | int | None = None,
                  refresh_csrf: bool = False,
                  prefix: str = "api",
                  is_encrypted: bool = False,
@@ -211,7 +218,7 @@ class Session:
 
     def post_set(self,
                  endpoint: str,
-                 data: Union[dict, list, int, None] = None,
+                 data: dict | list | int | None = None,
                  refresh_csrf: bool = False,
                  prefix: str = "api",
                  is_encrypted: bool = False,
@@ -228,12 +235,12 @@ class Session:
     @_try_or_reload_and_retry
     def _post(self,
               endpoint: str,
-              data: Union[dict, list, int, None] = None,
+              data: dict | list | int | None = None,
               refresh_csrf: bool = False,
               prefix: str = "api",
               is_encrypted: bool = False,
               is_json: bool = False,
-              ) -> Union[GetResponseType, SetResponseType]:
+              ) -> GetResponseType | SetResponseType:
 
         headers = {}
 
@@ -249,10 +256,9 @@ class Session:
             else:
                 headers["__RequestVerificationToken"] = self.request_verification_tokens[0]
 
-        if data:
-            data_encoded = json.dumps(data).encode() if is_json else self._create_request_xml(data)
-        else:
-            data_encoded = b""
+
+        data_encoded = json.dumps(data).encode() if is_json else self._create_request_xml(data) if data else b""
+
         response = self.requests_session.post(
             self._build_final_url(endpoint, prefix),
             data=self._encrypt_data(data_encoded) if is_encrypted else data_encoded,
@@ -280,7 +286,7 @@ class Session:
     def post_file(self,
                   endpoint: str,
                   files: dict,
-                  data: Optional[dict] = None,
+                  data: dict | None = None,
                   prefix: str = "api",
                   ) -> str:
 
@@ -300,7 +306,7 @@ class Session:
         return response.content.decode("UTF-8").lower()
 
     @_try_or_reload_and_retry
-    def get(self, endpoint: str, params: Optional[dict] = None, prefix: str = "api") -> dict:
+    def get(self, endpoint: str, params: dict | None = None, prefix: str = "api") -> dict:
         headers = {}
         if len(self.request_verification_tokens) == 1:
             headers["__RequestVerificationToken"] = self.request_verification_tokens[0]
@@ -314,7 +320,7 @@ class Session:
 
         return cast("dict", self._check_response_status(self._process_response_data(response)))
 
-    def _get_token(self) -> Optional[str]:
+    def _get_token(self) -> str | None:
         try:
             data = self.get("webserver/token")
             return data["token"]
@@ -338,10 +344,10 @@ class Session:
         if not self._custom_requests_session:
             self.requests_session.close()
 
-    def __enter__(self) -> "Session":
+    def __enter__(self) -> Session:
         return self
 
-    def __exit__(self, exc_type: Optional[Type[BaseException]],
-                 exc_value: Optional[BaseException],
-                 traceback: Optional[TracebackType]) -> None:
+    def __exit__(self, exc_type: type[BaseException] | None,
+                 exc_value: BaseException | None,
+                 traceback: TracebackType | None) -> None:
         self.close()

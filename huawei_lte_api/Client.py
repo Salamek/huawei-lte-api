@@ -77,7 +77,7 @@ from huawei_lte_api.usermanual.PublicSysResources import PublicSysResources as P
 
 
 class Client:
-    def __init__(self, connection: Connection):  # pylint: disable=too-many-statements
+    def __init__(self, connection: Connection) -> None:
         self.monitoring = Monitoring(connection)
         self.security = Security(connection)
         self.webserver = WebServer(connection)

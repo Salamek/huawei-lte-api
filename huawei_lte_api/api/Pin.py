@@ -1,8 +1,11 @@
-from typing import Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Session import GetResponseType, SetResponseType
 
+if TYPE_CHECKING:
+    from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 class Pin(ApiGroup):
     def status(self) -> GetResponseType:
@@ -44,8 +47,8 @@ class Pin(ApiGroup):
         """
         return self._session.get("pin/save-pin")
 
-    def operate(self, operate_type: str = "0", current_pin: Optional[str] = None,
-                new_pin: Optional[str] = None, puk_code: Optional[str] = None) \
+    def operate(self, operate_type: str = "0", current_pin: str | None = None,
+                new_pin: str | None = None, puk_code: str | None = None) \
             -> SetResponseType:
         """
         Perform an operation on the PIN.

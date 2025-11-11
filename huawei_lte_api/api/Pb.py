@@ -114,7 +114,7 @@ class Pb(ApiGroup):
         """
 
         class Node:
-            def __init__(self, _name: str):
+            def __init__(self, _name: str) -> None:
                 self._name = _name
 
             def __str__(self) -> str:

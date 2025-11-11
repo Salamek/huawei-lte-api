@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from collections import OrderedDict
-from typing import Union
+from typing import TYPE_CHECKING
 
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.enums.net import NetworkModeEnum
-from huawei_lte_api.Session import GetResponseType, SetResponseType
+
+if TYPE_CHECKING:
+    from huawei_lte_api.enums.net import NetworkModeEnum
+    from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class Net(ApiGroup):
@@ -33,7 +37,7 @@ class Net(ApiGroup):
         """
         return self._session.get("net/net-mode")
 
-    def set_net_mode(self, lteband: Union[str, int], networkband: Union[int, str], networkmode: Union[NetworkModeEnum, str]) -> SetResponseType:
+    def set_net_mode(self, lteband: str | int, networkband: int | str, networkmode: NetworkModeEnum | str) -> SetResponseType:
         """
         Set the network mode.
 

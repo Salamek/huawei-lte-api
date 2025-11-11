@@ -12,7 +12,7 @@ from huawei_lte_api.Client import Client
 from huawei_lte_api.Connection import Connection
 
 
-def main():
+def main() -> None:
     parser = ArgumentParser()
     parser.add_argument("url", type=str)
     parser.add_argument("--username", type=str)

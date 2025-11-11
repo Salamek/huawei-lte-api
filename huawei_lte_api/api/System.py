@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import cast
 
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType
@@ -21,14 +21,14 @@ class System(ApiGroup):
             is_json=True,
         )
 
-    def onlinestate(self, devid: str = "all") -> List[GetResponseType]:
+    def onlinestate(self, devid: str = "all") -> list[GetResponseType]:
         return cast(
-            "List[GetResponseType]",
+            "list[GetResponseType]",
             self._session.get("system/onlinestate", {"devid": devid}),
         )
 
-    def hostinfo(self) -> List[GetResponseType]:
+    def hostinfo(self) -> list[GetResponseType]:
         return cast(
-            "List[GetResponseType]",
+            "list[GetResponseType]",
             self._session.get("system/HostInfo"),
         )

@@ -1,12 +1,17 @@
+from __future__ import annotations
+
 import dataclasses
 from collections import OrderedDict
-from collections.abc import Iterable
-from typing import Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.enums.wlan import AuthModeEnum, WepEncryptModeEnum, WpaEncryptModeEnum
-from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.Tools import Tools
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 # Constants for repeated string patterns
 WIFI_MAC_FILTER_MAC_TEMPLATE = "WifiMacFilterMac{}"
@@ -18,18 +23,18 @@ class WLanSettings:
     index: int
     enabled: bool
     ssid: str
-    mac: Optional[str]
+    mac: str | None
     broadcast: bool
     auth_mode: str
-    id: Optional[str]
-    radius_key: Optional[str]
+    id: str | None
+    radius_key: str | None
     wpa_encryption_modes: str
     wep_key_index: int
     guest_off_time: int
     is_guest_network: bool
 
     @classmethod
-    def from_dict(cls, data: dict) -> "WLanSettings":
+    def from_dict(cls, data: dict) -> WLanSettings:
         return WLanSettings(
             index=int(data.get("Index", 0)),
             enabled=data.get("WifiEnable") == "1",
@@ -174,7 +179,7 @@ class WLan(ApiGroup):
     def wps_appin(self) -> GetResponseType:
         return self._session.get("wlan/wps-appin")
 
-    def set_wps_appin(self, wpsappintype: int = 0, wpsappin: Optional[int] = None) -> SetResponseType:
+    def set_wps_appin(self, wpsappintype: int = 0, wpsappin: int | None = None) -> SetResponseType:
         return self._session.post_set("wlan/wps-appin", OrderedDict((
             ("wpsappintype", wpsappintype),
             ("wpsappin", str(wpsappin) if wpsappin is not None else ""),
@@ -229,7 +234,7 @@ class WLan(ApiGroup):
 
         return self.wifi_network_switch(status, {"is_guest_network": True})
 
-    def find_wlan_settings(self, criteria: dict) -> List[WLanSettings]:
+    def find_wlan_settings(self, criteria: dict) -> list[WLanSettings]:
         """
         Finds WLanSettings by provided criteria
         :param criteria: dict of key: value
@@ -247,7 +252,7 @@ class WLan(ApiGroup):
         """
         return self.set_multi_basic_settings([item.to_dict() for item in settings])
 
-    def wifi_network_switch(self, status: bool, criteria: Optional[dict] = None) -> SetResponseType:
+    def wifi_network_switch(self, status: bool, criteria: dict | None = None) -> SetResponseType:
         """
         Turn on/off Wi-Fi network by criteria, by default matches all wlans
         :param status: True->on, False->off
@@ -296,7 +301,7 @@ class WLan(ApiGroup):
     def guesttime_setting(self) -> GetResponseType:
         return self._session.get("wlan/guesttime-setting")
 
-    def filter_mac_addresses(self, mac_list: List[str], hostname_list: List[str],
+    def filter_mac_addresses(self, mac_list: list[str], hostname_list: list[str],
                              ssid_index: str = "0", filter_status: str = "2") -> SetResponseType:
         """
         Add multiple MAC addresses to the filter list
@@ -316,7 +321,8 @@ class WLan(ApiGroup):
             )
         """
         if len(mac_list) != len(hostname_list):
-            raise ValueError("The number of MAC addresses and hostnames must be the same")
+            msg = "The number of MAC addresses and hostnames must be the same"
+            raise ValueError(msg)
 
         clients = {
             "Index": ssid_index,
@@ -330,9 +336,9 @@ class WLan(ApiGroup):
 
         return self.set_multi_macfilter_settings([clients])
 
-    def _extract_mac_hostname_pairs(self, mac_list_dict: Optional[Dict[str, str]]) -> List[Dict[str, str]]:
+    def _extract_mac_hostname_pairs(self, mac_list_dict: dict[str, str] | None) -> list[dict[str, str]]:
         """Helper method to extract MAC address and hostname pairs from response dictionary"""
-        devices: List[Dict[str, str]] = []
+        devices: list[dict[str, str]] = []
         if not isinstance(mac_list_dict, dict):
             return devices
 
@@ -350,14 +356,14 @@ class WLan(ApiGroup):
 
         return devices
 
-    def get_filtered_devices(self) -> List[Dict[str, Any]]:
+    def get_filtered_devices(self) -> list[dict[str, Any]]:
         """
         Get a structured list of MAC addresses in the filter lists (both blacklist and whitelist)
 
         :return: List of dictionaries containing filtered device information
         """
         response = self.multi_macfilter_settings_ex()
-        result: List[Dict[str, Any]] = []
+        result: list[dict[str, Any]] = []
 
         if "Ssids" not in response or "Ssid" not in response["Ssids"]:
             return result
@@ -385,7 +391,7 @@ class WLan(ApiGroup):
 
         return result
 
-    def get_filter_status(self) -> Dict[str, Union[bool, str]]:
+    def get_filter_status(self) -> dict[str, bool | str]:
         """
         Get the current MAC filter status (enabled/disabled and mode)
 

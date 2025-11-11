@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from argparse import ArgumentParser
 from time import sleep
 
@@ -52,7 +54,7 @@ while failing:
                 failing = False
             else:
                 sleep(60)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001, PERF203
         print("Failed with exception: " + str(e) + ", sleeping 60s")
         sleep(60)
 

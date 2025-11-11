@@ -76,18 +76,26 @@ max-complexity = 20
 
 [tool.ruff.lint.pylint]
 allow-magic-value-types = ["int", "str"]
-max-args = 8
+max-args = 10
 max-branches = 16
 max-returns = 10
 
 
 [tool.ruff.lint.per-file-ignores]
-"huawei_lte_api/*" = ["N999"]
+"huawei_lte_api/*" = ["N999", "FBT001", "FBT002"]  # fixing FBT001 & FBT002 =boolean typed arguments is BC, ignore for now
+"examples/*" = ["T201", "T203"]  # print, pprint
+"huawei_lte_api/exceptions.py" = ["N818"]  # Wrong exception suffix, should be Error instead of Exception, add *Error with BC like this class MissingFieldError(MissingFieldException): mark *Exception deprecated
+"huawei_lte_api/api/User.py" = ["PYI034"]  # PYI034 `__enter__` methods in classes like `UserSession` usually return `self` at runtime, fixing this requires typing_extensions for py3.9... so lets wait a bit till we drop py3.9 support
+"huawei_lte_api/Session.py" = ["PYI034"]  # PYI034 `__enter__` methods in classes like `UserSession` usually return `self` at runtime, fixing this requires typing_extensions for py3.9... so lets wait a bit till we drop py3.9 support
+"huawei_lte_api/Connection.py" = ["PYI034"]  # PYI034 `__enter__` methods in classes like `UserSession` usually return `self` at runtime, fixing this requires typing_extensions for py3.9... so lets wait a bit till we drop py3.9 support
+"huawei_lte_api/Client.py" = ["PLR0915"]  # PLR0915 Too many statements
+"huawei_lte_api/api/Sms.py" = ["DTZ005"]  # DTZ005 naive datetimes used, needs testing if we want to use timezone avare datetimes
+"huawei_lte_api/api/SdCard.py" = ["DTZ005"]  # DTZ005 naive datetimes used, needs testing if we want to use timezone avare datetimes
+"huawei_lte_api/Tools.py" = ["DTZ007"]  # DTZ007 naive datetimes used, needs testing if we want to use timezone avare datetimes
 "tests/*" = ["S101", "PLR2004"]  # Use of assert detected
 
 
 [tool.mypy]
-target-version = "py39"
 files = ["huawei_lte_api", "tests"]
 python_version = 3.9
 strict = true

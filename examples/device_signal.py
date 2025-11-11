@@ -5,6 +5,7 @@ Display 4G/5G modem signal strength using vertical bars and show operator + acce
 Example usage:
 python3 signal_bars.py http://admin:PASSWORD@192.168.8.1/
 """
+from __future__ import annotations
 
 import re
 from argparse import ArgumentParser
@@ -21,13 +22,13 @@ SIGNAL_LEVELS = {
     5: "▂▃▄▅▇",
 }
 
-def parse_dbm(value):
+def parse_dbm(value: str | None) -> int | None:
     if value is None:
         return None
-    match = re.search(r"-?\d+", str(value))
+    match = re.search(r"-?\d+", value)
     return int(match.group()) if match else None
 
-def get_signal_level(rsrp: int) -> int:
+def get_signal_level(rsrp: int | None) -> int:
     if rsrp is None:
         return 0
     if rsrp >= -80:
@@ -58,7 +59,7 @@ def generate_signal_bars(level: int, total: int = 5) -> str:
         result.append(line.rstrip())
     return "\n".join(result)
 
-def main():
+def main() -> None:
     parser = ArgumentParser()
     parser.add_argument("url", type=str)
     parser.add_argument("--username", type=str)
@@ -92,7 +93,6 @@ def main():
         sinr = signal_info.get("sinr")
 
         level = get_signal_level(rsrp)
-#        bars = generate_signal_bars(level)
         bars = SIGNAL_LEVELS[level]
 
         operator_name = plmn_info.get("FullName") or plmn_info.get("ShortName") or "Unknown"
@@ -115,7 +115,7 @@ def main():
 
         # Display
         print(f"{operator_name} {readable_mode} {bars}")
-#        print(bars)
+
         print(f"  RSRP: {signal_info.get('rsrp')}")
         if rsrq:
             print(f"  RSRQ: {rsrq}")
