@@ -8,7 +8,7 @@ test:debian:
   stage: test
   script:
     - apt-get update -qy
-    - apt-get install -y python3-setuptools python3-pytest-runner python3-pytest python3-pytest-cov python3-xmltodict python3-requests python3-pycryptodome
+    - apt-get install -y python3-setuptools python3-venv python3-pytest-runner python3-pytest python3-pytest-cov python3-xmltodict python3-requests python3-pycryptodome
     - python3 -m venv .venv
     - ./.venv/bin/pip install .[dev,test]
     - ./.venv/bin/ruff check .
@@ -27,7 +27,7 @@ test:archlinux:
     - ./.venv/bin/pip install .[dev,test]
     - ./.venv/bin/ruff check .
     - ./.venv/bin/ruff format --check .
-    - ./.venv/bin/mypy .
+    - ./.venv/bin/mypy . --python-version "$(python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")"
     - ./.venv/bin/pytest .
 
   tags:
