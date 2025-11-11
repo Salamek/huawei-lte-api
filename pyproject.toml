@@ -64,7 +64,6 @@ exclude = ["tests*", "examples*"]
 
 [tool.ruff]
 line-length = 170
-target-version = "py39"
 
 [tool.ruff.lint]
 select = ["ALL"]
