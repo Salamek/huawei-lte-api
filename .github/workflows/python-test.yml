@@ -22,4 +22,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install .[dev,test]
     - name: Test
-      run: ./code-check.sh
+      run: |
+        ruff check .
+        mypy . --python-version ${{ matrix.python-version }}
+        pytest .
