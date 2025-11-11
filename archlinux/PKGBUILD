@@ -5,7 +5,7 @@ pkgrel=1
 arch=('any')
 license=('LGPL-3.0')
 url='https://github.com/Salamek/huawei-lte-api'
-makedepends=('python-setuptools')
+makedepends=(python-build python-installer python-wheel python-setuptools)
 depends=(
     'python'
     'python-xmltodict'

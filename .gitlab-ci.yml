@@ -13,7 +13,7 @@ test:debian:
     - ./.venv/bin/pip install .[dev,test]
     - ./.venv/bin/ruff check .
     - ./.venv/bin/ruff format --check .
-    - ./.venv/bin/mypy . --python-version "$(python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")"
+    - ./.venv/bin/mypy . --python-version "$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")"
     - ./.venv/bin/pytest .
 
   tags:
@@ -51,7 +51,7 @@ package:debian:
 package:archlinux:
   stage: package
   script:
-    - pacman -Sy python-pip sudo openssh binutils fakeroot python-xmltodict python-requests python-pycryptodomex python-setuptools base-devel --noconfirm
+    - pacman -Sy python-pip sudo openssh binutils fakeroot python-xmltodict python-requests python-pycryptodomex python-setuptools python-build python-installer base-devel --noconfirm
     - useradd -m -G users -s /bin/bash package
     - chown -R package:users archlinux
     - cd archlinux
