@@ -8,7 +8,7 @@ test:debian:
   stage: test
   script:
     - apt-get update -qy
-    - apt-get install -y python3-setuptools python3-pytest-runner python3-pytest python3-pytest-cov python3-xmltodict python3-requests python3-pycryptodome
+    - apt-get install -y python3-setuptools python3-venv python3-pytest-runner python3-pytest python3-pytest-cov python3-xmltodict python3-requests python3-pycryptodome
     - python3 -m venv .venv
     - ./.venv/bin/pip install .[dev,test]
     - ./.venv/bin/ruff check .
@@ -21,13 +21,15 @@ test:debian:
 
 test:archlinux:
   stage: test
+  variables:
+    PY_VER: "$(python -c 'import sys; print(f\"{sys.version_info.major}.{sys.version_info.minor}\")')"
   script:
     - pacman -Sy python python-setuptools python-pytest python-pytest-cov python-xmltodict python-requests python-pycryptodomex --noconfirm
     - python3 -m venv .venv
     - ./.venv/bin/pip install .[dev,test]
     - ./.venv/bin/ruff check .
     - ./.venv/bin/ruff format --check .
-    - ./.venv/bin/mypy .
+    - ./.venv/bin/mypy . --python-version "$PY_VER"
     - ./.venv/bin/pytest .
 
   tags:
