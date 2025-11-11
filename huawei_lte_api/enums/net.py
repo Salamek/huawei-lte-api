@@ -39,13 +39,14 @@ class NetworkBandEnum(enum.IntEnum):
     BC14 = 0x80000000
     UMTS_B8_900 = 0x2000000000000
 
-    ALL = 0x3fffffff
+    ALL = 0x3FFFFFFF
     """Use alone, do not 'or' this with others."""
 
 
 @enum.unique
 class LTEBandEnum(enum.IntEnum):
     """For other values besides, see set_net_mode docs."""
+
     B1 = 0x01
     B3 = 0x04
     B7 = 0x40
@@ -54,5 +55,5 @@ class LTEBandEnum(enum.IntEnum):
     B28 = 0x8000000
     B38 = 0x2000000000
     B40 = 0x8000000000
-    ALL = 0x7fffffffffffffff
+    ALL = 0x7FFFFFFFFFFFFFFF
     """Use alone, do not 'or' this with others."""

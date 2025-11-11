@@ -11,12 +11,10 @@ if TYPE_CHECKING:
 
 
 class SdCard(ApiGroup):
-
     def dlna_setting(self) -> GetResponseType:
         return self._session.get("sdcard/dlna-setting")
 
-    def set_dlna_setting(self, enabled: bool, share_all: bool,
-                         share_path: str = "/") -> SetResponseType:
+    def set_dlna_setting(self, enabled: bool, share_all: bool, share_path: str = "/") -> SetResponseType:
         """
         Sets DLNA settings
         :param enabled: is DLNA enabled
@@ -24,11 +22,14 @@ class SdCard(ApiGroup):
         :param share_path: What path to share defaults to /
         :return:
         """
-        return self._session.post_set("sdcard/dlna-setting", {
-            "enabled": int(enabled),
-            "sharepath": share_path,
-            "shareallpath": int(share_all),
-        })
+        return self._session.post_set(
+            "sdcard/dlna-setting",
+            {
+                "enabled": int(enabled),
+                "sharepath": share_path,
+                "shareallpath": int(share_all),
+            },
+        )
 
     def sdcard(self) -> GetResponseType:
         """
@@ -40,12 +41,15 @@ class SdCard(ApiGroup):
     def sdcardsamba(self) -> GetResponseType:
         return self._session.get("sdcard/sdcardsamba")
 
-    def set_sdcardsamba(self, enabled: bool,
-                        server_name: str = "homerouter.cpe",
-                        server_description: str = "samba server",
-                        workgroup_name: str = "WORKGROUP",
-                        anonymous_access: bool = False,
-                        printer_enabled: bool = True) -> SetResponseType:
+    def set_sdcardsamba(
+        self,
+        enabled: bool,
+        server_name: str = "homerouter.cpe",
+        server_description: str = "samba server",
+        workgroup_name: str = "WORKGROUP",
+        anonymous_access: bool = False,
+        printer_enabled: bool = True,
+    ) -> SetResponseType:
         """
         Enable file sharing using SMB
         :return:
@@ -57,36 +61,41 @@ class SdCard(ApiGroup):
         :param printer_enabled: enable printer
         :return:
         """
-        return self._session.post_set("sdcard/sdcardsamba", OrderedDict((
-            ("enabled", int(enabled)),
-            ("servername", server_name),
-            ("serverdescription", server_description),
-            ("workgroupname", workgroup_name),
-            ("anonymousaccess", int(anonymous_access)),
-            ("printerenable", int(printer_enabled)),
-        )))
+        return self._session.post_set(
+            "sdcard/sdcardsamba",
+            OrderedDict(
+                (
+                    ("enabled", int(enabled)),
+                    ("servername", server_name),
+                    ("serverdescription", server_description),
+                    ("workgroupname", workgroup_name),
+                    ("anonymousaccess", int(anonymous_access)),
+                    ("printerenable", int(printer_enabled)),
+                )
+            ),
+        )
 
     def printerlist(self) -> GetResponseType:
         return self._session.get("sdcard/printerlist")
 
     def share_account(self) -> GetResponseType:
         """???
-        <request>
-        <accounts>
-            <account>
-                <accountname></accountname>
-                <accountpwd></accountpwd>
-                <sharepath></sharepath>
-                <accesstype></accesstype>
-                <shareallpath></shareallpath>
-            </account>
-            <account>
+            <request>
+            <accounts>
+                <account>
+                    <accountname></accountname>
+                    <accountpwd></accountpwd>
+                    <sharepath></sharepath>
+                    <accesstype></accesstype>
+                    <shareallpath></shareallpath>
+                </account>
+                <account>
+                    ...
+                </account>
                 ...
-            </account>
-            ...
-        </accounts>
-    </request>
-        :return:
+            </accounts>
+        </request>
+            :return:
         """
         return self._session.get("sdcard/share-account")
 
@@ -123,18 +132,21 @@ class SdCard(ApiGroup):
         if not created:
             created = datetime.datetime.now()
 
-        return self._session.post_set("sdcard/createdir", {
-            "CurrentPath": current_path,
-            "FileName": name,
-            "Time": {
-                "Year": created.year,
-                "Month": created.month,
-                "Day": created.day,
-                "Hour": created.hour,
-                "Min": created.minute,
-                "Sec": created.second,
+        return self._session.post_set(
+            "sdcard/createdir",
+            {
+                "CurrentPath": current_path,
+                "FileName": name,
+                "Time": {
+                    "Year": created.year,
+                    "Month": created.month,
+                    "Day": created.day,
+                    "Hour": created.hour,
+                    "Min": created.minute,
+                    "Sec": created.second,
+                },
             },
-        })
+        )
 
     def delete_file(self, name: str, current_path: str = "/") -> SetResponseType:
         """
@@ -143,10 +155,13 @@ class SdCard(ApiGroup):
         :param current_path: in what path to delete
         :return: ResponseEnum.OK on success
         """
-        return self._session.post_set("sdcard/deletefile", {
-            "CurrentPath": current_path,
-            "DeleteFileList": name,
-        })
+        return self._session.post_set(
+            "sdcard/deletefile",
+            {
+                "CurrentPath": current_path,
+                "DeleteFileList": name,
+            },
+        )
 
     def sd_capacity(self) -> GetResponseType:
         """

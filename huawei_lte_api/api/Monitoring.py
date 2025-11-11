@@ -85,12 +85,17 @@ class Monitoring(ApiGroup):
         >>> response = monitoring.set_start_date(start_day=1, data_limit="1GB", month_threshold=90)
         >>> print(response)
         """
-        return self._session.post_set("monitoring/start_date", OrderedDict((
-            ("StartDay", start_day),
-            ("DataLimit", data_limit),
-            ("MonthThreshold", month_threshold),
-            ("SetMonthData", 1),
-        )))
+        return self._session.post_set(
+            "monitoring/start_date",
+            OrderedDict(
+                (
+                    ("StartDay", start_day),
+                    ("DataLimit", data_limit),
+                    ("MonthThreshold", month_threshold),
+                    ("SetMonthData", 1),
+                )
+            ),
+        )
 
     def start_date_wlan(self) -> GetResponseType:
         """
@@ -119,12 +124,17 @@ class Monitoring(ApiGroup):
         >>> response = monitoring.set_start_date_wlan(start_day=1, data_limit="1GB", month_threshold=90)
         >>> print(response)
         """
-        return self._session.post_set("monitoring/start_date_wlan", OrderedDict((
-            ("StartDay", start_day),
-            ("DataLimit", data_limit),
-            ("MonthThreshold", month_threshold),
-            ("SettingEnable", 1),  # !FIXME
-        )))
+        return self._session.post_set(
+            "monitoring/start_date_wlan",
+            OrderedDict(
+                (
+                    ("StartDay", start_day),
+                    ("DataLimit", data_limit),
+                    ("MonthThreshold", month_threshold),
+                    ("SettingEnable", 1),  # !FIXME
+                )
+            ),
+        )
 
     def month_statistics(self) -> GetResponseType:
         """
@@ -163,9 +173,12 @@ class Monitoring(ApiGroup):
         >>> response = monitoring.set_clear_traffic()
         >>> print(response)
         """
-        return self._session.post_set("monitoring/clear-traffic", {
-            "ClearTraffic": 1,
-        })
+        return self._session.post_set(
+            "monitoring/clear-traffic",
+            {
+                "ClearTraffic": 1,
+            },
+        )
 
     def wifi_month_setting(self) -> GetResponseType:
         """

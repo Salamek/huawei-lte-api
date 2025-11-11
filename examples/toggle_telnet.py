@@ -5,6 +5,7 @@ python3 toggle_telnet.py http://admin:PASSWORD@192.168.8.1/ 1
 python3 toggle_telnet.py http://admin:PASSWORD@192.168.8.1/ 0
 Telnet is usually open on port 23
 """
+
 from argparse import ArgumentParser
 
 from huawei_lte_api.Client import Client

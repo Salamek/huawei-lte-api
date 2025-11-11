@@ -24,5 +24,6 @@ jobs:
     - name: Test
       run: |
         ruff check .
+        ruff format --check .
         mypy . --python-version ${{ matrix.python-version }}
         pytest .

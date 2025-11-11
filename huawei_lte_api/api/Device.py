@@ -70,10 +70,12 @@ class Device(ApiGroup):
         >>> response = device.set_basic_information(restore_default_status=True)
         >>> print(response)
         """
-        return self._session.post_set("device/basic_information",
-                                      {
-                                          "restore_default_status": 1 if restore_default_status else 0,
-                                      })
+        return self._session.post_set(
+            "device/basic_information",
+            {
+                "restore_default_status": 1 if restore_default_status else 0,
+            },
+        )
 
     def basicinformation(self) -> GetResponseType:
         """
@@ -126,9 +128,12 @@ class Device(ApiGroup):
         >>> response = device.set_control(control=ControlModeEnum.REBOOT)
         >>> print(response)
         """
-        return self._session.post_set("device/control", {
-            "Control": control.value,
-        })
+        return self._session.post_set(
+            "device/control",
+            {
+                "Control": control.value,
+            },
+        )
 
     def signal(self) -> GetResponseType:
         """
@@ -210,9 +215,12 @@ class Device(ApiGroup):
         >>> response = device.set_antenna_settings(antenna_type=AntennaTypeEnum.EXTERNAL)
         >>> print(response)
         """
-        return self._session.post_set("device/antenna_settings", {
-            "antenna_type": antenna_type.value,
-        })
+        return self._session.post_set(
+            "device/antenna_settings",
+            {
+                "antenna_type": antenna_type.value,
+            },
+        )
 
     def antenna_type(self) -> GetResponseType:
         """
@@ -295,9 +303,12 @@ class Device(ApiGroup):
         >>> vendor_name = device.vendorname(lang='en_us')
         >>> print(vendor_name)
         """
-        return self._session.post_get("device/vendorname", {
-            "language": lang,
-        })
+        return self._session.post_get(
+            "device/vendorname",
+            {
+                "language": lang,
+            },
+        )
 
     def mode(self, mode: ModeEnum) -> SetResponseType:
         """
@@ -311,9 +322,12 @@ class Device(ApiGroup):
         >>> response = device.mode(mode=ModeEnum.DEBUG)
         >>> print(response)
         """
-        return self._session.post_set("device/mode", {
-            "mode": mode,
-        })
+        return self._session.post_set(
+            "device/mode",
+            {
+                "mode": mode,
+            },
+        )
 
     def compress_logfile(self) -> GetResponseType:
         """

@@ -56,11 +56,16 @@ class Net(ApiGroup):
         >>> response = net.set_net_mode(lteband=0x80005, networkband=0x3fffffff, networkmode=NetworkModeEnum.MODE_AUTO)
         >>> print(response)
         """
-        return self._session.post_set("net/net-mode", OrderedDict((
-            ("NetworkMode", networkmode if isinstance(networkmode, str) else networkmode.value),
-            ("NetworkBand", networkband if isinstance(networkband, str) else f"{networkband:x}"),
-            ("LTEBand", lteband if isinstance(lteband, str) else f"{lteband:x}"),
-        )))
+        return self._session.post_set(
+            "net/net-mode",
+            OrderedDict(
+                (
+                    ("NetworkMode", networkmode if isinstance(networkmode, str) else networkmode.value),
+                    ("NetworkBand", networkband if isinstance(networkband, str) else f"{networkband:x}"),
+                    ("LTEBand", lteband if isinstance(lteband, str) else f"{lteband:x}"),
+                )
+            ),
+        )
 
     def network(self) -> GetResponseType:
         """
@@ -88,10 +93,15 @@ class Net(ApiGroup):
         >>> response = net.set_network(networkmode="03", networkband="3fffffff")
         >>> print(response)
         """
-        return self._session.post_set("net/network", OrderedDict((
-            ("NetworkMode", networkmode),
-            ("NetworkBand", networkband),
-        )))
+        return self._session.post_set(
+            "net/network",
+            OrderedDict(
+                (
+                    ("NetworkMode", networkmode),
+                    ("NetworkBand", networkband),
+                )
+            ),
+        )
 
     def register(self) -> GetResponseType:
         """
@@ -120,11 +130,16 @@ class Net(ApiGroup):
         >>> response = net.set_register(mode="1", plmn="12345", rat="7")
         >>> print(response)
         """
-        return self._session.post_set("net/register", OrderedDict((
-            ("Mode", mode),
-            ("Plmn", plmn),
-            ("Rat", rat),
-        )))
+        return self._session.post_set(
+            "net/register",
+            OrderedDict(
+                (
+                    ("Mode", mode),
+                    ("Plmn", plmn),
+                    ("Rat", rat),
+                )
+            ),
+        )
 
     def net_mode_list(self) -> GetResponseType:
         """
@@ -202,6 +217,4 @@ class Net(ApiGroup):
         >>> response = net.reconnect()
         >>> print(response)
         """
-        return self._session.post_set("net/reconnect", OrderedDict((
-            ("ReconnectAction", 1),
-        )))
+        return self._session.post_set("net/reconnect", OrderedDict((("ReconnectAction", 1),)))

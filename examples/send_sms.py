@@ -3,6 +3,7 @@
 Example code on how to send a SMS, you can try it by running:
 python3 send_sms.py http://admin:PASSWORD@192.168.8.1/ +420123456789 "Hello world"
 """
+
 from argparse import ArgumentParser
 
 from huawei_lte_api.Client import Client

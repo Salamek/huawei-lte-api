@@ -3,6 +3,7 @@
 Example code on how to print ~all info about your router, you can try it by running:
 python3 examples/data_dump.py --username=admin --password=PASSWORD http://192.168.8.1/
 """
+
 import pprint
 import sys
 from argparse import ArgumentParser

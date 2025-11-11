@@ -42,10 +42,8 @@ parser = ArgumentParser()
 parser.add_argument("url", type=str)
 parser.add_argument("--username", type=str)
 parser.add_argument("--password", type=str)
-parser.add_argument("--primary-lteband", type=str, choices=BANDS.keys(),
-                    help="the primary LTE band, e.g. '7'")
-parser.add_argument("--lteband", type=str, action="append", choices=BANDS.keys(),
-                    help="additional LTE bands, can be set multiple times to add more bands")
+parser.add_argument("--primary-lteband", type=str, choices=BANDS.keys(), help="the primary LTE band, e.g. '7'")
+parser.add_argument("--lteband", type=str, action="append", choices=BANDS.keys(), help="additional LTE bands, can be set multiple times to add more bands")
 parser.add_argument("--mode", type=str, choices=MODES.keys())
 args = parser.parse_args()
 

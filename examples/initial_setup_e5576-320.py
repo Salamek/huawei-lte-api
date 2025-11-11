@@ -38,7 +38,10 @@ with Connection(url, password=original_password) as connection:
 
     print(f"Set wlan ({wifi_ssid}/{wifi_password}) and account settings (admin/{new_password})")
     resp = client.wlan.set_wlan_guide_settings(
-        ssid=wifi_ssid, wpa_psk=wifi_password, current_password=original_password, new_password=new_password,
+        ssid=wifi_ssid,
+        wpa_psk=wifi_password,
+        current_password=original_password,
+        new_password=new_password,
     )
     print(resp)
 
@@ -66,6 +69,3 @@ with Connection(url, password=new_password) as connection:
 
     # restart wifi to see effect of the new ssid
     # see toggle_wifi.py
-
-
-

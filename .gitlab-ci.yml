@@ -12,6 +12,7 @@ test:debian:
     - python3 -m venv .venv
     - ./.venv/bin/pip install .[dev,test]
     - ./.venv/bin/ruff check .
+    - ./.venv/bin/ruff format --check .
     - ./.venv/bin/mypy .
     - ./.venv/bin/pytest .
 
@@ -25,6 +26,7 @@ test:archlinux:
     - python3 -m venv .venv
     - ./.venv/bin/pip install .[dev,test]
     - ./.venv/bin/ruff check .
+    - ./.venv/bin/ruff format --check .
     - ./.venv/bin/mypy .
     - ./.venv/bin/pytest .
 

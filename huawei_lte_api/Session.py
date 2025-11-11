@@ -42,7 +42,6 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
                 args[0].reload()
             return fn(*args, **kw)
 
-
     return wrapped
 
 
@@ -51,19 +50,22 @@ class Session:
     csrf_re = re.compile(r'name="csrf_token"\s+content="(\S+)"')
     request_verification_tokens: list[str]
 
-    def __init__(self,
-                 url: str,
-                 timeout: float | tuple[float, float] | None = None,
-                 requests_session: requests.Session | None = None,
-                 ) -> None:
+    def __init__(
+        self,
+        url: str,
+        timeout: float | tuple[float, float] | None = None,
+        requests_session: requests.Session | None = None,
+    ) -> None:
         self.request_verification_tokens = []
         # Auth info embedded in the URL may reportedly cause problems, strip it
         parsed_url = urlparse(url)
-        clear_url = urlunparse((
-            parsed_url.scheme,
-            parsed_url.netloc.rpartition("@")[-1],
-            *parsed_url[2:],
-        ))
+        clear_url = urlunparse(
+            (
+                parsed_url.scheme,
+                parsed_url.netloc.rpartition("@")[-1],
+                *parsed_url[2:],
+            )
+        )
 
         if requests_session:
             self.requests_session = requests_session
@@ -200,14 +202,15 @@ class Session:
             raise ValueError(msg)
         return Tools.rsa_encrypt(rsa_e, rsa_n, data, rsa_padding)
 
-    def post_get(self,
-                 endpoint: str,
-                 data: dict | list | int | None = None,
-                 refresh_csrf: bool = False,
-                 prefix: str = "api",
-                 is_encrypted: bool = False,
-                 is_json: bool = False,
-                 ) -> GetResponseType:
+    def post_get(
+        self,
+        endpoint: str,
+        data: dict | list | int | None = None,
+        refresh_csrf: bool = False,
+        prefix: str = "api",
+        is_encrypted: bool = False,
+        is_json: bool = False,
+    ) -> GetResponseType:
         _LOGGER.debug("Sending XML request to endpoint %s: %s", endpoint, data)
         response = cast(
             "GetResponseType",
@@ -216,14 +219,15 @@ class Session:
         _LOGGER.debug("Received XML response from endpoint %s: %s", endpoint, response)
         return response
 
-    def post_set(self,
-                 endpoint: str,
-                 data: dict | list | int | None = None,
-                 refresh_csrf: bool = False,
-                 prefix: str = "api",
-                 is_encrypted: bool = False,
-                 is_json: bool = False,
-                 ) -> SetResponseType:
+    def post_set(
+        self,
+        endpoint: str,
+        data: dict | list | int | None = None,
+        refresh_csrf: bool = False,
+        prefix: str = "api",
+        is_encrypted: bool = False,
+        is_json: bool = False,
+    ) -> SetResponseType:
         _LOGGER.debug("Sending XML request to endpoint %s: %s", endpoint, data)
         response = cast(
             "SetResponseType",
@@ -233,15 +237,15 @@ class Session:
         return response
 
     @_try_or_reload_and_retry
-    def _post(self,
-              endpoint: str,
-              data: dict | list | int | None = None,
-              refresh_csrf: bool = False,
-              prefix: str = "api",
-              is_encrypted: bool = False,
-              is_json: bool = False,
-              ) -> GetResponseType | SetResponseType:
-
+    def _post(
+        self,
+        endpoint: str,
+        data: dict | list | int | None = None,
+        refresh_csrf: bool = False,
+        prefix: str = "api",
+        is_encrypted: bool = False,
+        is_json: bool = False,
+    ) -> GetResponseType | SetResponseType:
         headers = {}
 
         if is_encrypted:
@@ -255,7 +259,6 @@ class Session:
                 headers["__RequestVerificationToken"] = self.request_verification_tokens.pop(0)
             else:
                 headers["__RequestVerificationToken"] = self.request_verification_tokens[0]
-
 
         data_encoded = json.dumps(data).encode() if is_json else self._create_request_xml(data) if data else b""
 
@@ -283,13 +286,13 @@ class Session:
 
         return response_data  # noqa: RET504 # complex enough
 
-    def post_file(self,
-                  endpoint: str,
-                  files: dict,
-                  data: dict | None = None,
-                  prefix: str = "api",
-                  ) -> str:
-
+    def post_file(
+        self,
+        endpoint: str,
+        files: dict,
+        data: dict | None = None,
+        prefix: str = "api",
+    ) -> str:
         if self.request_verification_tokens:
             if data is None:
                 data = {}
@@ -347,7 +350,5 @@ class Session:
     def __enter__(self) -> Session:
         return self
 
-    def __exit__(self, exc_type: type[BaseException] | None,
-                 exc_value: BaseException | None,
-                 traceback: TracebackType | None) -> None:
+    def __exit__(self, exc_type: type[BaseException] | None, exc_value: BaseException | None, traceback: TracebackType | None) -> None:
         self.close()

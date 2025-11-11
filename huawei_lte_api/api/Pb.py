@@ -17,19 +17,23 @@ class Pb(ApiGroup):
         >>> match = pb.get_pb_match(phone_number="123456789")
         >>> print(match)
         """
-        return self._session.post_get("pb/pb-match", {
-            "Phone": phone_number,
-        })
+        return self._session.post_get(
+            "pb/pb-match",
+            {
+                "Phone": phone_number,
+            },
+        )
 
-    def get_pb_list(self,
-                    page: int = 1,
-                    key_word: str = "",
-                    group_id: int = 0,
-                    read_count: int = 50,
-                    save_type: int = 0,
-                    sort_type: int = 1,
-                    ascending: int = 1,
-                    ) -> GetResponseType:
+    def get_pb_list(
+        self,
+        page: int = 1,
+        key_word: str = "",
+        group_id: int = 0,
+        read_count: int = 50,
+        save_type: int = 0,
+        sort_type: int = 1,
+        ascending: int = 1,
+    ) -> GetResponseType:
         """
         Get the list of phone book entries.
 
@@ -47,15 +51,20 @@ class Pb(ApiGroup):
         >>> pb_list = pb.get_pb_list(page=1, key_word="John")
         >>> print(pb_list)
         """
-        return self._session.post_get("pb/pb-list", OrderedDict((
-            ("GroupID", group_id),
-            ("PageIndex", page),
-            ("ReadCount", read_count),
-            ("SaveType", save_type),
-            ("SortType", sort_type),
-            ("Ascending", ascending),
-            ("KeyWord", key_word),
-        )))
+        return self._session.post_get(
+            "pb/pb-list",
+            OrderedDict(
+                (
+                    ("GroupID", group_id),
+                    ("PageIndex", page),
+                    ("ReadCount", read_count),
+                    ("SaveType", save_type),
+                    ("SortType", sort_type),
+                    ("Ascending", ascending),
+                    ("KeyWord", key_word),
+                )
+            ),
+        )
 
     def pb_count(self) -> GetResponseType:
         """
@@ -87,14 +96,9 @@ class Pb(ApiGroup):
         """
         return self._session.post_get("pb/group-count")
 
-    def pb_new(self,
-               group_id: int = 0,
-               save_type: int = 0,
-               name: str = "",
-               mobile_phone: str = "",
-               home_phone: str = "",
-               work_phone: str = "",
-               work_email: str = "") -> SetResponseType:
+    def pb_new(
+        self, group_id: int = 0, save_type: int = 0, name: str = "", mobile_phone: str = "", home_phone: str = "", work_phone: str = "", work_email: str = ""
+    ) -> SetResponseType:
         """
         Add new entry to global PhoneBook
 
@@ -120,30 +124,47 @@ class Pb(ApiGroup):
             def __str__(self) -> str:
                 return self._name
 
-        data = OrderedDict([
-            ("GroupID", group_id),
-            ("SaveType", save_type),
-            (Node("Field"), {
-                "Name": "FormattedName",
-                "Value": name,
-            }),
-            (Node("Field"), {
-                "Name": "MobilePhone",
-                "Value": mobile_phone,
-            }),
-            (Node("Field"), {
-                "Name": "HomePhone",
-                "Value": home_phone,
-            }),
-            (Node("Field"), {
-                "Name": "WorkPhone",
-                "Value": work_phone,
-            }),
-            (Node("Field"), {
-                "Name": "WorkEmail",
-                "Value": work_email,
-            }),
-        ])
+        data = OrderedDict(
+            [
+                ("GroupID", group_id),
+                ("SaveType", save_type),
+                (
+                    Node("Field"),
+                    {
+                        "Name": "FormattedName",
+                        "Value": name,
+                    },
+                ),
+                (
+                    Node("Field"),
+                    {
+                        "Name": "MobilePhone",
+                        "Value": mobile_phone,
+                    },
+                ),
+                (
+                    Node("Field"),
+                    {
+                        "Name": "HomePhone",
+                        "Value": home_phone,
+                    },
+                ),
+                (
+                    Node("Field"),
+                    {
+                        "Name": "WorkPhone",
+                        "Value": work_phone,
+                    },
+                ),
+                (
+                    Node("Field"),
+                    {
+                        "Name": "WorkEmail",
+                        "Value": work_email,
+                    },
+                ),
+            ]
+        )
 
         return self._session.post_set("pb/pb-new", data)
 
@@ -175,12 +196,13 @@ class Pb(ApiGroup):
         """
         return self._session.post_set("pb/group-delete", {"GroupID": group_id})
 
-    def group_list(self,
-                   page: int = 1,
-                   read_count: int = 50,
-                   sort_type: int = 1,
-                   ascending: int = 1,
-                   ) -> GetResponseType:
+    def group_list(
+        self,
+        page: int = 1,
+        read_count: int = 50,
+        sort_type: int = 1,
+        ascending: int = 1,
+    ) -> GetResponseType:
         """
         Get the list of phone book groups.
 
@@ -195,12 +217,17 @@ class Pb(ApiGroup):
         >>> group_list = pb.group_list(page=1)
         >>> print(group_list)
         """
-        return self._session.post_get("pb/group-list", OrderedDict((
-            ("PageIndex", page),
-            ("ReadCount", read_count),
-            ("SortType", sort_type),
-            ("Ascending", ascending),
-        )))
+        return self._session.post_get(
+            "pb/group-list",
+            OrderedDict(
+                (
+                    ("PageIndex", page),
+                    ("ReadCount", read_count),
+                    ("SortType", sort_type),
+                    ("Ascending", ascending),
+                )
+            ),
+        )
 
     def group_new(self, name_str: str) -> SetResponseType:
         """
@@ -215,6 +242,7 @@ class Pb(ApiGroup):
         >>> print(response)
         """
         return self._session.post_set("pb/group-new", {"GroupName": name_str})
+
 
 # missing functions
 #
