@@ -1,4 +1,4 @@
-name: Tox tests
+name: Tests
 
 on:
   - push
@@ -20,6 +20,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install ruff setuptools mypy pytest
+        pip install .[dev,test]
     - name: Test
       run: ./code-check.sh
