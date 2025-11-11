@@ -1,4 +1,5 @@
 from typing import Optional
+
 from huawei_lte_api.ApiGroup import ApiGroup
 from huawei_lte_api.Session import GetResponseType, SetResponseType
 
@@ -15,7 +16,7 @@ class Dhcp(ApiGroup):
         >>> settings = dhcp.settings()
         >>> print(settings)
         """
-        return self._session.get('dhcp/settings')
+        return self._session.get("dhcp/settings")
 
     def feature_switch(self) -> GetResponseType:
         """
@@ -28,7 +29,7 @@ class Dhcp(ApiGroup):
         >>> feature_switch = dhcp.feature_switch()
         >>> print(feature_switch)
         """
-        return self._session.get('dhcp/feature-switch')
+        return self._session.get("dhcp/feature-switch")
 
     def dhcp_host_info(self) -> GetResponseType:
         """
@@ -43,7 +44,7 @@ class Dhcp(ApiGroup):
         >>> host_info = dhcp.dhcp_host_info()
         >>> print(host_info)
         """
-        return self._session.get('dhcp/dhcp-host-info')
+        return self._session.get("dhcp/dhcp-host-info")
 
     def static_addr_info(self) -> GetResponseType:
         """
@@ -58,7 +59,7 @@ class Dhcp(ApiGroup):
         >>> static_info = dhcp.static_addr_info()
         >>> print(static_info)
         """
-        return self._session.get('dhcp/static-addr-info')
+        return self._session.get("dhcp/static-addr-info")
 
     def set_settings(  # pylint: disable=too-many-arguments
         self,
@@ -111,17 +112,17 @@ class Dhcp(ApiGroup):
         dhcp_end_ip_address = ".".join(ip_address_parts) + "." + str(dhcp_end_ip_range)
 
         return self._session.post_set(
-            'dhcp/settings',
+            "dhcp/settings",
             {
-                'DhcpIPAddress': dhcp_ip_address,
-                'DhcpLanNetmask': dhcp_lan_netmask,
-                'DhcpStatus': 1 if dhcp_status else 0,
-                'DhcpStartIPAddress': dhcp_start_ip_address,
-                'DhcpEndIPAddress': dhcp_end_ip_address,
-                'DhcpLeaseTime': dhcp_lease_time,
-                'DnsStatus': 1 if dns_status else 0,
-                'PrimaryDns': primary_dns,
-                'SecondaryDns': secondary_dns,
-                'ShowDnsSetting': 1 if show_dns_setting else 0,
-            }
+                "DhcpIPAddress": dhcp_ip_address,
+                "DhcpLanNetmask": dhcp_lan_netmask,
+                "DhcpStatus": 1 if dhcp_status else 0,
+                "DhcpStartIPAddress": dhcp_start_ip_address,
+                "DhcpEndIPAddress": dhcp_end_ip_address,
+                "DhcpLeaseTime": dhcp_lease_time,
+                "DnsStatus": 1 if dns_status else 0,
+                "PrimaryDns": primary_dns,
+                "SecondaryDns": secondary_dns,
+                "ShowDnsSetting": 1 if show_dns_setting else 0,
+            },
         )

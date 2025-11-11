@@ -16,7 +16,7 @@ class Pin(ApiGroup):
         >>> pin_status = pin.status()
         >>> print(pin_status)
         """
-        return self._session.get('pin/status')
+        return self._session.get("pin/status")
 
     def simlock(self) -> GetResponseType:
         """
@@ -29,7 +29,7 @@ class Pin(ApiGroup):
         >>> simlock_status = pin.simlock()
         >>> print(simlock_status)
         """
-        return self._session.get('pin/simlock')
+        return self._session.get("pin/simlock")
 
     def save_pin(self) -> GetResponseType:
         """
@@ -42,7 +42,7 @@ class Pin(ApiGroup):
         >>> save_pin_response = pin.save_pin()
         >>> print(save_pin_response)
         """
-        return self._session.get('pin/save-pin')
+        return self._session.get("pin/save-pin")
 
     def operate(self, operate_type: str = "0", current_pin: Optional[str] = None,
                 new_pin: Optional[str] = None, puk_code: Optional[str] = None) \
@@ -66,9 +66,9 @@ class Pin(ApiGroup):
         >>> response = pin.operate(operate_type="1", current_pin="1234")
         >>> print(response)
         """
-        return self._session.post_set('pin/operate', {
-            'OperateType': operate_type,
-            'CurrentPin': current_pin,
-            'NewPin': new_pin,
-            'PukCode': puk_code
+        return self._session.post_set("pin/operate", {
+            "OperateType": operate_type,
+            "CurrentPin": current_pin,
+            "NewPin": new_pin,
+            "PukCode": puk_code,
         }, is_encrypted=True)

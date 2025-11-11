@@ -1,5 +1,4 @@
 # Api imports
-from huawei_lte_api.Connection import Connection
 from huawei_lte_api.api.App import App
 from huawei_lte_api.api.Bluetooth import Bluetooth
 from huawei_lte_api.api.Cradle import Cradle
@@ -26,10 +25,10 @@ from huawei_lte_api.api.Ota import Ota
 from huawei_lte_api.api.Pb import Pb
 from huawei_lte_api.api.Pin import Pin
 from huawei_lte_api.api.Redirection import Redirection
-from huawei_lte_api.api.SNtp import SNtp
 from huawei_lte_api.api.SdCard import SdCard
 from huawei_lte_api.api.Security import Security
 from huawei_lte_api.api.Sms import Sms
+from huawei_lte_api.api.SNtp import SNtp
 from huawei_lte_api.api.Staticroute import Staticroute
 from huawei_lte_api.api.Statistic import Statistic
 from huawei_lte_api.api.Syslog import Syslog
@@ -39,12 +38,12 @@ from huawei_lte_api.api.TimeRule import TimeRule
 from huawei_lte_api.api.UsbPrinter import UsbPrinter
 from huawei_lte_api.api.UsbStorage import UsbStorage
 from huawei_lte_api.api.User import User
-from huawei_lte_api.api.VSim import VSim
+from huawei_lte_api.api.Ussd import Ussd
 from huawei_lte_api.api.Voice import Voice as Voice_
 from huawei_lte_api.api.Vpn import Vpn
-from huawei_lte_api.api.WLan import WLan
+from huawei_lte_api.api.VSim import VSim
 from huawei_lte_api.api.WebServer import WebServer
-from huawei_lte_api.api.Ussd import Ussd
+from huawei_lte_api.api.WLan import WLan
 
 # Config imports
 from huawei_lte_api.config.Device import Device as DeviceConfig
@@ -64,13 +63,14 @@ from huawei_lte_api.config.Sms import Sms as SmsConfig
 from huawei_lte_api.config.Sntp import Sntp as SntpConfig
 from huawei_lte_api.config.Statistic import Statistic as StatisticConfig
 from huawei_lte_api.config.Stk import Stk as StkConfig
-from huawei_lte_api.config.UPnp import UPnp as UPnpConfig
 from huawei_lte_api.config.Update import Update as UpdateConfig
+from huawei_lte_api.config.UPnp import UPnp as UPnpConfig
 from huawei_lte_api.config.Ussd import Ussd as UssdConfig
 from huawei_lte_api.config.Voice import Voice as VoiceConfig
 from huawei_lte_api.config.WebSd import WebSd as WebSdConfig
 from huawei_lte_api.config.WebUICfg import WebUICfg as WebUICfgConfig
 from huawei_lte_api.config.Wifi import Wifi as WifiConfig
+from huawei_lte_api.Connection import Connection
 
 # Usermanual imports
 from huawei_lte_api.usermanual.PublicSysResources import PublicSysResources as PublicSysResourcesUserManual

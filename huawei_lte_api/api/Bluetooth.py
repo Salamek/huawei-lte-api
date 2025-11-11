@@ -16,7 +16,7 @@ class Bluetooth(ApiGroup):
         >>> settings = bluetooth.settings()
         >>> print(settings)
         """
-        return self._session.get('bluetooth/settings')
+        return self._session.get("bluetooth/settings")
 
     def scan(self) -> GetResponseType:
         """
@@ -31,4 +31,4 @@ class Bluetooth(ApiGroup):
         >>> scan_results = bluetooth.scan()
         >>> print(scan_results)
         """
-        return self._session.get('bluetooth/scan')
+        return self._session.get("bluetooth/scan")

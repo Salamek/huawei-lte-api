@@ -3,21 +3,21 @@
 Example code on how to print ~all info about your router, you can try it by running:
 python3 examples/data_dump.py --username=admin --password=PASSWORD http://192.168.8.1/
 """
-from argparse import ArgumentParser
 import os.path
 import pprint
 import sys
+from argparse import ArgumentParser
 from typing import Any, Callable
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), os.path.pardir))
 
-from huawei_lte_api.Client import Client  # noqa: E402
-from huawei_lte_api.Connection import Connection  # noqa: E402
-
+from huawei_lte_api.Client import Client
+from huawei_lte_api.Connection import Connection
 
 parser = ArgumentParser()
-parser.add_argument('url', type=str)
-parser.add_argument('--username', type=str)
-parser.add_argument('--password', type=str)
+parser.add_argument("url", type=str)
+parser.add_argument("--username", type=str)
+parser.add_argument("--password", type=str)
 args = parser.parse_args()
 
 

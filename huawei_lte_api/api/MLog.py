@@ -16,4 +16,4 @@ class MLog(ApiGroup):
         >>> mobile_logger_info = mlog.mobile_logger()
         >>> print(mobile_logger_info)
         """
-        return self._session.get('mlog/mobile-logger')
+        return self._session.get("mlog/mobile-logger")

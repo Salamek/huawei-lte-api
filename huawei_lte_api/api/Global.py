@@ -14,7 +14,7 @@ class Global(ApiGroup):
         >>> module_switch_status = global_api.module_switch()
         >>> print(module_switch_status)
         """
-        return self._session.get('global/module-switch')
+        return self._session.get("global/module-switch")
 
     def storage_get_item(self) -> GetResponseType:
         """
@@ -29,7 +29,7 @@ class Global(ApiGroup):
         >>> storage_item = global_api.storage_get_item()
         >>> print(storage_item)
         """
-        return self._session.get('global/storage-getitem')
+        return self._session.get("global/storage-getitem")
 
     def custommenu_url(self) -> GetResponseType:
         """
@@ -42,4 +42,4 @@ class Global(ApiGroup):
         >>> custom_menu_url = global_api.custommenu_url()
         >>> print(custom_menu_url)
         """
-        return self._session.get('global/custommenu-url')
+        return self._session.get("global/custommenu-url")

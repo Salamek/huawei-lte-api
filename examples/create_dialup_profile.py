@@ -10,10 +10,10 @@ from huawei_lte_api.Client import Client
 from huawei_lte_api.Connection import Connection
 
 parser = ArgumentParser()
-parser.add_argument('url', type=str)
-parser.add_argument('name', type=str)
-parser.add_argument('--username', type=str)
-parser.add_argument('--password', type=str)
+parser.add_argument("url", type=str)
+parser.add_argument("name", type=str)
+parser.add_argument("--username", type=str)
+parser.add_argument("--password", type=str)
 args = parser.parse_args()
 
 with Connection(

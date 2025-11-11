@@ -12,18 +12,18 @@ Examples:
 """
 
 from argparse import ArgumentParser
-from huawei_lte_api.Connection import Connection
-from huawei_lte_api.api.WLan import WLan
 
+from huawei_lte_api.api.WLan import WLan
+from huawei_lte_api.Connection import Connection
 
 parser = ArgumentParser()
-parser.add_argument('url', type=str)
-parser.add_argument('--username', type=str)
-parser.add_argument('--password', type=str)
-parser.add_argument('--mac', type=str, nargs='+', help='One or more MAC addresses to filter')
-parser.add_argument('--hostname', type=str, nargs='+', help='Hostnames corresponding to MAC addresses')
-parser.add_argument('--index', type=str, default='0', help='Index for the SSID (default: 0)')
-parser.add_argument('--status', type=str, help='Filter status (1=whitelist, 2=blacklist)')
+parser.add_argument("url", type=str)
+parser.add_argument("--username", type=str)
+parser.add_argument("--password", type=str)
+parser.add_argument("--mac", type=str, nargs="+", help="One or more MAC addresses to filter")
+parser.add_argument("--hostname", type=str, nargs="+", help="Hostnames corresponding to MAC addresses")
+parser.add_argument("--index", type=str, default="0", help="Index for the SSID (default: 0)")
+parser.add_argument("--status", type=str, help="Filter status (1=whitelist, 2=blacklist)")
 args = parser.parse_args()
 
 # Validate that we have the same number of MACs and hostnames
@@ -38,6 +38,6 @@ with Connection(args.url, username=args.username, password=args.password) as con
         mac_list=args.mac,
         hostname_list=args.hostname,
         ssid_index=args.index,
-        filter_status=args.status
+        filter_status=args.status,
     )
-    print("Response: {}".format(response))
+    print(f"Response: {response}")

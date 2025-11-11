@@ -14,7 +14,7 @@ class OnlineUpdate(ApiGroup):
         >>> new_version_info = online_update.check_new_version()
         >>> print(new_version_info)
         """
-        return self._session.get('online-update/check-new-version')
+        return self._session.get("online-update/check-new-version")
 
     def set_check_new_version(self) -> SetResponseType:
         """
@@ -27,7 +27,7 @@ class OnlineUpdate(ApiGroup):
         >>> response = online_update.set_check_new_version()
         >>> print(response)
         """
-        return self._session.post_set('online-update/check-new-version')
+        return self._session.post_set("online-update/check-new-version")
 
     def status(self) -> GetResponseType:
         """
@@ -40,7 +40,7 @@ class OnlineUpdate(ApiGroup):
         >>> update_status = online_update.status()
         >>> print(update_status)
         """
-        return self._session.get('online-update/status')
+        return self._session.get("online-update/status")
 
     def url_list(self) -> GetResponseType:
         """
@@ -53,7 +53,7 @@ class OnlineUpdate(ApiGroup):
         >>> url_list = online_update.url_list()
         >>> print(url_list)
         """
-        return self._session.get('online-update/url-list')
+        return self._session.get("online-update/url-list")
 
     def ack_newversion(self) -> GetResponseType:
         """
@@ -66,7 +66,7 @@ class OnlineUpdate(ApiGroup):
         >>> ack_response = online_update.ack_newversion()
         >>> print(ack_response)
         """
-        return self._session.get('online-update/ack-newversion')
+        return self._session.get("online-update/ack-newversion")
 
     def set_ack_newversion(self) -> SetResponseType:
         """
@@ -79,8 +79,8 @@ class OnlineUpdate(ApiGroup):
         >>> response = online_update.set_ack_newversion()
         >>> print(response)
         """
-        return self._session.post_set('online-update/ack-newversion', {
-            'userAckNewVersion': 0
+        return self._session.post_set("online-update/ack-newversion", {
+            "userAckNewVersion": 0,
         })
 
     def cancel_downloading(self) -> GetResponseType:
@@ -96,7 +96,7 @@ class OnlineUpdate(ApiGroup):
         >>> cancel_response = online_update.cancel_downloading()
         >>> print(cancel_response)
         """
-        return self._session.get('online-update/cancel-downloading')
+        return self._session.get("online-update/cancel-downloading")
 
     def set_cancel_downloading(self) -> SetResponseType:
         """
@@ -109,7 +109,7 @@ class OnlineUpdate(ApiGroup):
         >>> response = online_update.set_cancel_downloading()
         >>> print(response)
         """
-        return self._session.post_set('online-update/cancel-downloading')
+        return self._session.post_set("online-update/cancel-downloading")
 
     def upgrade_messagebox(self) -> GetResponseType:
         """
@@ -122,7 +122,7 @@ class OnlineUpdate(ApiGroup):
         >>> messagebox = online_update.upgrade_messagebox()
         >>> print(messagebox)
         """
-        return self._session.get('online-update/upgrade-messagebox')
+        return self._session.get("online-update/upgrade-messagebox")
 
     def set_upgrade_messagebox(self, messagebox: str) -> SetResponseType:
         """
@@ -136,8 +136,8 @@ class OnlineUpdate(ApiGroup):
         >>> response = online_update.set_upgrade_messagebox(messagebox="Upgrade available")
         >>> print(response)
         """
-        return self._session.post_set('online-update/upgrade-messagebox', {
-            'messagebox': messagebox
+        return self._session.post_set("online-update/upgrade-messagebox", {
+            "messagebox": messagebox,
         })
 
     def configuration(self) -> GetResponseType:
@@ -151,7 +151,7 @@ class OnlineUpdate(ApiGroup):
         >>> config = online_update.configuration()
         >>> print(config)
         """
-        return self._session.get('online-update/configuration')
+        return self._session.get("online-update/configuration")
 
     def autoupdate_config(self) -> GetResponseType:
         """
@@ -164,7 +164,7 @@ class OnlineUpdate(ApiGroup):
         >>> autoupdate_config = online_update.autoupdate_config()
         >>> print(autoupdate_config)
         """
-        return self._session.get('online-update/autoupdate-config')
+        return self._session.get("online-update/autoupdate-config")
 
     def set_autoupdate_config(self, autoupdate: bool) -> SetResponseType:
         """
@@ -178,7 +178,7 @@ class OnlineUpdate(ApiGroup):
         >>> response = online_update.set_autoupdate_config(autoupdate=True)
         >>> print(response)
         """
-        return self._session.post_set('online-update/autoupdate-config',
+        return self._session.post_set("online-update/autoupdate-config",
                                       {"auto_update": int(autoupdate is True), "ui_download": 0})
 
     def redirect_cancel(self) -> GetResponseType:
@@ -192,4 +192,4 @@ class OnlineUpdate(ApiGroup):
         >>> cancel_response = online_update.redirect_cancel()
         >>> print(cancel_response)
         """
-        return self._session.get('online-update/redirect_cancel')
+        return self._session.get("online-update/redirect_cancel")

@@ -14,7 +14,7 @@ class Cradle(ApiGroup):
         >>> status_info = cradle.status_info()
         >>> print(status_info)
         """
-        return self._session.get('cradle/status-info')
+        return self._session.get("cradle/status-info")
 
     def feature_switch(self) -> GetResponseType:
         """
@@ -27,7 +27,7 @@ class Cradle(ApiGroup):
         >>> feature_switch = cradle.feature_switch()
         >>> print(feature_switch)
         """
-        return self._session.get('cradle/feature-switch')
+        return self._session.get("cradle/feature-switch")
 
     def basic_info(self) -> GetResponseType:
         """
@@ -40,7 +40,7 @@ class Cradle(ApiGroup):
         >>> basic_info = cradle.basic_info()
         >>> print(basic_info)
         """
-        return self._session.get('cradle/basic-info')
+        return self._session.get("cradle/basic-info")
 
     def factory_mac(self) -> GetResponseType:
         """
@@ -53,7 +53,7 @@ class Cradle(ApiGroup):
         >>> factory_mac = cradle.factory_mac()
         >>> print(factory_mac)
         """
-        return self._session.get('cradle/factory-mac')
+        return self._session.get("cradle/factory-mac")
 
     def mac_info(self) -> GetResponseType:
         """
@@ -66,4 +66,4 @@ class Cradle(ApiGroup):
         >>> mac_info = cradle.mac_info()
         >>> print(mac_info)
         """
-        return self._session.get('cradle/mac-info')
+        return self._session.get("cradle/mac-info")

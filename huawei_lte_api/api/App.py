@@ -1,10 +1,10 @@
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.exceptions import ResponseErrorException
+from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class App(ApiGroup):
-    def operatorinfo(self, lang: str = 'en_us') -> GetResponseType:
+    def operatorinfo(self, lang: str = "en_us") -> GetResponseType:
         """
         Get operator information.
 
@@ -16,9 +16,9 @@ class App(ApiGroup):
         >>> operator_info = app.operatorinfo()
         >>> print(operator_info)
         """
-        return self._session.get('app/operatorinfo', {'lang': lang})
+        return self._session.get("app/operatorinfo", {"lang": lang})
 
-    def privacypolicy(self, lang: str = 'en_us') -> GetResponseType:
+    def privacypolicy(self, lang: str = "en_us") -> GetResponseType:
         """
         Get privacy policy.
 
@@ -30,7 +30,7 @@ class App(ApiGroup):
         >>> privacy_policy = app.privacypolicy()
         >>> print(privacy_policy)
         """
-        return self._session.get('app/privacypolicy', {'lang': lang})
+        return self._session.get("app/privacypolicy", {"lang": lang})
 
     def accept_privacypolicy(self, approve: bool = False) -> SetResponseType:
         """
@@ -44,12 +44,12 @@ class App(ApiGroup):
         >>> response = app.accept_privacypolicy(approve=True)
         >>> print(response)
         """
-        response = self._session.post_get('app/privacypolicy',
+        response = self._session.post_get("app/privacypolicy",
                                       {
                                           "data": {
                                               "Approve": "2" if approve else "0",
-                                              "Liscence": "0"  # deliberate typo
-                                          }
+                                              "Liscence": "0",  # deliberate typo
+                                          },
                                       },
                                       is_json=True)
         error_code = response["errcode"]
@@ -58,5 +58,5 @@ class App(ApiGroup):
 
         raise ResponseErrorException(
             message="Unexpected response: " + str(response),
-            code=int(error_code)
+            code=int(error_code),
         )

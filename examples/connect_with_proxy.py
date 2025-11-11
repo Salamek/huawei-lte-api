@@ -12,9 +12,9 @@ from huawei_lte_api.Client import Client
 from huawei_lte_api.Connection import Connection
 
 parser = ArgumentParser()
-parser.add_argument('url', type=str)
-parser.add_argument('--username', type=str)
-parser.add_argument('--password', type=str)
+parser.add_argument("url", type=str)
+parser.add_argument("--username", type=str)
+parser.add_argument("--password", type=str)
 args = parser.parse_args()
 
 my_custom_session = requests.Session()
@@ -27,7 +27,7 @@ with my_custom_session, Connection(
         args.url,
         username=args.username,
         password=args.password,
-        requests_session=my_custom_session
+        requests_session=my_custom_session,
 ) as connection:
     client = Client(connection)
     print(client.device.information())

@@ -1,7 +1,8 @@
 import warnings
+
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.enums.device import AntennaTypeEnum, ControlModeEnum, ModeEnum
+from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class Device(ApiGroup):
@@ -16,7 +17,7 @@ class Device(ApiGroup):
         >>> info = device.information()
         >>> print(info)
         """
-        return self._session.get('device/information')
+        return self._session.get("device/information")
 
     def autorun_version(self) -> GetResponseType:
         """
@@ -29,7 +30,7 @@ class Device(ApiGroup):
         >>> version = device.autorun_version()
         >>> print(version)
         """
-        return self._session.get('device/autorun-version')
+        return self._session.get("device/autorun-version")
 
     def device_feature_switch(self) -> GetResponseType:
         """
@@ -42,7 +43,7 @@ class Device(ApiGroup):
         >>> feature_switch = device.device_feature_switch()
         >>> print(feature_switch)
         """
-        return self._session.get('device/device-feature-switch')
+        return self._session.get("device/device-feature-switch")
 
     def basic_information(self) -> GetResponseType:
         """
@@ -55,7 +56,7 @@ class Device(ApiGroup):
         >>> basic_info = device.basic_information()
         >>> print(basic_info)
         """
-        return self._session.get('device/basic_information')
+        return self._session.get("device/basic_information")
 
     def set_basic_information(self, restore_default_status: bool = False) -> SetResponseType:
         """
@@ -69,9 +70,9 @@ class Device(ApiGroup):
         >>> response = device.set_basic_information(restore_default_status=True)
         >>> print(response)
         """
-        return self._session.post_set('device/basic_information',
+        return self._session.post_set("device/basic_information",
                                       {
-                                          "restore_default_status": 1 if restore_default_status else 0
+                                          "restore_default_status": 1 if restore_default_status else 0,
                                       })
 
     def basicinformation(self) -> GetResponseType:
@@ -85,7 +86,7 @@ class Device(ApiGroup):
         >>> basic_info = device.basicinformation()
         >>> print(basic_info)
         """
-        return self._session.get('device/basicinformation')
+        return self._session.get("device/basicinformation")
 
     def usb_tethering_switch(self) -> GetResponseType:
         """
@@ -98,7 +99,7 @@ class Device(ApiGroup):
         >>> tethering_switch = device.usb_tethering_switch()
         >>> print(tethering_switch)
         """
-        return self._session.get('device/usb-tethering-switch')
+        return self._session.get("device/usb-tethering-switch")
 
     def boot_time(self) -> GetResponseType:
         """
@@ -111,7 +112,7 @@ class Device(ApiGroup):
         >>> boot_time = device.boot_time()
         >>> print(boot_time)
         """
-        return self._session.get('device/boot_time')
+        return self._session.get("device/boot_time")
 
     def set_control(self, control: ControlModeEnum = ControlModeEnum.POWER_OFF) -> SetResponseType:
         """
@@ -125,8 +126,8 @@ class Device(ApiGroup):
         >>> response = device.set_control(control=ControlModeEnum.REBOOT)
         >>> print(response)
         """
-        return self._session.post_set('device/control', {
-            'Control': control.value
+        return self._session.post_set("device/control", {
+            "Control": control.value,
         })
 
     def signal(self) -> GetResponseType:
@@ -140,7 +141,7 @@ class Device(ApiGroup):
         >>> signal_info = device.signal()
         >>> print(signal_info)
         """
-        return self._session.get('device/signal')
+        return self._session.get("device/signal")
 
     def control(self, control: ControlModeEnum) -> SetResponseType:
         """
@@ -182,7 +183,7 @@ class Device(ApiGroup):
         >>> antenna_status = device.antenna_status()
         >>> print(antenna_status)
         """
-        return self._session.get('device/antenna_status')
+        return self._session.get("device/antenna_status")
 
     def get_antenna_settings(self) -> GetResponseType:
         """
@@ -195,7 +196,7 @@ class Device(ApiGroup):
         >>> antenna_settings = device.get_antenna_settings()
         >>> print(antenna_settings)
         """
-        return self._session.get('device/antenna_settings')
+        return self._session.get("device/antenna_settings")
 
     def set_antenna_settings(self, antenna_type: AntennaTypeEnum = AntennaTypeEnum.AUTO) -> SetResponseType:
         """
@@ -209,8 +210,8 @@ class Device(ApiGroup):
         >>> response = device.set_antenna_settings(antenna_type=AntennaTypeEnum.EXTERNAL)
         >>> print(response)
         """
-        return self._session.post_set('device/antenna_settings', {
-            'antenna_type': antenna_type.value
+        return self._session.post_set("device/antenna_settings", {
+            "antenna_type": antenna_type.value,
         })
 
     def antenna_type(self) -> GetResponseType:
@@ -224,7 +225,7 @@ class Device(ApiGroup):
         >>> antenna_type = device.antenna_type()
         >>> print(antenna_type)
         """
-        return self._session.get('device/antenna_type')
+        return self._session.get("device/antenna_type")
 
     def antenna_set_type(self) -> GetResponseType:
         """
@@ -237,7 +238,7 @@ class Device(ApiGroup):
         >>> antenna_set_type = device.antenna_set_type()
         >>> print(antenna_set_type)
         """
-        return self._session.get('device/antenna_set_type')
+        return self._session.get("device/antenna_set_type")
 
     def logsetting(self) -> GetResponseType:
         """
@@ -251,7 +252,7 @@ class Device(ApiGroup):
         >>> log_settings = device.logsetting()
         >>> print(log_settings)
         """
-        return self._session.get('device/logsetting')
+        return self._session.get("device/logsetting")
 
     def logport(self) -> GetResponseType:
         """
@@ -264,7 +265,7 @@ class Device(ApiGroup):
         >>> log_port = device.logport()
         >>> print(log_port)
         """
-        return self._session.get('device/logport')
+        return self._session.get("device/logport")
 
     def datalock(self) -> GetResponseType:
         """
@@ -277,9 +278,9 @@ class Device(ApiGroup):
         >>> data_lock = device.datalock()
         >>> print(data_lock)
         """
-        return self._session.get('device/datalock')
+        return self._session.get("device/datalock")
 
-    def vendorname(self, lang: str = 'en_us') -> GetResponseType:
+    def vendorname(self, lang: str = "en_us") -> GetResponseType:
         """
         Get device vendor name.
 
@@ -294,8 +295,8 @@ class Device(ApiGroup):
         >>> vendor_name = device.vendorname(lang='en_us')
         >>> print(vendor_name)
         """
-        return self._session.post_get('device/vendorname', {
-            'language': lang
+        return self._session.post_get("device/vendorname", {
+            "language": lang,
         })
 
     def mode(self, mode: ModeEnum) -> SetResponseType:
@@ -310,8 +311,8 @@ class Device(ApiGroup):
         >>> response = device.mode(mode=ModeEnum.DEBUG)
         >>> print(response)
         """
-        return self._session.post_set('device/mode', {
-            'mode': mode
+        return self._session.post_set("device/mode", {
+            "mode": mode,
         })
 
     def compress_logfile(self) -> GetResponseType:
@@ -325,4 +326,4 @@ class Device(ApiGroup):
         >>> log_file_link = device.compress_logfile()
         >>> print(log_file_link)
         """
-        return self._session.get('device/compresslogfile')
+        return self._session.get("device/compresslogfile")

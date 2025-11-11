@@ -14,7 +14,7 @@ class Led(ApiGroup):
         >>> nightmode_status = led.nightmode()
         >>> print(nightmode_status)
         """
-        return self._session.get('led/nightmode')
+        return self._session.get("led/nightmode")
 
     def appctrlled(self) -> GetResponseType:
         """
@@ -27,4 +27,4 @@ class Led(ApiGroup):
         >>> appctrlled_status = led.appctrlled()
         >>> print(appctrlled_status)
         """
-        return self._session.get('led/appctrlled')
+        return self._session.get("led/appctrlled")

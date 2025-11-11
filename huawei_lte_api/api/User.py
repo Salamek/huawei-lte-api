@@ -2,24 +2,27 @@ import base64
 import hashlib
 import time
 from types import TracebackType
-from typing import Type, Optional
+from typing import Optional, Type
+
 import requests
 
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Session import GetResponseType, SetResponseType, Session
 from huawei_lte_api.enums.client import ResponseEnum
-from huawei_lte_api.enums.user import PasswordTypeEnum, LoginStateEnum, LoginErrorEnum
-from huawei_lte_api.exceptions import ResponseErrorException, \
-    LoginErrorAlreadyLoginException, \
-    LoginErrorUsernamePasswordModifyException, \
-    LoginErrorUsernamePasswordOverrunException, \
-    LoginErrorUsernamePasswordWrongException, \
-    LoginErrorUsernameWrongException, \
-    LoginErrorPasswordWrongException, \
-    ResponseErrorLoginRequiredException, \
-    ResponseErrorNotSupportedException
+from huawei_lte_api.enums.user import LoginErrorEnum, LoginStateEnum, PasswordTypeEnum
+from huawei_lte_api.exceptions import (
+    LoginErrorAlreadyLoginException,
+    LoginErrorPasswordWrongException,
+    LoginErrorUsernamePasswordModifyException,
+    LoginErrorUsernamePasswordOverrunException,
+    LoginErrorUsernamePasswordWrongException,
+    LoginErrorUsernameWrongException,
+    ResponseErrorException,
+    ResponseErrorLoginRequiredException,
+    ResponseErrorNotSupportedException,
+)
+from huawei_lte_api.Session import GetResponseType, Session, SetResponseType
 
-DEFAULT_USERNAME = 'admin'
+DEFAULT_USERNAME = "admin"
 
 
 class UserSession:
@@ -34,7 +37,7 @@ class UserSession:
             # Idempotency/nothing further to do, suppress
             pass
 
-    def __enter__(self) -> 'UserSession':
+    def __enter__(self) -> "UserSession":
         return self
 
     def __exit__(self, exc_type: Optional[Type[BaseException]],
@@ -46,7 +49,7 @@ class UserSession:
 class User(ApiGroup):
 
     def state_login(self) -> GetResponseType:
-        return self._session.get('user/state-login')
+        return self._session.get("user/state-login")
 
     def _state_login_with_retry(self) -> GetResponseType:
         tries = 5
@@ -66,34 +69,34 @@ class User(ApiGroup):
 
     def _encode_password(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bytes:
         if not password:
-            return b''
+            return b""
 
         if password_type == PasswordTypeEnum.SHA256:
-            concentrated = b''.join([
-                username.encode('UTF-8'),
-                base64.b64encode(hashlib.sha256(password.encode('UTF-8')).hexdigest().encode('ascii')),
-                self._session.request_verification_tokens[0].encode('UTF-8')
+            concentrated = b"".join([
+                username.encode("UTF-8"),
+                base64.b64encode(hashlib.sha256(password.encode("UTF-8")).hexdigest().encode("ascii")),
+                self._session.request_verification_tokens[0].encode("UTF-8"),
             ])
-            return base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode('ascii'))
+            return base64.b64encode(hashlib.sha256(concentrated).hexdigest().encode("ascii"))
 
-        return base64.b64encode(password.encode('UTF-8'))
+        return base64.b64encode(password.encode("UTF-8"))
 
     def _login(self, username: str, password: Optional[str], password_type: PasswordTypeEnum = PasswordTypeEnum.BASE_64) -> bool:
         password_encoded = self._encode_password(username, password, password_type)
         try:
-            result = self._session.post_set('user/login', {
-                'Username': username,
-                'Password': password_encoded.decode('UTF-8'),
-                'password_type': password_type.value
+            result = self._session.post_set("user/login", {
+                "Username": username,
+                "Password": password_encoded.decode("UTF-8"),
+                "password_type": password_type.value,
             }, refresh_csrf=True)
         except ResponseErrorException as e:
             error_code_to_message = {
-                LoginErrorEnum.USERNAME_WRONG.value: 'Username wrong',
-                LoginErrorEnum.PASSWORD_WRONG.value: 'Password wrong',
-                LoginErrorEnum.ALREADY_LOGIN.value: 'Already login',
-                LoginErrorEnum.USERNAME_PWD_WRONG.value: 'Username and Password wrong',
-                LoginErrorEnum.USERNAME_PWD_OVERRUN.value: 'Password overrun',
-                LoginErrorEnum.USERNAME_PWD_MODIFY.value: 'Password modify',
+                LoginErrorEnum.USERNAME_WRONG.value: "Username wrong",
+                LoginErrorEnum.PASSWORD_WRONG.value: "Password wrong",
+                LoginErrorEnum.ALREADY_LOGIN.value: "Already login",
+                LoginErrorEnum.USERNAME_PWD_WRONG.value: "Username and Password wrong",
+                LoginErrorEnum.USERNAME_PWD_OVERRUN.value: "Password overrun",
+                LoginErrorEnum.USERNAME_PWD_MODIFY.value: "Password modify",
             }
 
             error_code_to_exception = {
@@ -105,14 +108,14 @@ class User(ApiGroup):
                 LoginErrorEnum.USERNAME_PWD_MODIFY.value: LoginErrorUsernamePasswordModifyException,
             }
 
-            message = error_code_to_message.get(e.code, 'Unknown')
+            message = error_code_to_message.get(e.code, "Unknown")
             raise error_code_to_exception.get(e.code, ResponseErrorException)(
-                '{}: {}'.format(e.code, message), e.code)
+                f"{e.code}: {message}", e.code)
 
         return result == ResponseEnum.OK.value
 
     def login(self, username: str = DEFAULT_USERNAME, password: Optional[str] = None, force_new_login: bool = False) -> bool:
-        if username == '':  # <= 1.6.4 backwards compatibility
+        if username == "":  # <= 1.6.4 backwards compatibility
             username = DEFAULT_USERNAME
 
         try:
@@ -120,80 +123,80 @@ class User(ApiGroup):
         except ResponseErrorNotSupportedException:
             return True
 
-        if LoginStateEnum(int(state_login['State'])) == LoginStateEnum.LOGGED_IN and not force_new_login:
+        if LoginStateEnum(int(state_login["State"])) == LoginStateEnum.LOGGED_IN and not force_new_login:
             return True
 
-        return self._login(username, password, PasswordTypeEnum(int(state_login.get('password_type', 0))))
+        return self._login(username, password, PasswordTypeEnum(int(state_login.get("password_type", 0))))
 
     def logout(self) -> SetResponseType:
-        return self._session.post_set('user/logout', {
-            'Logout': 1
+        return self._session.post_set("user/logout", {
+            "Logout": 1,
         })
 
     def remind(self) -> GetResponseType:
-        return self._session.get('user/remind')
+        return self._session.get("user/remind")
 
     def password(self) -> GetResponseType:
-        return self._session.get('user/password')
+        return self._session.get("user/password")
 
     def pwd(self) -> GetResponseType:
-        return self._session.get('user/pwd')
+        return self._session.get("user/pwd")
 
     def set_pwd(self) -> SetResponseType:
-        return self._session.post_set('user/pwd', {
+        return self._session.post_set("user/pwd", {
             "module": "wlan",
-            "nonce": "aaaaaaa"
+            "nonce": "aaaaaaa",
         })
 
     def set_remind(self, remind_state: str) -> SetResponseType:
-        return self._session.post_set('user/remind', {
-            'remindstate': remind_state
+        return self._session.post_set("user/remind", {
+            "remindstate": remind_state,
         })
 
     def authentication_login(self) -> GetResponseType:
-        return self._session.get('user/authentication_login')
+        return self._session.get("user/authentication_login")
 
     def challenge_login(self) -> GetResponseType:
-        return self._session.get('user/challenge_login')
+        return self._session.get("user/challenge_login")
 
     def hilink_login(self) -> GetResponseType:
-        return self._session.get('user/hilink_login')
+        return self._session.get("user/hilink_login")
 
     def history_login(self) -> GetResponseType:
-        return self._session.get('user/history-login')
+        return self._session.get("user/history-login")
 
     def heartbeat(self) -> GetResponseType:
-        return self._session.get('user/heartbeat')
+        return self._session.get("user/heartbeat")
 
     def web_feature_switch(self) -> GetResponseType:
-        return self._session.get('user/web-feature-switch')
+        return self._session.get("user/web-feature-switch")
 
     def input_event(self) -> GetResponseType:
         """
        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
        :return:
        """
-        return self._session.get('user/input_event')
+        return self._session.get("user/input_event")
 
     def screen_state(self) -> GetResponseType:
         """
        Endpoint found by reverse engineering B310s-22 firmware, unknown usage
        :return:
        """
-        return self._session.get('user/screen_state')
+        return self._session.get("user/screen_state")
 
     def session(self) -> GetResponseType:
         """
         Endpoint found by reverse engineering B310s-22 firmware, unknown usage
         :return:
         """
-        return self._session.get('user/session')
+        return self._session.get("user/session")
 
     def second_login(self) -> GetResponseType:
-        return self._session.get('user/second_login')
+        return self._session.get("user/second_login")
 
     def remember_pwd(self) -> GetResponseType:
-        return self._session.get('user/remember-pwd')
+        return self._session.get("user/remember-pwd")
 
     def rule(self) -> GetResponseType:
-        return self._session.get('user/rule')
+        return self._session.get("user/rule")

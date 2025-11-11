@@ -16,7 +16,7 @@ class Monitoring(ApiGroup):
         >>> converged_status = monitoring.converged_status()
         >>> print(converged_status)
         """
-        return self._session.get('monitoring/converged-status')
+        return self._session.get("monitoring/converged-status")
 
     def status(self) -> GetResponseType:
         """
@@ -30,7 +30,7 @@ class Monitoring(ApiGroup):
         >>> status_info = monitoring.status()
         >>> print(status_info)
         """
-        return self._session.get('monitoring/status')
+        return self._session.get("monitoring/status")
 
     def check_notifications(self) -> GetResponseType:
         """
@@ -43,7 +43,7 @@ class Monitoring(ApiGroup):
         >>> notifications = monitoring.check_notifications()
         >>> print(notifications)
         """
-        return self._session.get('monitoring/check-notifications')
+        return self._session.get("monitoring/check-notifications")
 
     def traffic_statistics(self) -> GetResponseType:
         """
@@ -56,7 +56,7 @@ class Monitoring(ApiGroup):
         >>> traffic_stats = monitoring.traffic_statistics()
         >>> print(traffic_stats)
         """
-        return self._session.get('monitoring/traffic-statistics')
+        return self._session.get("monitoring/traffic-statistics")
 
     def start_date(self) -> GetResponseType:
         """
@@ -69,7 +69,7 @@ class Monitoring(ApiGroup):
         >>> start_date = monitoring.start_date()
         >>> print(start_date)
         """
-        return self._session.get('monitoring/start_date')
+        return self._session.get("monitoring/start_date")
 
     def set_start_date(self, start_day: int, data_limit: str, month_threshold: int) -> SetResponseType:
         """
@@ -85,11 +85,11 @@ class Monitoring(ApiGroup):
         >>> response = monitoring.set_start_date(start_day=1, data_limit="1GB", month_threshold=90)
         >>> print(response)
         """
-        return self._session.post_set('monitoring/start_date', OrderedDict((
-            ('StartDay', start_day),
-            ('DataLimit', data_limit),
-            ('MonthThreshold', month_threshold),
-            ('SetMonthData', 1)
+        return self._session.post_set("monitoring/start_date", OrderedDict((
+            ("StartDay", start_day),
+            ("DataLimit", data_limit),
+            ("MonthThreshold", month_threshold),
+            ("SetMonthData", 1),
         )))
 
     def start_date_wlan(self) -> GetResponseType:
@@ -103,7 +103,7 @@ class Monitoring(ApiGroup):
         >>> start_date_wlan = monitoring.start_date_wlan()
         >>> print(start_date_wlan)
         """
-        return self._session.get('monitoring/start_date_wlan')
+        return self._session.get("monitoring/start_date_wlan")
 
     def set_start_date_wlan(self, start_day: int, data_limit: str, month_threshold: int) -> SetResponseType:
         """
@@ -119,11 +119,11 @@ class Monitoring(ApiGroup):
         >>> response = monitoring.set_start_date_wlan(start_day=1, data_limit="1GB", month_threshold=90)
         >>> print(response)
         """
-        return self._session.post_set('monitoring/start_date_wlan', OrderedDict((
-            ('StartDay', start_day),
-            ('DataLimit', data_limit),
-            ('MonthThreshold', month_threshold),
-            ('SettingEnable', 1)  # !FIXME
+        return self._session.post_set("monitoring/start_date_wlan", OrderedDict((
+            ("StartDay", start_day),
+            ("DataLimit", data_limit),
+            ("MonthThreshold", month_threshold),
+            ("SettingEnable", 1),  # !FIXME
         )))
 
     def month_statistics(self) -> GetResponseType:
@@ -137,7 +137,7 @@ class Monitoring(ApiGroup):
         >>> month_stats = monitoring.month_statistics()
         >>> print(month_stats)
         """
-        return self._session.get('monitoring/month_statistics')
+        return self._session.get("monitoring/month_statistics")
 
     def month_statistics_wlan(self) -> GetResponseType:
         """
@@ -150,7 +150,7 @@ class Monitoring(ApiGroup):
         >>> month_stats_wlan = monitoring.month_statistics_wlan()
         >>> print(month_stats_wlan)
         """
-        return self._session.get('monitoring/month_statistics_wlan')
+        return self._session.get("monitoring/month_statistics_wlan")
 
     def set_clear_traffic(self) -> SetResponseType:
         """
@@ -163,8 +163,8 @@ class Monitoring(ApiGroup):
         >>> response = monitoring.set_clear_traffic()
         >>> print(response)
         """
-        return self._session.post_set('monitoring/clear-traffic', {
-            'ClearTraffic': 1
+        return self._session.post_set("monitoring/clear-traffic", {
+            "ClearTraffic": 1,
         })
 
     def wifi_month_setting(self) -> GetResponseType:
@@ -178,7 +178,7 @@ class Monitoring(ApiGroup):
         >>> wifi_month_setting = monitoring.wifi_month_setting()
         >>> print(wifi_month_setting)
         """
-        return self._session.get('monitoring/wifi-month-setting')
+        return self._session.get("monitoring/wifi-month-setting")
 
     def daily_data_limit(self) -> GetResponseType:
         """
@@ -191,7 +191,7 @@ class Monitoring(ApiGroup):
         >>> daily_data_limit = monitoring.daily_data_limit()
         >>> print(daily_data_limit)
         """
-        return self._session.get('monitoring/daily-data-limit')
+        return self._session.get("monitoring/daily-data-limit")
 
     def statistic_feature_switch(self) -> GetResponseType:
         """
@@ -204,7 +204,7 @@ class Monitoring(ApiGroup):
         >>> statistic_feature_switch = monitoring.statistic_feature_switch()
         >>> print(statistic_feature_switch)
         """
-        return self._session.get('monitoring/statistic-feature-switch')
+        return self._session.get("monitoring/statistic-feature-switch")
 
     def onekey_diag(self) -> GetResponseType:
         """
@@ -217,4 +217,4 @@ class Monitoring(ApiGroup):
         >>> onekey_diag = monitoring.onekey_diag()
         >>> print(onekey_diag)
         """
-        return self._session.get('monitoring/onekey_diag')
+        return self._session.get("monitoring/onekey_diag")

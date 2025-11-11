@@ -1,13 +1,13 @@
+import logging
 import warnings
 from types import TracebackType
-from typing import Optional, Tuple, Union, Type
+from typing import Optional, Tuple, Type, Union
 from urllib.parse import urlparse
 
-import logging
 import requests
 
+from huawei_lte_api.api.User import DEFAULT_USERNAME, UserSession
 from huawei_lte_api.Session import Session
-from huawei_lte_api.api.User import UserSession, DEFAULT_USERNAME
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class Connection(Session):
                  password: Optional[str] = None,
                  login_on_demand: bool = False,
                  timeout: Union[float, Tuple[float, float], None] = None,
-                 requests_session: Optional[requests.Session] = None
+                 requests_session: Optional[requests.Session] = None,
                  ):
         """
         :param requests_session: requests Session to use; if not None, closing it is the caller's responsibility
@@ -41,25 +41,25 @@ class Connection(Session):
             self.user_session = UserSession(
                 self,
                 username or DEFAULT_USERNAME,
-                password
+                password,
             )
 
         if login_on_demand:
             warnings.warn(
                 "login_on_demand is deprecated, and has no effect, please remove this parameter from your code! if  will get removed in next minor release.",
-                DeprecationWarning
+                DeprecationWarning,
             )
 
     def close(self) -> None:
         if self.user_session:
             try:
                 self.user_session.close()
-            except:  # noqa: E722
+            except:
                 super().close()
                 raise
         super().close()
 
-    def __enter__(self) -> 'Connection':
+    def __enter__(self) -> "Connection":
         return self
 
     def __exit__(self, exc_type: Optional[Type[BaseException]],

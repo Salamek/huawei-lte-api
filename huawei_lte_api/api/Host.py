@@ -21,11 +21,11 @@ class Host(ApiGroup):
         >>> response = host.info(datetime.datetime.now(), "Windows", "Mozilla/5.0", "1.0")
         >>> print(response)
         """
-        return self._session.post_set('host/info', OrderedDict((
-            ('Time', date_time.strftime('%Y%m%d%H%M%S')),
-            ('Timezone', 'GMT{}'.format(date_time.strftime('%z'))),
-            ('Platform', platform),
-            ('PlatformVer', user_agent),
-            ('Navigator', version),
-            ('NavigatorVer', user_agent)
+        return self._session.post_set("host/info", OrderedDict((
+            ("Time", date_time.strftime("%Y%m%d%H%M%S")),
+            ("Timezone", "GMT{}".format(date_time.strftime("%z"))),
+            ("Platform", platform),
+            ("PlatformVer", user_agent),
+            ("Navigator", version),
+            ("NavigatorVer", user_agent),
         )))

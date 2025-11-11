@@ -14,7 +14,7 @@ class DDns(ApiGroup):
         >>> ddns_list = ddns.get_ddns_list()
         >>> print(ddns_list)
         """
-        return self._session.get('ddns/ddns-list')
+        return self._session.get("ddns/ddns-list")
 
     def get_status(self) -> GetResponseType:
         """
@@ -27,7 +27,7 @@ class DDns(ApiGroup):
         >>> status = ddns.get_status()
         >>> print(status)
         """
-        return self._session.get('ddns/status')
+        return self._session.get("ddns/status")
 
     def serverlist(self) -> GetResponseType:
         """
@@ -40,4 +40,4 @@ class DDns(ApiGroup):
         >>> server_list = ddns.serverlist()
         >>> print(server_list)
         """
-        return self._session.get('ddns/serverlist')
+        return self._session.get("ddns/serverlist")

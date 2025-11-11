@@ -5,7 +5,7 @@ from huawei_lte_api.Session import GetResponseType
 class UsbStorage(ApiGroup):
 
     def fsstatus(self) -> GetResponseType:
-        return self._session.get('usbstorage/fsstatus')
+        return self._session.get("usbstorage/fsstatus")
 
     def usbaccount(self) -> GetResponseType:
-        return self._session.get('usbstorage/usbaccount')
+        return self._session.get("usbstorage/usbaccount")

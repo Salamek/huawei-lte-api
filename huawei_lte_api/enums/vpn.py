@@ -3,5 +3,5 @@ import enum
 
 @enum.unique
 class VPNType(enum.Enum):
-    PPTP = 'pptp'
-    L2TP = 'l2tp'
+    PPTP = "pptp"
+    L2TP = "l2tp"

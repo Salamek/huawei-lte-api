@@ -3,7 +3,7 @@ import enum
 
 @enum.unique
 class ResponseEnum(enum.Enum):
-    OK = 'OK'
+    OK = "OK"
 
 
 @enum.unique

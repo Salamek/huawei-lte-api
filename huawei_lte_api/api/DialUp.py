@@ -1,7 +1,8 @@
 from typing import Optional
+
 from huawei_lte_api.ApiGroup import ApiGroup
-from huawei_lte_api.Session import GetResponseType, SetResponseType
 from huawei_lte_api.enums.dialup import AuthModeEnum, IpType
+from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
 class DialUp(ApiGroup):
@@ -16,7 +17,7 @@ class DialUp(ApiGroup):
         >>> state = dialup.mobile_dataswitch()
         >>> print(state)
         """
-        return self._session.get('dialup/mobile-dataswitch')
+        return self._session.get("dialup/mobile-dataswitch")
 
     def connection(self) -> GetResponseType:
         """
@@ -29,7 +30,7 @@ class DialUp(ApiGroup):
         >>> connection_settings = dialup.connection()
         >>> print(connection_settings)
         """
-        return self._session.get('dialup/connection')
+        return self._session.get("dialup/connection")
 
     def dialup_feature_switch(self) -> GetResponseType:
         """
@@ -42,7 +43,7 @@ class DialUp(ApiGroup):
         >>> feature_switch = dialup.dialup_feature_switch()
         >>> print(feature_switch)
         """
-        return self._session.get('dialup/dialup-feature-switch')
+        return self._session.get("dialup/dialup-feature-switch")
 
     def profiles(self) -> GetResponseType:
         """
@@ -55,7 +56,7 @@ class DialUp(ApiGroup):
         >>> profiles = dialup.profiles()
         >>> print(profiles)
         """
-        return self._session.get('dialup/profiles')
+        return self._session.get("dialup/profiles")
 
     def auto_apn(self) -> GetResponseType:
         """
@@ -68,7 +69,7 @@ class DialUp(ApiGroup):
         >>> auto_apn_settings = dialup.auto_apn()
         >>> print(auto_apn_settings)
         """
-        return self._session.get('dialup/auto-apn')
+        return self._session.get("dialup/auto-apn")
 
     def dial(self) -> SetResponseType:
         """
@@ -81,8 +82,8 @@ class DialUp(ApiGroup):
         >>> response = dialup.dial()
         >>> print(response)
         """
-        return self._session.post_set('dialup/dial', {
-            'Action': 1
+        return self._session.post_set("dialup/dial", {
+            "Action": 1,
         })
 
     def set_mobile_dataswitch(self, dataswitch: int = 0) -> SetResponseType:
@@ -97,8 +98,8 @@ class DialUp(ApiGroup):
         >>> response = dialup.set_mobile_dataswitch(dataswitch=1)
         >>> print(response)
         """
-        return self._session.post_set('dialup/mobile-dataswitch', {
-            'dataswitch': dataswitch
+        return self._session.post_set("dialup/mobile-dataswitch", {
+            "dataswitch": dataswitch,
         })
 
     def set_default_profile(self, index: int = 0) -> SetResponseType:
@@ -113,10 +114,10 @@ class DialUp(ApiGroup):
         >>> response = dialup.set_default_profile(index=1)
         >>> print(response)
         """
-        return self._session.post_set('dialup/profiles', {
-            'SetDefault': index,
-            'Delete': 0,
-            'Modify': 0
+        return self._session.post_set("dialup/profiles", {
+            "SetDefault": index,
+            "Delete": 0,
+            "Modify": 0,
         }, is_encrypted=True)
 
     def delete_profile(self, index: int) -> SetResponseType:
@@ -131,10 +132,10 @@ class DialUp(ApiGroup):
         >>> response = dialup.delete_profile(index=1)
         >>> print(response)
         """
-        return self._session.post_set('dialup/profiles', {
-            'SetDefault': 0,
-            'Delete': index,
-            'Modify': 0
+        return self._session.post_set("dialup/profiles", {
+            "SetDefault": 0,
+            "Delete": index,
+            "Modify": 0,
         }, is_encrypted=True)
 
     def create_profile(self,
@@ -145,7 +146,7 @@ class DialUp(ApiGroup):
                        dialup_number: Optional[str] = None,
                        auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
                        ip_type: IpType = IpType.IPV4_IPV6,
-                       is_default: bool = False
+                       is_default: bool = False,
                        ) -> SetResponseType:
         """
         Create a new dial-up profile.
@@ -174,28 +175,28 @@ class DialUp(ApiGroup):
         >>> )
         >>> print(response)
         """
-        return self._session.post_set('dialup/profiles', {
-            'SetDefault': 1 if is_default else 0, # For E5576, the new profile will always become the default (See #221)
-            'Delete': 0,
-            'Modify': 1,
-            'Profile': {
-                'Index': '',
-                'IsValid': 1,
-                'Name': name,
-                'ApnIsStatic': 1 if apn else 0,
-                'ApnName': apn,
-                'DialupNum': dialup_number,
-                'Username': username,
-                'Password': password,
-                'AuthMode': auth_mode.value,
-                'IpIsStatic': '',
-                'IpAddress': '',
-                'DnsIsStatic': '',
-                'PrimaryDns': '',
-                'SecondaryDns': '',
-                'ReadOnly': '0',
-                'iptype': ip_type.value
-            }
+        return self._session.post_set("dialup/profiles", {
+            "SetDefault": 1 if is_default else 0, # For E5576, the new profile will always become the default (See #221)
+            "Delete": 0,
+            "Modify": 1,
+            "Profile": {
+                "Index": "",
+                "IsValid": 1,
+                "Name": name,
+                "ApnIsStatic": 1 if apn else 0,
+                "ApnName": apn,
+                "DialupNum": dialup_number,
+                "Username": username,
+                "Password": password,
+                "AuthMode": auth_mode.value,
+                "IpIsStatic": "",
+                "IpAddress": "",
+                "DnsIsStatic": "",
+                "PrimaryDns": "",
+                "SecondaryDns": "",
+                "ReadOnly": "0",
+                "iptype": ip_type.value,
+            },
         }, is_encrypted=True)
 
     def update_profile(self,
@@ -207,7 +208,7 @@ class DialUp(ApiGroup):
                        dialup_number: Optional[str] = None,
                        auth_mode: AuthModeEnum = AuthModeEnum.AUTO,
                        ip_type: IpType = IpType.IPV4_IPV6,
-                       is_default: bool = False
+                       is_default: bool = False,
                        ) -> SetResponseType:
         """
         Update an existing dial-up profile.
@@ -238,28 +239,28 @@ class DialUp(ApiGroup):
         >>> )
         >>> print(response)
         """
-        return self._session.post_set('dialup/profiles', {
-            'SetDefault': index if is_default else 0,
-            'Delete': 0,
-            'Modify': 2,
-            'Profile': {
-                'Index': index,
-                'IsValid': 1,
-                'Name': name,
-                'ApnIsStatic': 1 if apn else 0,
-                'ApnName': apn,
-                'DialupNum': dialup_number,
-                'Username': username,
-                'Password': password,
-                'AuthMode': auth_mode.value,
-                'IpIsStatic': '',
-                'IpAddress': '',
-                'DnsIsStatic': '',
-                'PrimaryDns': '',
-                'SecondaryDns': '',
-                'ReadOnly': '0',
-                'iptype': ip_type.value
-            }
+        return self._session.post_set("dialup/profiles", {
+            "SetDefault": index if is_default else 0,
+            "Delete": 0,
+            "Modify": 2,
+            "Profile": {
+                "Index": index,
+                "IsValid": 1,
+                "Name": name,
+                "ApnIsStatic": 1 if apn else 0,
+                "ApnName": apn,
+                "DialupNum": dialup_number,
+                "Username": username,
+                "Password": password,
+                "AuthMode": auth_mode.value,
+                "IpIsStatic": "",
+                "IpAddress": "",
+                "DnsIsStatic": "",
+                "PrimaryDns": "",
+                "SecondaryDns": "",
+                "ReadOnly": "0",
+                "iptype": ip_type.value,
+            },
         }, is_encrypted=True)
 
     def set_connection_settings(
@@ -288,13 +289,13 @@ class DialUp(ApiGroup):
         >>> print(response)
         """
         return self._session.post_set(
-            'dialup/connection',
+            "dialup/connection",
             {
-                'RoamAutoConnectEnable': 1 if roam_auto_connect_enable else 0,
-                'MaxIdelTime': max_idle_time,
-                'ConnectMode': connect_mode,
-                'MTU': mtu,
-                'auto_dial_switch': 1 if auto_dial_switch else 0,
-                'pdp_always_on': 1 if pdp_always_on else 0,
-            }
+                "RoamAutoConnectEnable": 1 if roam_auto_connect_enable else 0,
+                "MaxIdelTime": max_idle_time,
+                "ConnectMode": connect_mode,
+                "MTU": mtu,
+                "auto_dial_switch": 1 if auto_dial_switch else 0,
+                "pdp_always_on": 1 if pdp_always_on else 0,
+            },
         )

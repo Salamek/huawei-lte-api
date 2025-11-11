@@ -9,13 +9,14 @@ Examples:
 """
 
 from argparse import ArgumentParser
-from huawei_lte_api.Connection import Connection
+
 from huawei_lte_api.api.WLan import WLan
+from huawei_lte_api.Connection import Connection
 
 parser = ArgumentParser()
-parser.add_argument('url', type=str)
-parser.add_argument('--username', type=str)
-parser.add_argument('--password', type=str)
+parser.add_argument("url", type=str)
+parser.add_argument("--username", type=str)
+parser.add_argument("--password", type=str)
 args = parser.parse_args()
 
 with Connection(args.url, username=args.username, password=args.password) as connection:
@@ -23,7 +24,7 @@ with Connection(args.url, username=args.username, password=args.password) as con
 
     # Get the filter status
     filter_status = wlan.get_filter_status()
-    print("Filter Status: {}".format(filter_status))
+    print(f"Filter Status: {filter_status}")
 
     # Get the list of filtered devices
     filtered_devices = wlan.get_filtered_devices()

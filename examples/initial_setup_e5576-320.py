@@ -1,14 +1,14 @@
 from argparse import ArgumentParser
+from time import sleep
 
 from huawei_lte_api.Client import Client
 from huawei_lte_api.Connection import Connection
-from time import sleep
 
 parser = ArgumentParser()
-parser.add_argument('--password', type=str)
-parser.add_argument('--newpassword', type=str)
-parser.add_argument('--ssid', type=str)
-parser.add_argument('--wpapassword', type=str)
+parser.add_argument("--password", type=str)
+parser.add_argument("--newpassword", type=str)
+parser.add_argument("--ssid", type=str)
+parser.add_argument("--wpapassword", type=str)
 args = parser.parse_args()
 
 original_password = args.password
@@ -17,7 +17,7 @@ new_password = args.newpassword
 wifi_ssid = args.ssid
 wifi_password = args.wpapassword
 
-url = 'http://192.168.8.1/'
+url = "http://192.168.8.1/"
 with Connection(url, password=original_password) as connection:
     client = Client(connection)
 
@@ -36,7 +36,7 @@ with Connection(url, password=original_password) as connection:
 
     print(f"Set wlan ({wifi_ssid}/{wifi_password}) and account settings (admin/{new_password})")
     resp = client.wlan.set_wlan_guide_settings(
-        ssid=wifi_ssid, wpa_psk=wifi_password, current_password=original_password, new_password=new_password
+        ssid=wifi_ssid, wpa_psk=wifi_password, current_password=original_password, new_password=new_password,
     )
     print(resp)
 

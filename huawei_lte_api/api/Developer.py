@@ -14,7 +14,7 @@ class Developer(ApiGroup):
         >>> featureswitch_status = developer.developermode_featureswitch()
         >>> print(featureswitch_status)
         """
-        return self._session.get('developer/developermode-featureswitch')
+        return self._session.get("developer/developermode-featureswitch")
 
     def atport_status(self) -> GetResponseType:
         """
@@ -27,4 +27,4 @@ class Developer(ApiGroup):
         >>> atport_status = developer.atport_status()
         >>> print(atport_status)
         """
-        return self._session.get('app/atport-status')
+        return self._session.get("app/atport-status")

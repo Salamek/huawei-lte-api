@@ -14,7 +14,7 @@ class Ntwk(ApiGroup):
         >>> lan_upnp_portmapping = ntwk.lan_upnp_portmapping()
         >>> print(lan_upnp_portmapping)
         """
-        return self._session.get('ntwk/lan_upnp_portmapping')
+        return self._session.get("ntwk/lan_upnp_portmapping")
 
     def celllock(self) -> GetResponseType:
         """
@@ -27,7 +27,7 @@ class Ntwk(ApiGroup):
         >>> celllock_status = ntwk.celllock()
         >>> print(celllock_status)
         """
-        return self._session.get('ntwk/celllock')
+        return self._session.get("ntwk/celllock")
 
     def dualwaninfo(self) -> GetResponseType:
         """
@@ -40,7 +40,7 @@ class Ntwk(ApiGroup):
         >>> dualwan_info = ntwk.dualwaninfo()
         >>> print(dualwan_info)
         """
-        return self._session.get('ntwk/dualwaninfo')
+        return self._session.get("ntwk/dualwaninfo")
 
     def lan_wan_config(self) -> GetResponseType:
         """
@@ -53,4 +53,4 @@ class Ntwk(ApiGroup):
         >>> lan_wan_config = ntwk.lan_wan_config()
         >>> print(lan_wan_config)
         """
-        return self._session.get('ntwk/lan-wan-config')
+        return self._session.get("ntwk/lan-wan-config")

@@ -14,7 +14,7 @@ class Diagnosis(ApiGroup):
         >>> traceroute_result = diagnosis.trace_route_result()
         >>> print(traceroute_result)
         """
-        return self._session.get('diagnosis/tracerouteresult')
+        return self._session.get("diagnosis/tracerouteresult")
 
     def diagnose_ping(self) -> GetResponseType:
         """
@@ -27,7 +27,7 @@ class Diagnosis(ApiGroup):
         >>> ping_result = diagnosis.diagnose_ping()
         >>> print(ping_result)
         """
-        return self._session.get('diagnosis/diagnose_ping')
+        return self._session.get("diagnosis/diagnose_ping")
 
     def set_diagnose_ping(self, host: str, timeout: int = 4000) -> SetResponseType:
         """
@@ -42,10 +42,10 @@ class Diagnosis(ApiGroup):
         >>> response = diagnosis.set_diagnose_ping(host="example.com", timeout=5000)
         >>> print(response)
         """
-        return self._session.post_set('diagnosis/diagnose_ping', {
+        return self._session.post_set("diagnosis/diagnose_ping", {
             "Host": host,
-            "Timeout": timeout
-            }
+            "Timeout": timeout,
+            },
         )
 
     def diagnose_traceroute(self) -> GetResponseType:
@@ -59,7 +59,7 @@ class Diagnosis(ApiGroup):
         >>> traceroute_result = diagnosis.diagnose_traceroute()
         >>> print(traceroute_result)
         """
-        return self._session.get('diagnosis/diagnose_traceroute')
+        return self._session.get("diagnosis/diagnose_traceroute")
 
     def set_diagnose_traceroute(self, host: str, timeout: int = 4000, max_hop_count: int = 30) -> SetResponseType:
         """
@@ -75,11 +75,11 @@ class Diagnosis(ApiGroup):
         >>> response = diagnosis.set_diagnose_traceroute(host="example.com", timeout=5000, max_hop_count=20)
         >>> print(response)
         """
-        return self._session.post_set('diagnosis/diagnose_traceroute', {
+        return self._session.post_set("diagnosis/diagnose_traceroute", {
             "Host": host,
             "MaxHopCount": max_hop_count,
-            "Timeout": timeout
-            }
+            "Timeout": timeout,
+            },
         )
 
     def time_reboot(self) -> GetResponseType:
@@ -93,7 +93,7 @@ class Diagnosis(ApiGroup):
         >>> time_reboot_status = diagnosis.time_reboot()
         >>> print(time_reboot_status)
         """
-        return self._session.get('diagnosis/time_reboot')
+        return self._session.get("diagnosis/time_reboot")
 
     def wan_service_name(self) -> GetResponseType:
         """
@@ -106,4 +106,4 @@ class Diagnosis(ApiGroup):
         >>> wan_service_name = diagnosis.wan_service_name()
         >>> print(wan_service_name)
         """
-        return self._session.get('diagnosis/get-wan-service-name')
+        return self._session.get("diagnosis/get-wan-service-name")
