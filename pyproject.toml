@@ -126,6 +126,12 @@ disallow_subclassing_any = false
 disallow_untyped_decorators = false
 exclude = "(.venv/.*|build/.*)"
 
+[[tool.mypy.overrides]]
+module = ["_pytest.*"]
+# With new Python versions, we may receive a pytest that won't typecheck
+# (done along with tests) with mypy python_version set to our lowest bound
+follow_imports = "skip"
+
 
 [tool.pytest.ini_options]
 # Tell pytest where to look for tests

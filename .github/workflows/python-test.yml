@@ -21,9 +21,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install .[dev,test]
-    - name: Test
+    - name: Lint
+      if: ${{ matrix.python-version == '3.14' }}
       run: |
         ruff check .
         ruff format --check .
-        mypy . --python-version ${{ matrix.python-version }}
+        mypy .
+    - name: Test
+      run: |
         pytest .
