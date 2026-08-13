@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import dataclasses
 import datetime
-import warnings
 from collections import OrderedDict
 from typing import TYPE_CHECKING
 
@@ -83,14 +82,6 @@ class Sms(ApiGroup):
         ascending: bool = False,
         unread_preferred: bool = False,
     ) -> GetResponseType:
-        if isinstance(sort_type, int):
-            warnings.warn(
-                "get_sms_list: Passing int into sort_type is deprecated and will be removed in next minor version! Please use enums.sms.SortTypeEnum instead!.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            sort_type = SortTypeEnum(sort_type)
-
         # Note: at least the B525s-23a is order sensitive
         return Tools.enforce_list_response(
             self._session.post_get(

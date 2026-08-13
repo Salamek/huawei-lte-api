@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 from huawei_lte_api.Client import Client
 from huawei_lte_api.Connection import Connection
 from huawei_lte_api.enums.client import ResponseEnum
+from huawei_lte_api.enums.device import ControlModeEnum
 
 parser = ArgumentParser()
 parser.add_argument("url", type=str)
@@ -18,7 +19,7 @@ args = parser.parse_args()
 
 with Connection(args.url, username=args.username, password=args.password) as connection:
     client = Client(connection)
-    if client.device.reboot() == ResponseEnum.OK.value:
+    if client.device.set_control(ControlModeEnum.REBOOT) == ResponseEnum.OK.value:
         print("Reboot requested successfully")
     else:
         print("Error")
