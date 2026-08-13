@@ -44,6 +44,44 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
 
     return wrapped
 
+def cesu8_encode(text):
+    out = bytearray()
+
+    for char in text:
+        code = ord(char)
+
+        if code <= 0xFFFF:
+            out.extend(char.encode())
+        elif code <= 0x10FFFF:
+            # cesu-8 sequence: a surrogate pair encoded with the utf-8 algorithm
+            base = code - 0x10000
+
+            high = chr(0xD800 + (base >> 10))
+            out.extend(high.encode(errors='surrogatepass'))
+
+            low = chr(0xDC00 + (base & 0x3FF))
+            out.extend(low.encode(errors='surrogatepass'))
+        else:
+            raise ValueError(f"Invalid character: {code}")
+
+    return bytes(out)
+
+def cesu8_fix(blob):
+    CESU8 = re.compile(b'\xed[\xa0-\xaf][\x80-\xbf]\xed[\xb0-\xbf][\x80-\xbf]')
+
+    while (match := CESU8.search(blob)):
+        index = match.start()
+        cesu8 = blob[index:index+6]
+        code = (
+            0x10000 +
+            ((cesu8[1] & 0x0F) << 16) +
+            ((cesu8[2] & 0x3F) << 10) +
+            ((cesu8[4] & 0x0F) << 6) +
+            ((cesu8[5] & 0x3F))
+        )
+        blob = blob[0:index] + chr(code).encode() + blob[index+6:]
+
+    return blob
 
 class Session:
     encryption_key = None
@@ -96,7 +134,7 @@ class Session:
             "request": data,
         }
 
-        return xmltodict.unparse(wrapped_in_request).encode("utf-8")
+        return cesu8_encode(xmltodict.unparse(wrapped_in_request))
 
     @staticmethod
     def _process_response_data(response: requests.Response) -> dict:
@@ -129,7 +167,7 @@ class Session:
         # such cases, and return a generated "not supported" error
         # instead of letting the XML parse error pass through.
         try:
-            return xmltodict.parse(data, dict_constructor=dict) if data else {}
+            return xmltodict.parse(cesu8_fix(data), dict_constructor=dict) if data else {}
         except:
             if response.history:
                 return {"error": {"code": ResponseCodeEnum.ERROR_SYSTEM_NO_SUPPORT, "message": ""}}
