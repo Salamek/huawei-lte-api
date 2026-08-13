@@ -44,7 +44,7 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
 
     return wrapped
 
-def cesu8_encode(text):
+def cesu8_encode(text: str) -> bytes:
     out = bytearray()
 
     for char in text:
@@ -66,9 +66,8 @@ def cesu8_encode(text):
 
     return bytes(out)
 
-def cesu8_fix(blob):
-    CESU8 = re.compile(b'\xed[\xa0-\xaf][\x80-\xbf]\xed[\xb0-\xbf][\x80-\xbf]')
-
+CESU8 = re.compile(b'\xed[\xa0-\xaf][\x80-\xbf]\xed[\xb0-\xbf][\x80-\xbf]')
+def cesu8_fix(blob: bytes) -> bytes:
     while (match := CESU8.search(blob)):
         index = match.start()
         cesu8 = blob[index:index+6]
@@ -77,7 +76,7 @@ def cesu8_fix(blob):
             ((cesu8[1] & 0x0F) << 16) +
             ((cesu8[2] & 0x3F) << 10) +
             ((cesu8[4] & 0x0F) << 6) +
-            ((cesu8[5] & 0x3F))
+            (cesu8[5] & 0x3F)
         )
         blob = blob[0:index] + chr(code).encode() + blob[index+6:]
 
