@@ -62,7 +62,8 @@ def cesu8_encode(text: str) -> bytes:
             low = chr(0xDC00 + (base & 0x3FF))
             out.extend(low.encode(errors='surrogatepass'))
         else:
-            raise ValueError(f"Invalid character: {code}")
+            error = f"Invalid character: {code}"
+            raise ValueError(error)
 
     return bytes(out)
 
