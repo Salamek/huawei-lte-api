@@ -35,7 +35,7 @@ class Connection(Session):
 
         # User login code
         username = username or parsed_url.username
-        password = password if password else parsed_url.password
+        password = password or parsed_url.password
 
         _LOGGER.debug("Initializing Connection with URL: %s", url)
         _LOGGER.debug("Username: %s", username)

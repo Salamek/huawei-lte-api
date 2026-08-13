@@ -72,6 +72,7 @@ ignore = [
   # https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
   # (keep order of ignores here same as ^there for maintainability)
   # https://github.com/astral-sh/ruff/issues/8175
+
   "W191",
   "E111",
   "E114",
@@ -82,10 +83,12 @@ ignore = [
   "Q001",
   "Q002",
   "Q003",
+  "CPY001",
   "COM812",
   "COM819",
   "ISC001",
   "ISC002",
+
 ]
 
 [tool.ruff.lint.mccabe]

@@ -34,7 +34,7 @@ SetResponseType = str
 
 
 def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
-    def wrapped(*args: str | dict | list | int | None | bool | Session, **kw: str | dict | list | int | None | bool) -> T:
+    def wrapped(*args: str | dict | list | int | bool | Session | None, **kw: str | dict | list | int | bool | None) -> T:
         try:
             return fn(*args, **kw)
         except ResponseErrorLoginCsrfException:
@@ -43,6 +43,7 @@ def _try_or_reload_and_retry(fn: Callable[..., T]) -> Callable[..., T]:
             return fn(*args, **kw)
 
     return wrapped
+
 
 def cesu8_encode(text: str) -> bytes:
     out = bytearray()
@@ -57,31 +58,29 @@ def cesu8_encode(text: str) -> bytes:
             base = code - 0x10000
 
             high = chr(0xD800 + (base >> 10))
-            out.extend(high.encode(errors='surrogatepass'))
+            out.extend(high.encode(errors="surrogatepass"))
 
             low = chr(0xDC00 + (base & 0x3FF))
-            out.extend(low.encode(errors='surrogatepass'))
+            out.extend(low.encode(errors="surrogatepass"))
         else:
             error = f"Invalid character: {code}"
             raise ValueError(error)
 
     return bytes(out)
 
-CESU8 = re.compile(b'\xed[\xa0-\xaf][\x80-\xbf]\xed[\xb0-\xbf][\x80-\xbf]')
+
+CESU8 = re.compile(b"\xed[\xa0-\xaf][\x80-\xbf]\xed[\xb0-\xbf][\x80-\xbf]")
+
+
 def cesu8_fix(blob: bytes) -> bytes:
-    while (match := CESU8.search(blob)):
+    while match := CESU8.search(blob):
         index = match.start()
-        cesu8 = blob[index:index+6]
-        code = (
-            0x10000 +
-            ((cesu8[1] & 0x0F) << 16) +
-            ((cesu8[2] & 0x3F) << 10) +
-            ((cesu8[4] & 0x0F) << 6) +
-            (cesu8[5] & 0x3F)
-        )
-        blob = blob[0:index] + chr(code).encode() + blob[index+6:]
+        cesu8 = blob[index : index + 6]
+        code = 0x10000 + ((cesu8[1] & 0x0F) << 16) + ((cesu8[2] & 0x3F) << 10) + ((cesu8[4] & 0x0F) << 6) + (cesu8[5] & 0x3F)
+        blob = blob[0:index] + chr(code).encode() + blob[index + 6 :]
 
     return blob
+
 
 class Session:
     encryption_key = None
