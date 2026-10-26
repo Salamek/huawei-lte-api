@@ -51,6 +51,10 @@ _LOGIN_ERROR_EXCEPTIONS = {
 }
 
 
+class _ScramUnavailableError(Exception):
+    """The challenge probe could not establish SCRAM support."""
+
+
 def _login_error(e: ResponseErrorException) -> ResponseErrorException:
     message = _LOGIN_ERROR_MESSAGES.get(e.code, "Unknown")
     return _LOGIN_ERROR_EXCEPTIONS.get(e.code, ResponseErrorException)(f"{e.code}: {message}", e.code)
@@ -157,6 +161,30 @@ class User(ApiGroup):
 
         return result == ResponseEnum.OK.value
 
+    def _get_scram_challenge(self, username: str, first_nonce: str) -> GetResponseType:
+        """Probe SCRAM support; only this step may permit legacy fallback."""
+        try:
+            challenge = self._session.post_get(
+                "user/challenge_login",
+                {
+                    "username": username,
+                    "firstnonce": first_nonce,
+                    "mode": 1,
+                },
+                refresh_csrf=True,
+            )
+        except (ResponseErrorNotSupportedException, ResponseErrorLoginRequiredException) as e:
+            msg = "user/challenge_login is unavailable before login"
+            raise _ScramUnavailableError(msg) from e
+        except ResponseErrorException as e:
+            raise _login_error(e) from e
+        # Legacy firmware may reject the probe with 100002 (unsupported) or
+        # 100003 (login required). A non-challenge response also permits fallback.
+        if not isinstance(challenge, dict) or not {"salt", "iterations", "servernonce"} <= challenge.keys():
+            msg = "user/challenge_login did not return a SCRAM challenge"
+            raise _ScramUnavailableError(msg)
+        return challenge
+
     def _login_scram(self, username: str, password: str) -> bool:
         """
         SCRAM login (user/challenge_login -> user/authentication_login) used by
@@ -164,26 +192,12 @@ class User(ApiGroup):
         B610h-72a (issue #228). These devices report password_type=4 but reject
         the legacy user/login SHA256 scheme with 108006.
 
-        Raises ResponseErrorNotSupportedException if the device does not know
-        the challenge endpoint; the caller then falls back to user/login. The
-        challenge itself does not verify any credential, so probing it does not
-        count towards the device's failed-login lockout.
+        Raises _ScramUnavailableError if the challenge probe cannot establish
+        SCRAM support. Authentication and server verification failures propagate
+        without permitting legacy fallback.
         """
         first_nonce = secrets.token_hex(32)
-        challenge = self._session.post_get(
-            "user/challenge_login",
-            {
-                "username": username,
-                "firstnonce": first_nonce,
-                "mode": 1,
-            },
-            refresh_csrf=True,
-        )
-        # A firmware without SCRAM normally answers 100002 (raised by the
-        # session); anything that is not a SCRAM challenge is treated the same.
-        if not isinstance(challenge, dict) or not {"salt", "iterations", "servernonce"} <= challenge.keys():
-            msg = "user/challenge_login did not return a SCRAM challenge"
-            raise ResponseErrorNotSupportedException(msg, 100002)
+        challenge = self._get_scram_challenge(username, first_nonce)
         server_nonce = challenge["servernonce"]
         client_proof, server_signature = scram_client_proof(
             password,
@@ -206,8 +220,8 @@ class User(ApiGroup):
             raise _login_error(e) from e
 
         returned_signature = result.get("serversignature") if isinstance(result, dict) else None
-        if returned_signature and not hmac.compare_digest(returned_signature, server_signature):
-            msg = "Server signature mismatch"
+        if not isinstance(returned_signature, str) or not hmac.compare_digest(returned_signature, server_signature):
+            msg = "Missing or invalid server signature"
             raise ResponseErrorException(msg, 0)
         return True
 
@@ -225,8 +239,13 @@ class User(ApiGroup):
 
         password_type = PasswordTypeEnum(int(state_login.get("password_type", 0)))
         if password_type == PasswordTypeEnum.SHA256 and password:
-            with contextlib.suppress(ResponseErrorNotSupportedException):
+            try:
                 return self._login_scram(username, password)
+            except _ScramUnavailableError:
+                # The probe may have cleared the CSRF tokens without supplying
+                # a replacement. Obtain a current token for the legacy hash.
+                if not self._session.request_verification_tokens:
+                    self._session.reload()
 
         return self._login(username, password, password_type)
 
