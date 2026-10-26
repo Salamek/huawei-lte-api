@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 from collections import OrderedDict
 from typing import TYPE_CHECKING
 
@@ -120,7 +120,7 @@ class SdCard(ApiGroup):
         """
         return self._session.get("sdcard/Check_file_exist")
 
-    def create_dir(self, name: str, current_path: str = "/", created: datetime.datetime | None = None) -> SetResponseType:
+    def create_dir(self, name: str, current_path: str = "/", created: dt.datetime | None = None) -> SetResponseType:
         """
         Create directory on the SD card
         :param name: Name of dir to create
@@ -130,7 +130,7 @@ class SdCard(ApiGroup):
         """
 
         if not created:
-            created = datetime.datetime.now()
+            created = dt.datetime.now()
 
         return self._session.post_set(
             "sdcard/createdir",

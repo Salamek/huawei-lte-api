@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import dataclasses
-import datetime
+import datetime as dt
 from collections import OrderedDict
 from typing import TYPE_CHECKING
 
@@ -21,7 +21,7 @@ class Message:
     status: StatusEnum  # Status of SMS
     phone: str  # Phone number of sender
     content: str  # Text content of SMS
-    date_time: datetime.datetime  # Datetime of SMS send/receive
+    date_time: dt.datetime  # Datetime of SMS send/receive
     sca: str | None  # Message center number in INTL format eg. +420603052000
     save_type: SaveModeEnum  # How to save received SMS in device
     priority: PriorityEnum  # What priority this SMS have
@@ -36,7 +36,7 @@ class Message:
             status=StatusEnum(int(data.get("Smstat", 0))),
             phone=data.get("Phone", ""),
             content=data.get("Content", ""),
-            date_time=Tools.string_to_datetime(date_time) if date_time else datetime.datetime.now(),
+            date_time=Tools.string_to_datetime(date_time) if date_time else dt.datetime.now(),
             sca=data.get("Sca"),
             save_type=SaveModeEnum(int(data.get("SaveType", 0))),
             priority=PriorityEnum(int(data.get("Priority", 0))),
@@ -109,7 +109,7 @@ class Sms(ApiGroup):
         """
         return self._session.post_set("sms/delete-sms", {"Index": sms_id})
 
-    def backup_sim(self, from_date: datetime.datetime, is_move: bool = False) -> SetResponseType:
+    def backup_sim(self, from_date: dt.datetime, is_move: bool = False) -> SetResponseType:
         return self._session.post_set(
             "sms/backup-sim",
             OrderedDict(
@@ -135,7 +135,7 @@ class Sms(ApiGroup):
         sms_index: int = -1,
         sca: str | None = None,
         text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT,
-        from_date: datetime.datetime | None = None,
+        from_date: dt.datetime | None = None,
     ) -> SetResponseType:
         """
 
@@ -149,7 +149,7 @@ class Sms(ApiGroup):
         """
 
         if from_date is None:
-            from_date = datetime.datetime.now(tz=datetime.timezone.utc)
+            from_date = dt.datetime.now(tz=dt.timezone.utc)
 
         return self._session.post_set(
             "sms/save-sms",
@@ -173,7 +173,7 @@ class Sms(ApiGroup):
         sms_index: int = -1,
         sca: str | None = None,
         text_mode: TextModeEnum = TextModeEnum.SEVEN_BIT,
-        from_date: datetime.datetime | None = None,
+        from_date: dt.datetime | None = None,
     ) -> SetResponseType:
         """
 
@@ -186,7 +186,7 @@ class Sms(ApiGroup):
         :return:
         """
         if from_date is None:
-            from_date = datetime.datetime.now(tz=datetime.timezone.utc)
+            from_date = dt.datetime.now(tz=dt.timezone.utc)
         return self._session.post_set(
             "sms/send-sms",
             OrderedDict(
@@ -360,7 +360,7 @@ class Sms(ApiGroup):
             page = 1  # Start page has to be always 1
 
         while True:
-            now = datetime.datetime.now()
+            now = dt.datetime.now()
             sms_list_tmp = self.get_sms_list(page, box_type, read_count, sort_type, ascending, unread_preferred)
             if int(sms_list_tmp.get("Count", 0)) == 0:
                 break
@@ -372,7 +372,7 @@ class Sms(ApiGroup):
                 # Check if message is possibly multipart,
                 # if it is ignore it if is younger than 60 seconds
                 # This way we provide the router with enough time to receive all possible parts and do correct rebuild
-                if message.type == TypeEnum.MULTIPART and message.date_time + datetime.timedelta(seconds=10) > now:
+                if message.type == TypeEnum.MULTIPART and message.date_time + dt.timedelta(seconds=10) > now:
                     continue
 
                 yield message

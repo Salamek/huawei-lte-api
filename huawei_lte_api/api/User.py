@@ -3,6 +3,8 @@ from __future__ import annotations
 import base64
 import contextlib
 import hashlib
+import hmac
+import secrets
 import time
 from typing import TYPE_CHECKING
 
@@ -29,6 +31,61 @@ if TYPE_CHECKING:
     from huawei_lte_api.Session import GetResponseType, Session, SetResponseType
 
 DEFAULT_USERNAME = "admin"
+
+_LOGIN_ERROR_MESSAGES = {
+    LoginErrorEnum.USERNAME_WRONG.value: "Username wrong",
+    LoginErrorEnum.PASSWORD_WRONG.value: "Password wrong",
+    LoginErrorEnum.ALREADY_LOGIN.value: "Already login",
+    LoginErrorEnum.USERNAME_PWD_WRONG.value: "Username and Password wrong",
+    LoginErrorEnum.USERNAME_PWD_OVERRUN.value: "Password overrun",
+    LoginErrorEnum.USERNAME_PWD_MODIFY.value: "Password modify",
+}
+
+_LOGIN_ERROR_EXCEPTIONS = {
+    LoginErrorEnum.USERNAME_WRONG.value: LoginErrorUsernameWrongException,
+    LoginErrorEnum.PASSWORD_WRONG.value: LoginErrorPasswordWrongException,
+    LoginErrorEnum.ALREADY_LOGIN.value: LoginErrorAlreadyLoginException,
+    LoginErrorEnum.USERNAME_PWD_WRONG.value: LoginErrorUsernamePasswordWrongException,
+    LoginErrorEnum.USERNAME_PWD_OVERRUN.value: LoginErrorUsernamePasswordOverrunException,
+    LoginErrorEnum.USERNAME_PWD_MODIFY.value: LoginErrorUsernamePasswordModifyException,
+}
+
+
+def _login_error(e: ResponseErrorException) -> ResponseErrorException:
+    message = _LOGIN_ERROR_MESSAGES.get(e.code, "Unknown")
+    return _LOGIN_ERROR_EXCEPTIONS.get(e.code, ResponseErrorException)(f"{e.code}: {message}", e.code)
+
+
+def scram_client_proof(
+    password: str,
+    salt: bytes,
+    iterations: int,
+    first_nonce: str,
+    server_nonce: str,
+) -> tuple[str, str]:
+    """
+    Client proof and expected server signature for the SCRAM login used by
+    newer Huawei web UIs (user/challenge_login + user/authentication_login).
+
+    Ported from the device's own JavaScript (CryptoJS.SCRAM in emui-jquery.js
+    and the login handler in js/index.js). NOTE: it is NOT plain RFC 5802 -
+    the firmware calls CryptoJS.HmacSHA256(message, key) as
+    hmac(saltedPassword, "Client Key") and hmac(storedKey, authMessage), i.e.
+    key and message are swapped compared to the RFC. An RFC-correct
+    implementation is rejected by the device with 108006.
+
+    :return: (client proof hex, expected server signature hex)
+    """
+    auth_message = f"{first_nonce},{server_nonce},{server_nonce}".encode()
+    salted_password = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations, 32)
+    client_key = hmac.new(b"Client Key", salted_password, hashlib.sha256).digest()
+    stored_key = hashlib.sha256(client_key).digest()
+    client_signature = hmac.new(auth_message, stored_key, hashlib.sha256).digest()
+    client_proof = bytes(a ^ b for a, b in zip(client_key, client_signature)).hex()
+
+    server_key = hmac.new(b"Server Key", salted_password, hashlib.sha256).digest()
+    server_signature = hmac.new(auth_message, server_key, hashlib.sha256).hexdigest()
+    return client_proof, server_signature
 
 
 class UserSession:
@@ -96,29 +153,63 @@ class User(ApiGroup):
                 refresh_csrf=True,
             )
         except ResponseErrorException as e:
-            error_code_to_message = {
-                LoginErrorEnum.USERNAME_WRONG.value: "Username wrong",
-                LoginErrorEnum.PASSWORD_WRONG.value: "Password wrong",
-                LoginErrorEnum.ALREADY_LOGIN.value: "Already login",
-                LoginErrorEnum.USERNAME_PWD_WRONG.value: "Username and Password wrong",
-                LoginErrorEnum.USERNAME_PWD_OVERRUN.value: "Password overrun",
-                LoginErrorEnum.USERNAME_PWD_MODIFY.value: "Password modify",
-            }
-
-            error_code_to_exception = {
-                LoginErrorEnum.USERNAME_WRONG.value: LoginErrorUsernameWrongException,
-                LoginErrorEnum.PASSWORD_WRONG.value: LoginErrorPasswordWrongException,
-                LoginErrorEnum.ALREADY_LOGIN.value: LoginErrorAlreadyLoginException,
-                LoginErrorEnum.USERNAME_PWD_WRONG.value: LoginErrorUsernamePasswordWrongException,
-                LoginErrorEnum.USERNAME_PWD_OVERRUN.value: LoginErrorUsernamePasswordOverrunException,
-                LoginErrorEnum.USERNAME_PWD_MODIFY.value: LoginErrorUsernamePasswordModifyException,
-            }
-
-            message = error_code_to_message.get(e.code, "Unknown")
-            exc_msg = f"{e.code}: {message}"
-            raise error_code_to_exception.get(e.code, ResponseErrorException)(exc_msg, e.code) from e
+            raise _login_error(e) from e
 
         return result == ResponseEnum.OK.value
+
+    def _login_scram(self, username: str, password: str) -> bool:
+        """
+        SCRAM login (user/challenge_login -> user/authentication_login) used by
+        newer web UIs, e.g. 5G CPE Pro H112-370 (emui webui 6.0) and reportedly
+        B610h-72a (issue #228). These devices report password_type=4 but reject
+        the legacy user/login SHA256 scheme with 108006.
+
+        Raises ResponseErrorNotSupportedException if the device does not know
+        the challenge endpoint; the caller then falls back to user/login. The
+        challenge itself does not verify any credential, so probing it does not
+        count towards the device's failed-login lockout.
+        """
+        first_nonce = secrets.token_hex(32)
+        challenge = self._session.post_get(
+            "user/challenge_login",
+            {
+                "username": username,
+                "firstnonce": first_nonce,
+                "mode": 1,
+            },
+            refresh_csrf=True,
+        )
+        # A firmware without SCRAM normally answers 100002 (raised by the
+        # session); anything that is not a SCRAM challenge is treated the same.
+        if not isinstance(challenge, dict) or not {"salt", "iterations", "servernonce"} <= challenge.keys():
+            msg = "user/challenge_login did not return a SCRAM challenge"
+            raise ResponseErrorNotSupportedException(msg, 100002)
+        server_nonce = challenge["servernonce"]
+        client_proof, server_signature = scram_client_proof(
+            password,
+            bytes.fromhex(challenge["salt"]),
+            int(challenge["iterations"]),
+            first_nonce,
+            server_nonce,
+        )
+
+        try:
+            result = self._session.post_get(
+                "user/authentication_login",
+                {
+                    "clientproof": client_proof,
+                    "finalnonce": server_nonce,
+                },
+                refresh_csrf=True,
+            )
+        except ResponseErrorException as e:
+            raise _login_error(e) from e
+
+        returned_signature = result.get("serversignature") if isinstance(result, dict) else None
+        if returned_signature and not hmac.compare_digest(returned_signature, server_signature):
+            msg = "Server signature mismatch"
+            raise ResponseErrorException(msg, 0)
+        return True
 
     def login(self, username: str = DEFAULT_USERNAME, password: str | None = None, force_new_login: bool = False) -> bool:
         if username == "":  # <= 1.6.4 backwards compatibility
@@ -132,7 +223,12 @@ class User(ApiGroup):
         if LoginStateEnum(int(state_login["State"])) == LoginStateEnum.LOGGED_IN and not force_new_login:
             return True
 
-        return self._login(username, password, PasswordTypeEnum(int(state_login.get("password_type", 0))))
+        password_type = PasswordTypeEnum(int(state_login.get("password_type", 0)))
+        if password_type == PasswordTypeEnum.SHA256 and password:
+            with contextlib.suppress(ResponseErrorNotSupportedException):
+                return self._login_scram(username, password)
+
+        return self._login(username, password, password_type)
 
     def logout(self) -> SetResponseType:
         return self._session.post_set(

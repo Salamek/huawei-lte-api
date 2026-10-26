@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import base64
-import datetime
+import datetime as dt
 import math
 from binascii import hexlify
 from typing import TYPE_CHECKING, TypeVar
@@ -91,14 +91,14 @@ class Tools:
                 yield data_item
 
     @staticmethod
-    def string_to_datetime(datetime_string: str) -> datetime.datetime:
+    def string_to_datetime(datetime_string: str) -> dt.datetime:
         """
         Parses datetime in format 2022-12-22 18:01:09
         :param datetime_string: string to parse
         :return: datetime.datetime
         """
-        return datetime.datetime.strptime(datetime_string, Tools.datetime_format)
+        return dt.datetime.strptime(datetime_string, Tools.datetime_format)
 
     @staticmethod
-    def datetime_to_string(date_time: datetime.datetime) -> str:
+    def datetime_to_string(date_time: dt.datetime) -> str:
         return date_time.strftime(Tools.datetime_format)

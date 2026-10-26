@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from collections import OrderedDict
 
 from huawei_lte_api.ApiGroup import ApiGroup
@@ -6,7 +6,7 @@ from huawei_lte_api.Session import SetResponseType
 
 
 class Host(ApiGroup):
-    def info(self, date_time: datetime.datetime, platform: str, user_agent: str, version: str) -> SetResponseType:
+    def info(self, date_time: dt.datetime, platform: str, user_agent: str, version: str) -> SetResponseType:
         """
         Send host information to the server.
 
