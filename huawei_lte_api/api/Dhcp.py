@@ -130,3 +130,25 @@ class Dhcp(ApiGroup):
                 "ShowDnsSetting": 1 if show_dns_setting else 0,
             },
         )
+
+    def set_status(self, status: bool) -> SetResponseType:
+        """
+        Enable or disable the DHCP server.
+
+        The firmware replaces the complete DHCP configuration on every write,
+        so the settings currently read from the router are sent back with only
+        the DHCP status changed. This keeps the IP range, the lease time and
+        the DNS settings as they are.
+
+        :param status: True to enable the DHCP server, False to disable it.
+        :return: Set response type.
+
+        Usage example:
+        >>> dhcp = Dhcp(session)
+        >>> response = dhcp.set_status(True)
+        >>> print(response)
+        """
+        settings = self.settings()
+        settings["DhcpStatus"] = "1" if status else "0"
+
+        return self._session.post_set("dhcp/settings", settings)
