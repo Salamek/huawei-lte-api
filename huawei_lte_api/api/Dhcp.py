@@ -1,15 +1,73 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from huawei_lte_api.ApiGroup import ApiGroup
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from huawei_lte_api.Session import GetResponseType, SetResponseType
 
 
+@dataclass
+class DhcpSettings:
+    """DHCP configuration with full lease range addresses and lease time in seconds."""
+
+    dhcp_ip_address: str = "192.168.0.1"
+    dhcp_lan_netmask: str = "255.255.255.0"
+    dhcp_status: bool = True
+    dhcp_start_ip_address: str = "192.168.0.100"
+    dhcp_end_ip_address: str = "192.168.0.200"
+    dhcp_lease_time: int = 86400
+    dns_status: bool | None = True
+    primary_dns: str | None = None
+    secondary_dns: str | None = None
+    show_dns_setting: bool | None = True
+
+    @classmethod
+    def from_dict(cls, data: Mapping[str, str | None]) -> DhcpSettings:
+        def required_text(key: str) -> str:
+            value = data[key]
+            if not isinstance(value, str):
+                msg = f"Expected text for DHCP setting {key}"
+                raise TypeError(msg)
+            return value
+
+        return cls(
+            dhcp_ip_address=required_text("DhcpIPAddress"),
+            dhcp_lan_netmask=required_text("DhcpLanNetmask"),
+            dhcp_status=required_text("DhcpStatus") == "1",
+            dhcp_start_ip_address=required_text("DhcpStartIPAddress"),
+            dhcp_end_ip_address=required_text("DhcpEndIPAddress"),
+            dhcp_lease_time=int(required_text("DhcpLeaseTime")),
+            dns_status=data["DnsStatus"] == "1" if "DnsStatus" in data else None,
+            primary_dns=data.get("PrimaryDns"),
+            secondary_dns=data.get("SecondaryDns"),
+            show_dns_setting=data["ShowDnsSetting"] == "1" if "ShowDnsSetting" in data else None,
+        )
+
+    def to_dict(self) -> dict[str, str | None]:
+        data: dict[str, str | None] = {
+            "DhcpIPAddress": self.dhcp_ip_address,
+            "DhcpLanNetmask": self.dhcp_lan_netmask,
+            "DhcpStatus": "1" if self.dhcp_status else "0",
+            "DhcpStartIPAddress": self.dhcp_start_ip_address,
+            "DhcpEndIPAddress": self.dhcp_end_ip_address,
+            "DhcpLeaseTime": str(self.dhcp_lease_time),
+        }
+        if self.dns_status is not None:
+            data["DnsStatus"] = "1" if self.dns_status else "0"
+        data["PrimaryDns"] = self.primary_dns
+        data["SecondaryDns"] = self.secondary_dns
+        if self.show_dns_setting is not None:
+            data["ShowDnsSetting"] = "1" if self.show_dns_setting else "0"
+        return data
+
+
 class Dhcp(ApiGroup):
-    def settings(self) -> GetResponseType:
+    def settings(self) -> DhcpSettings:
         """
         Get DHCP settings.
 
@@ -20,7 +78,7 @@ class Dhcp(ApiGroup):
         >>> settings = dhcp.settings()
         >>> print(settings)
         """
-        return self._session.get("dhcp/settings")
+        return DhcpSettings.from_dict(self._session.get("dhcp/settings"))
 
     def feature_switch(self) -> GetResponseType:
         """
@@ -65,68 +123,11 @@ class Dhcp(ApiGroup):
         """
         return self._session.get("dhcp/static-addr-info")
 
-    def set_settings(  # pylint: disable=too-many-arguments
-        self,
-        dhcp_ip_address: str = "192.168.0.1",
-        dhcp_lan_netmask: str = "255.255.255.0",
-        dhcp_status: bool = True,
-        dhcp_start_ip_range: int = 100,
-        dhcp_end_ip_range: int = 200,
-        dhcp_lease_time: int = 86400,
-        dns_status: bool = True,
-        primary_dns: str | None = None,
-        secondary_dns: str | None = None,
-        show_dns_setting: bool = True,
-    ) -> SetResponseType:
+    def set_settings(self, settings: DhcpSettings) -> SetResponseType:
+        """Write DHCP settings to the router.
+
+        Pass a DhcpSettings instance in place of the former keyword arguments.
+        Edit a configuration returned by settings() to keep its other known
+        fields, or construct DhcpSettings with defaults for a new configuration.
         """
-        Configure DHCP server settings.
-
-        :param dhcp_ip_address: IP address of DHCP server.
-        :param dhcp_lan_netmask: Netmask for DHCP server.
-        :param dhcp_status: Turn DHCP server on/off.
-        :param dhcp_start_ip_range: Lease IP range from.
-        :param dhcp_end_ip_range: Lease IP range till.
-        :param dhcp_lease_time: IP lease duration.
-        :param dns_status: DNS status.
-        :param primary_dns: Primary DNS server IP.
-        :param secondary_dns: Secondary DNS server IP.
-        :param show_dns_setting: Show DNS setting.
-        :return: Set response type.
-
-        Usage example:
-        >>> dhcp = Dhcp(session)
-        >>> response = dhcp.set_settings(
-        >>>     dhcp_ip_address="192.168.1.1",
-        >>>     dhcp_lan_netmask="255.255.255.0",
-        >>>     dhcp_status=True,
-        >>>     dhcp_start_ip_range=50,
-        >>>     dhcp_end_ip_range=150,
-        >>>     dhcp_lease_time=3600,
-        >>>     dns_status=True,
-        >>>     primary_dns="8.8.8.8",
-        >>>     secondary_dns="8.8.4.4",
-        >>>     show_dns_setting=True
-        >>> )
-        >>> print(response)
-        """
-
-        ip_address_parts = dhcp_ip_address.split(".")
-        ip_address_parts.pop(-1)
-        dhcp_start_ip_address = ".".join(ip_address_parts) + "." + str(dhcp_start_ip_range)
-        dhcp_end_ip_address = ".".join(ip_address_parts) + "." + str(dhcp_end_ip_range)
-
-        return self._session.post_set(
-            "dhcp/settings",
-            {
-                "DhcpIPAddress": dhcp_ip_address,
-                "DhcpLanNetmask": dhcp_lan_netmask,
-                "DhcpStatus": 1 if dhcp_status else 0,
-                "DhcpStartIPAddress": dhcp_start_ip_address,
-                "DhcpEndIPAddress": dhcp_end_ip_address,
-                "DhcpLeaseTime": dhcp_lease_time,
-                "DnsStatus": 1 if dns_status else 0,
-                "PrimaryDns": primary_dns,
-                "SecondaryDns": secondary_dns,
-                "ShowDnsSetting": 1 if show_dns_setting else 0,
-            },
-        )
+        return self._session.post_set("dhcp/settings", settings.to_dict())
